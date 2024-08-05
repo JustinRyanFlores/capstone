@@ -1,0 +1,152 @@
+/* Base styles for the sidebar */
+.sidebar {
+  background-color: #1c2455;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 325px;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: border-radius 0.3s ease;
+}
+
+/* Header styles */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.sidebar img {
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  margin-right: 10px;
+}
+
+.sidebar h5 {
+  color: white;
+  margin: 0;
+}
+
+/* Navigation styles */
+.sidebar .nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.sidebar .nav-item {
+  margin-bottom: 20px;
+}
+
+.sidebar .nav-link {
+  color: white;
+  font-size: 16px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  position: relative;
+}
+
+/* Hover styles */
+.sidebar .nav-link:hover {
+  background-color: white;
+  color: #1c2455;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.sidebar .nav-link:hover i {
+  color: #1c2455;
+}
+
+.sidebar .nav-link i {
+  margin-right: 15px;
+}
+
+.white-box {
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.white-box .nav-link,
+.white-box .nav-link i {
+  color: #1c2455;
+}
+
+.white-box .nav-link:hover,
+.white-box .nav-link:hover i {
+  background-color: #1c2455;
+  color: white;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 250px;
+  }
+
+  .sidebar img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .sidebar .nav-link {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 992px) {
+  .sidebar {
+    width: 200px;
+    padding: 15px;
+  }
+
+  .sidebar img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .sidebar .nav-link {
+    font-size: 12px;
+    padding: 5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    padding: 10px;
+    box-shadow: none;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .sidebar .nav {
+    flex-direction: row;
+  }
+
+  .sidebar .nav-item {
+    margin-right: 15px;
+    margin-bottom: 0;
+  }
+
+  .sidebar img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .sidebar .nav-link {
+    font-size: 12px;
+  }
+}
