@@ -3,65 +3,29 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>My Web Application</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <?php include '/xampp/htdocs/capstone/src/components/date_and_time.php'; ?>
-    <style>
-        .date-time-container {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            text-align: right;
-        }
-
-        .date-time-component {
-            display: inline-block;
-            font-size: 16px;
-        }
-
-        .date-time-component p {
-            margin: 0;
-            padding: 0;
-        }
-
-        .date-time-component .date {
-            margin-bottom: 2px;
-
-        }
-
-        @media (max-width: 768px) {
-            .date-time-container {
-                position: static;
-                text-align: center;
-                margin-top: 10px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .date-time-container {
-                font-size: 14px;
-                padding: 10px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
+    <link rel="stylesheet" href="/capstone/src/css/header.css" />
+    <?php include '/xampp/htdocs/capstone/src/components/header.php'; ?>
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div class="container-fluid main-content">
         <div class="row">
             <div class="col-md-3">
                 <?php include '/xampp/htdocs/capstone/src/components/moderator_navbar.php'; ?>
             </div>
-            <div class="col-md-9">
-                <h1>Dashboard</h1>
-                <!-- Your main content goes here -->
+            <div class="col-md-9    ">
+                <div class="date-time-container">
+                    <h1>Dashboard</h1>
+                    <?php displayDateTime(); ?>
+                </div>
+                <!-- Add your main content here -->
             </div>
-        </div>
-        <div class="date-time-container">
-            <?php displayDateTime(); ?>
         </div>
     </div>
 

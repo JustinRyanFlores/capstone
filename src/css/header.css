@@ -1,0 +1,59 @@
+.main-content {
+  padding-top: 70px; /* Adjust this value to make space for the fixed header */
+}
+
+.dashboard-container {
+  padding-left: 0;
+}
+
+.date-time-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  position: fixed;
+  top: 0;
+  left: 20rem; /* Consider changing this to a percentage for better responsiveness */
+  width: calc(100% - 20rem);
+  transition: all 0.3s ease; /* Adjust this value based on the width of your sidebar or main content */
+}
+
+.date-time-container h1 {
+  margin: 0;
+}
+
+.date-time-component {
+  display: inline-block;
+  font-size: 16px;
+}
+
+.date-time-component p {
+  margin: 0;
+  padding: 0;
+}
+
+.date-time-component .date {
+  margin-bottom: 2px;
+}
+
+/* Medium screens and below */
+@media (max-width: 768px) {
+  .date-time-container {
+    left: 0; /* Aligns the container to the left */
+    width: 100%; /* Makes the container take the full width */
+    text-align: center;
+    justify-content: center; /* Centers the content */
+  }
+}
+
+/* Small screens and below */
+@media (max-width: 576px) {
+  .date-time-container {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .date-time-component {
+    font-size: 14px;
+  }
+}

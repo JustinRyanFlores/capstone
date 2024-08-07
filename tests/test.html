@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive Sidebar</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .sidebar {
+        background-color: #1c2455;
+        height: 100vh;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 20px;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar img {
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      .sidebar h5 {
+        color: white;
+        margin: 0;
+      }
+
+      .sidebar .nav-link {
+        color: white;
+        font-size: 16px;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        position: relative;
+      }
+
+      .sidebar .nav-link:hover {
+        background-color: white;
+        color: #1c2455;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+      }
+
+      .sidebar .nav-link:hover i {
+        color: #1c2455;
+      }
+
+      .sidebar .nav-link i {
+        margin-right: 15px;
+      }
+
+      .white-box {
+        background-color: white;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .white-box .nav-link,
+      .white-box .nav-link i {
+        color: #1c2455;
+      }
+
+      .white-box .nav-link:hover,
+      .white-box .nav-link:hover i {
+        background-color: #1c2455;
+        color: white;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: static;
+          padding: 10px;
+          box-shadow: none;
+          flex-direction: row;
+          overflow-x: auto;
+        }
+
+        .sidebar .nav {
+          flex-direction: row;
+        }
+
+        .sidebar .nav-item {
+          margin-right: 15px;
+          margin-bottom: 0;
+        }
+
+        .sidebar img {
+          width: 50px;
+          height: 50px;
+        }
+
+        .sidebar .nav-link {
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-3 col-lg-2 d-md-block bg-dark sidebar">
+          <div class="sidebar-header d-flex align-items-center">
+            <img src="avatar.png" class="img-fluid" alt="Avatar" />
+            <h5>Username</h5>
+          </div>
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="fas fa-home"></i> Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="fas fa-user"></i> Profile
+              </a>
+            </li>
+            <!-- More nav items -->
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  </body>
+</html>
