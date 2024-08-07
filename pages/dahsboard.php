@@ -14,19 +14,29 @@
 </head>
 
 <body>
+    <?php include '/xampp/htdocs/capstone/src/components/moderator_navbar.php'; ?>
     <div class="container-fluid main-content">
         <div class="row">
-            <div class="col-md-3">
-                <?php include '/xampp/htdocs/capstone/src/components/moderator_navbar.php'; ?>
+            <div class="h1 col-sm-6 col-md-6 text-start">
+                Dashboard
             </div>
-            <div class="col-md-9    ">
-                <div class="date-time-container">
-                    <h1>Dashboard</h1>
+            <div class="col-sm-6 col-md-6 d-flex justify-content-end">
+                <div>
                     <?php displayDateTime(); ?>
                 </div>
-                <!-- Add your main content here -->
             </div>
         </div>
+                <!-- Add your main content here -->
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6 text-left">
+                            col 1
+                        </div>
+                        <div class="col-sm-6">
+                            col 2
+                        </div>
+                    </div>
+                </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -35,3 +45,4 @@
 </body>
 
 </html>
+
