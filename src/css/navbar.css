@@ -163,31 +163,45 @@ body {
 }
 
 
-
 /* Top Navbar styles */
 .navbar {
   z-index: 1030; /* Ensure the navbar is above other content */
-  background-color: #1c2455; /* Navbar background color */
+  background-color: #1c2455 !important;
+
 }
 
+.navbar a {
+    color: #ffffff;
+}
 /* Navbar link styles */
+
 .navbar-nav .nav-link {
   color: white; /* Text color for navbar links */
 }
 
+.navbar a:hover {
+  background-color: #1c2455;
+  color: white;
+}
+
 .navbar-nav .nav-link:hover {
-  background-color: #1c2455; /* Background color on hover */
-  color: white; /* Ensure text color remains white on hover */
+  background-color: #ffffff; /* Background color on hover */
+  color: #1c2455; /* Ensure text color remains white on hover */
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  transition: all 0.3s ease;
 }
 
 /* Navbar dropdown styles */
 .navbar-nav .dropdown-menu {
-  background-color: #1c2455; /* Background color for dropdown */
-  border: none; /* Remove default border */
+  background-color: #ffffff; /* Background color for dropdown */
+  border-radius: 10px;
+  transition: all 0.3s ease;
+
 }
 
 .navbar-nav .dropdown-item {
-  color: white; /* Text color for dropdown items */
+  color: #1c2455; /* Text color for dropdown items */
 }
 
 .navbar-nav .dropdown-item:hover {

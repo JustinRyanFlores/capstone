@@ -17,10 +17,10 @@
     <?php include '/xampp/htdocs/capstone/src/components/moderator_navbar.php'; ?>
     <div class="container-fluid main-content">
         <div class="row">
-            <div class="h3 col-sm-6 col-md-6 text-start">
+            <div class="h3 col-sm-6 col-md-6 text-start h5-sm">
                 Dashboard
             </div>
-            <div class="col-sm-6 col-md-6 d-flex justify-content-end">
+            <div class="col-sm-6 col-md-6 d-flex justify-content-sm-between justify-content-md-end ">
                 <div>
                     <?php displayDateTime(); ?>
                 </div>

@@ -40,7 +40,7 @@
 </div>
 
 <!-- Top Navbar for smaller screens -->
-<nav class="navbar navbar-expand-md navbar-dark bg-primary d-md-none fixed-top">
+<nav class="navbar navbar-expand-md bg-primary d-md-none fixed-top">
     <a class="navbar-brand" href="#">
         <img src="/capstone/src/assets/kayanlog-logo.png" alt="Logo" style="width: 40px; height: 40px;">
         Barangay Kay-Anlog
