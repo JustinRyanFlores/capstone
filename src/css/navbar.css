@@ -147,7 +147,8 @@ body {
   }
 
   .main-content {
-    margin-left: 150px;
+    margin-left: 0px;
+    margin-top: 70px;
   }
 
   .sidebar img {
@@ -161,65 +162,62 @@ body {
   }
 }
 
-@media (max-width: 576px) {
-  .sidebar {
-    width: 100px;
-    padding: 5px;
-  }
 
-  .main-content {
-    margin-left: 100px;
-  }
 
-  .sidebar img {
-    width: 40px;
-    height: 40px;
-  }
+/* Top Navbar styles */
+.navbar {
+  z-index: 1030; /* Ensure the navbar is above other content */
+  background-color: #1c2455; /* Navbar background color */
+}
 
-  .sidebar .nav-link {
-    font-size: 8px;
-    padding: 2px;
+/* Navbar link styles */
+.navbar-nav .nav-link {
+  color: white; /* Text color for navbar links */
+}
+
+.navbar-nav .nav-link:hover {
+  background-color: #1c2455; /* Background color on hover */
+  color: white; /* Ensure text color remains white on hover */
+}
+
+/* Navbar dropdown styles */
+.navbar-nav .dropdown-menu {
+  background-color: #1c2455; /* Background color for dropdown */
+  border: none; /* Remove default border */
+}
+
+.navbar-nav .dropdown-item {
+  color: white; /* Text color for dropdown items */
+}
+
+.navbar-nav .dropdown-item:hover {
+  background-color: #2a3560; /* Slightly different color for hover effect */
+}
+
+/* Navbar-toggler styles */
+.navbar-toggler {
+  border-color: white; /* Border color for toggler button */
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' d='M5 7h20M5 15h20M5 23h20'/%3E%3C/svg%3E");
+}
+
+/* Media queries for responsive design */
+@media (min-width: 768px) {
+  .navbar {
+      display: none; /* Hide top navbar on larger screens */
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .sidebar {
-    width: 80px;
-    padding: 5px;
-  }
-
-  .main-content {
-    margin-left: 80px;
-  }
-
-  .sidebar img {
-    width: 30px;
-    height: 30px;
-  }
-
-  .sidebar .nav-link {
-    font-size: 8px;
-    padding: 1px;
+      display: none; /* Hide sidebar on smaller screens */
   }
 }
 
-@media (max-width: 320px) {
-  .sidebar {
-    width: 60px;
-    padding: 3px;
-  }
-
+@media (min-width: 768px) {
   .main-content {
-    margin-left: 60px;
-  }
-
-  .sidebar img {
-    width: 20px;
-    height: 20px;
-  }
-
-  .sidebar .nav-link {
-    font-size: 6px;
-    padding: 1px;
+      padding-top: 50px;
   }
 }
