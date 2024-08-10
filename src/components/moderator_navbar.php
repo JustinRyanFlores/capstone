@@ -4,7 +4,7 @@
         <img src="/capstone/src/assets/kayanlog-logo.png" alt="Logo" style="width: 80px; height: 80px; margin-right: 10px;">
         <h5 class="mb-0">Barangay Kay-Anlog</h5>
     </div>
-    <ul class="nav flex-column mt-3">
+    <ul class="nav flex-column mt-5">
         <li class="nav-item">
             <a class="nav-link" href="#"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
         </li>
@@ -51,10 +51,10 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
+                <a class="nav-link" href="#" style="padding-left: 15px;"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
             </li>
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding-left: 15px;">
                     <i class="fas fa-users me-2"></i> Resident Records
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -63,16 +63,16 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fas fa-file-alt me-2"></i> Reports</a>
+                <a class="nav-link" href="#" style="padding-left: 15px;"><i class="fas fa-file-alt me-2"></i> Reports</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fas fa-book me-2"></i> Blotter Records</a>
+                <a class="nav-link" href="#" style="padding-left: 15px;"><i class="fas fa-book me-2"></i> Blotter Records</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fas fa-question-circle me-2"></i> F.A.Q.s</a>
+                <a class="nav-link" href="#" style="padding-left: 15px;"><i class="fas fa-question-circle me-2"></i> F.A.Q.s</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#"><i class="fas fa-sign-out-alt me-2"></i> Sign out</a>
+                <a class="nav-link" href="#" style="padding-left: 15px;"><i class="fas fa-sign-out-alt me-2"></i> Sign out</a>
             </li>
         </ul>
     </div>
@@ -112,4 +112,25 @@ $('#residentRecords').on('show.bs.collapse', function() {
 }).on('hide.bs.collapse', function() {
     $(this).siblings('a.nav-link').removeClass('active');
 });
+</script>
+
+<!-- JavaScript to prevent navbar collapse when clicking inside the dropdown -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var dropdownLinks = document.querySelectorAll('.dropdown-menu .dropdown-item');
+
+        dropdownLinks.forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                var parent = this.closest('.dropdown');
+                if (parent) {
+                    e.stopPropagation();
+                    var toggleButton = parent.querySelector('[data-bs-toggle="dropdown"]');
+                    if (toggleButton) {
+                        toggleButton.click(); // Close the dropdown
+                        toggleButton.click(); // Re-open the dropdown
+                    }
+                }
+            });
+        });
+    });
 </script>

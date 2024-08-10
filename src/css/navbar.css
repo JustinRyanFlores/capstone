@@ -176,7 +176,12 @@ body {
 /* Navbar link styles */
 
 .navbar-nav .nav-link {
-  color: white; /* Text color for navbar links */
+  color: white;
+  padding-left: 15px !important;
+}
+
+.navbar.bg-primary.d-md-none .navbar-nav .nav-link .nav-text {
+  padding-left: 10px !important;
 }
 
 .navbar a:hover {
