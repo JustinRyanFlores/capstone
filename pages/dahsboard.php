@@ -1,3 +1,25 @@
+<?php
+
+  include("../src/configs/connection.php");
+
+  $sql = "SELECT COUNT(*) AS total_population FROM resident";
+  $result = $mysqlConn->query($sql);
+
+  $sql = "SELECT COUNT(*) AS total_unsettled_cases FROM blotter WHERE blotter_status='Pending'";
+  $result_total_blotter = $mysqlConn2->query($sql);
+  
+  if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    echo "" . $row['total_population'];
+} 
+
+if ($result_total_blotter->num_rows > 0) {
+    $row_blotter = $result_total_blotter->fetch_assoc();
+    echo "" . $row_blotter['total_unsettled_cases'];
+} 
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,6 +32,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
     <link rel="stylesheet" href="/capstone/src/css/header.css" />
+    <link rel="stylesheet" href="/capstone/src/css/dashboard.css" />
     <?php include '/xampp/htdocs/capstone/src/components/header.php'; ?>
 </head>
 
@@ -29,19 +52,32 @@
                 </div>
             </div>
         </div>
-                <!-- Add your main content here -->
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-sm-6 text-left">
-                            col 1
-                        </div>
-                        <div class="col-sm-6">
-                            col 2
-                        </div>
-                    </div>
+
+        <!-- Responsive row of three containers -->
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="custom-container" style="height: 150px;">
+                    <h5>Population</h5>
+                    <h1> <?php echo $row['total_population']; ?> </h1>
                 </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="custom-container" style="height: 150px;">
+                    <h5>Registered Voters</h5>
+                    <h1>Content</h1>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="custom-container" style="height: 150px;">
+                    <h5>Unsettled Cases</h5>
+                    <h1><?php echo $row_blotter['total_unsettled_cases']; ?></h1>
+                </div>
+            </div>
+        </div>
+
+
     </div>
-    
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

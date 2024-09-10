@@ -1,0 +1,147 @@
+.custom-container {
+    background-color: #1c2455; /* Adjusted to match the image */
+    color: white;
+    border-radius: 10px;
+    text-align: center;
+    padding: 32px;
+    margin: 10px 0;
+    height: 200px;
+    width: 400px;
+}
+
+.custom-container h5 {
+    font-size: 18px;
+}
+
+.custom-container h1 {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+/* Make it responsive */
+@media (max-width: 1664px) {
+    .custom-container {
+        padding: 10px;
+        margin: 5px 0;
+        height: 200px;
+        width: 350px;
+        padding: 32px;
+    }
+
+    .custom-container h1 {
+        font-size: 28px;
+    }
+
+    .custom-container h5 {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 1500px) {
+    .custom-container {
+        padding: 10px;
+        margin: 5px 0;
+        height: 150px;
+        width: 300px;
+        padding: 32px;
+    }
+
+    .custom-container h1 {
+        font-size: 28px;
+    }
+
+    .custom-container h5 {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 1300px) {
+    .custom-container {
+        padding: 10px;
+        margin: 5px 0;
+        height: 150px;
+        width: 250px;
+        padding: 32px;
+    }
+
+    .custom-container h1 {
+        font-size: 28px;
+    }
+
+    .custom-container h5 {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 1080px) {
+    .custom-container {
+        padding: 10px;
+        margin: 5px 0;
+        height: 150px;
+        width: 220px;
+        padding: 32px;
+    }
+
+    .custom-container h1 {
+        font-size: 28px;
+    }
+
+    .custom-container h5 {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 932px) {
+    .custom-container {
+        padding: 10px;
+        margin: 5px 0;
+        height: 150px;
+        width: 200px;
+        padding: 32px;
+    }
+
+    .custom-container h1 {
+        font-size: 28px;
+    }
+
+    .custom-container h5 {
+        font-size: 16px;
+    }
+}
+
+
+@media (max-width: 876px) {
+    .custom-container {
+        padding: 10px;
+        margin: 5px 0;
+        height: 150px;
+        width: 170px;
+        padding: 30px;
+    }
+
+    .custom-container h1 {
+        font-size: 20px;
+    }
+
+    .custom-container h5 {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 585px) {
+    .custom-container {
+        padding: 10px;
+        margin: 5px 0;
+        height: 150px;
+        width: 120px;
+        padding: 30px;
+    }
+
+    .custom-container h1 {
+        font-size: 20px;
+    }
+
+    .custom-container h5 {
+        font-size: 16px;
+    }
+}
