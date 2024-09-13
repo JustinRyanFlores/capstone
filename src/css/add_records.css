@@ -1,0 +1,102 @@
+.profile-picture-container {
+    display: inline-block;
+    width: 200px;
+    /* Fixed width */
+    height: 200px;
+    /* Fixed height */
+    background-color: #f8f9fa;
+    /* Light background color */
+    border: 2px solid #dee2e6;
+    /* Border color */
+    padding: 5px;
+    /* Padding around the image */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Optional shadow for depth */
+    overflow: hidden;
+    /* Ensures the image fits within the box */
+}
+
+.profile-picture-container img {
+    width: 100%;
+    /* Ensures the image fits the container */
+    height: 100%;
+    /* Ensures the image fits the container */
+    object-fit: cover;
+    /* Ensures the image covers the container without stretching */
+}
+
+.scrollable-container {
+    max-height: 80vh;
+    /* Adjust based on your needs */
+    overflow-y: auto;
+}
+
+
+/* Container to align buttons to the right */
+.button-container {
+    text-align: right;
+    /* Aligns buttons to the right */
+    margin-top: 20px;
+    /* Adds space above the buttons */
+}
+
+/* Common button styling */
+.btn-custom {
+    width:10vh;
+    border-radius: 4px;
+    /* Rounded corners */
+    padding: 5px 10px;
+    /* Padding for better appearance */
+    font-size: 16px;
+    /* Font size for better readability */
+    border: 2px solid transparent;
+    /* Default border */
+    color: #fff;
+    /* White text */
+    transition: background-color 0.3s, box-shadow 0.3s, border-color 0.3s, color 0.3s;
+    /* Smooth transition for hover effects */
+}
+
+/* Primary button styling */
+.btn-primary-custom {
+    background-color: #1c2455;
+    /* Primary color */
+    color: #fff;
+    /* White text */
+}
+
+.btn-primary-custom:hover {
+    background-color: #fff;
+    /* White background on hover */
+    color: #1c2455;
+    /* Primary color text on hover */
+    border-color: #1c2455;
+    /* Border color on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Add shadow on hover */
+}
+
+/* Secondary button styling */
+.btn-secondary-custom {
+    background-color: #6c757d;
+    /* Secondary color */
+    color: #fff;
+    /* White text */
+}
+
+.btn-secondary-custom:hover {
+    background-color: #fff;
+    /* White background on hover */
+    color: #6c757d;
+    /* Secondary color text on hover */
+    border-color: #6c757d;
+    /* Border color on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    /* Add shadow on hover */
+}
+
+/* Add space between buttons */
+.btn-custom+.btn-custom {
+    margin-left: 10px;
+    /* Space between buttons */
+}
