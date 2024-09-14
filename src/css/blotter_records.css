@@ -1,0 +1,129 @@
+        /* Table container */
+        .blotter-table-container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 10px; /* Reduced space between buttons and table */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Custom table styling */
+        .table-custom {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+            border-collapse: collapse;
+        }
+
+        .table-custom th, .table-custom td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-top: none;
+        }
+
+        .table-custom thead th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table-custom tbody tr {
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: #f1f3f5;
+        }
+
+        /* Search and Buttons */
+        .search-bar-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .action-buttons {
+            margin-top: 10px;
+            margin-bottom: 5px; /* Reduced padding below buttons */
+        }
+
+        /* Pagination styling */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .pagination-info {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .pagination {
+            margin: 0;
+        }
+
+        /* Buttons styling */
+        .action-buttons .btn {
+            margin-right: 10px;
+        }
+
+        /* Custom button colors for "New Blotter", "View", and "Delete" */
+        .btn-new-blotter {
+            background-color: #013220;
+            border-color: #013220;
+            color: white;
+        }
+
+        .btn-view {
+            background-color: #1c2455;
+            border-color: #1c2455;
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: #880808;
+            border-color: #880808;
+            color: white;
+        }
+
+        /* Button hover effects */
+        .btn-new-blotter:hover {
+            background-color: #026a39; /* Change hover color here */
+            color: white;
+        }
+
+        .btn-view:hover {
+            background-color: #2b3472; /* Change hover color here */
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #b22222; /* Change hover color here */
+            color: white;
+        }
+
+        /* Pagination active button color */
+        .pagination .page-item.active .page-link {
+            background-color: #1c2455; /* Updated to the new color */
+            border-color: #1c2455; /* Updated to the new color */
+            color: white;
+        }
+
+        /* Pagination normal page number color */
+        .pagination .page-link {
+            color: #1c2455; /* Updated normal page number color */
+        }
+
+        .pagination .page-link:hover {
+            background-color: #f1f3f5;
+            color: #1c2455;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 767.98px) {
+            .action-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
