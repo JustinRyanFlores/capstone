@@ -7,10 +7,12 @@
     <meta name="mobile-web-app-capable" content="yes">
     <title>Residents Records</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
     <link rel="stylesheet" href="/capstone/src/css/header.css" />
     <link rel="stylesheet" href="/capstone/src/css/add_records.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <?php include '/xampp/htdocs/capstone/src/components/header.php'; ?>
 </head>
 
@@ -41,7 +43,9 @@
                 </div>
             </div>
 
-            <form>
+            <form action="/capstone/src/components/submit.php" method="POST">
+
+
                 <!-- Personal Information -->
                 <div class="row mb-4">
                     <div class="col-md-12">
@@ -65,16 +69,34 @@
                                 <label for="dob">Date of Birth:</label>
                                 <div class="input-group">
                                     <select class="form-control" id="dobDay" name="dobDay">
-                                        <option>Day</option>
-                                        <!-- Populate options here -->
+                                        <option value="">Day</option>
+                                        <?php for ($day = 1; $day <= 31; $day++): ?>
+                                            <option value="<?php echo str_pad($day, 2, '0', STR_PAD_LEFT); ?>"><?php echo $day; ?></option>
+                                        <?php endfor; ?>
                                     </select>
                                     <select class="form-control" id="dobMonth" name="dobMonth">
-                                        <option>Month</option>
-                                        <!-- Populate options here -->
+                                        <option value="">Month</option>
+                                        <option value="01">January</option>
+                                        <option value="02">February</option>
+                                        <option value="03">March</option>
+                                        <option value="04">April</option>
+                                        <option value="05">May</option>
+                                        <option value="06">June</option>
+                                        <option value="07">July</option>
+                                        <option value="08">August</option>
+                                        <option value="09">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
                                     </select>
                                     <select class="form-control" id="dobYear" name="dobYear">
-                                        <option>Year</option>
-                                        <!-- Populate options here -->
+                                        <option value="">Year</option>
+                                        <?php
+                                        $currentYear = date('Y');
+                                        for ($year = 1900; $year <= $currentYear; $year++):
+                                        ?>
+                                            <option value="<?php echo $year; ?>"><?php echo $year; ?></option>
+                                        <?php endfor; ?>
                                     </select>
                                 </div>
                             </div>
@@ -92,11 +114,26 @@
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="contactNumber">Contact Number:</label>
-                                <input type="text" class="form-control" id="contactNumber" name="contactNumber">
+                                <input type="text" class="form-control" id="contactNumber" name="contactNumber"
+                                    pattern="\d{10,11}" title="Please enter a valid contact number." required>
+                                <small class="form-text text-muted">Please enter a valid contact number with 10 or 11 digits.</small>
                             </div>
+
                         </div>
                     </div>
                 </div>
+                <script>
+                    document.getElementById('contactNumber').addEventListener('input', function() {
+                        const value = this.value;
+                        const pattern = /^\d{10,11}$/;
+                        if (!pattern.test(value)) {
+                            this.setCustomValidity('Please enter a valid contact number');
+                        } else {
+                            this.setCustomValidity('');
+                        }
+                    });
+                </script>
+
 
                 <!-- Address Information -->
                 <div class="row mb-4">
@@ -107,35 +144,40 @@
                                 <label for="streetAddress">Street Address:</label>
                                 <input type="text" class="form-control" id="streetAddress" name="streetAddress">
                             </div>
-                            <div class="col-md-2 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label for="houseNumber">House Number:</label>
                                 <input type="text" class="form-control" id="houseNumber" name="houseNumber">
                             </div>
-                            <div class="col-md-2 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label for="subdivision">Subdivision:</label>
                                 <input type="text" class="form-control" id="subdivision" name="subdivision">
                             </div>
-                            <div class="col-md-2 mb-3">
-                                <label for="purok">Purok:</label>
-                                <input type="text" class="form-control" id="purok" name="purok">
-                            </div>
                         </div>
+
                         <div class="row">
                             <div class="col-md-3 mb-3">
                                 <label for="barangay">Barangay:</label>
-                                <input type="text" class="form-control" id="barangay" name="barangay">
+                                <select class="form-control" id="barangay" name="barangay">
+                                    <!-- Barangay options will be loaded here -->
+                                </select>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="city">City:</label>
-                                <input type="text" class="form-control" id="city" name="city">
+                                <select class="form-control" id="city" name="city">
+                                    <!-- City options will be loaded here -->
+                                </select>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="province">Province:</label>
-                                <input type="text" class="form-control" id="province" name="province">
+                                <select class="form-control" id="province" name="province">
+                                    <!-- Province options will be loaded here -->
+                                </select>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="region">Region:</label>
-                                <input type="text" class="form-control" id="region" name="region">
+                                <select class="form-control" id="region" name="region">
+                                    <!-- Region options will be loaded here -->
+                                </select>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="zipCode">Zip Code:</label>
@@ -144,6 +186,94 @@
                         </div>
                     </div>
                 </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const regionsSelect = document.getElementById('region');
+                        const provincesSelect = document.getElementById('province');
+                        const citiesSelect = document.getElementById('city');
+                        const barangaysSelect = document.getElementById('barangay');
+
+                        function populateDropdown(selectElement, data, valueKey, textKey) {
+                            selectElement.innerHTML = '<option value="">Select</option>';
+                            data.forEach(item => {
+                                const option = document.createElement('option');
+                                option.value = item[valueKey];
+                                option.textContent = item[textKey];
+                                selectElement.appendChild(option);
+                            });
+                        }
+
+                        function fetchData(url) {
+                            return fetch(url)
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('Data fetched from ' + url, data);
+                                    return data;
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching data:', error);
+                                    return [];
+                                });
+                        }
+
+                        fetchData('data/region.json').then(data => {
+                            populateDropdown(regionsSelect, data, 'region_code', 'region_name');
+                        });
+
+                        regionsSelect.addEventListener('change', function() {
+                            console.log('Region changed:', this.value);
+                            const selectedRegionCode = this.value;
+                            if (selectedRegionCode) {
+                                fetchData('data/province.json').then(data => {
+                                    console.log('Provinces data:', data);
+                                    const provinces = data.filter(province => province.region_code === selectedRegionCode);
+                                    console.log('Filtered provinces:', provinces);
+                                    populateDropdown(provincesSelect, provinces, 'province_code', 'province_name');
+                                    citiesSelect.innerHTML = '<option value="">Select City/Municipality</option>';
+                                    barangaysSelect.innerHTML = '<option value="">Select Barangay</option>';
+                                });
+                            } else {
+                                provincesSelect.innerHTML = '<option value="">Select Province</option>';
+                                citiesSelect.innerHTML = '<option value="">Select City/Municipality</option>';
+                                barangaysSelect.innerHTML = '<option value="">Select Barangay</option>';
+                            }
+                        });
+
+                        provincesSelect.addEventListener('change', function() {
+                            console.log('Province changed:', this.value);
+                            const selectedProvinceCode = this.value;
+                            if (selectedProvinceCode) {
+                                fetchData('data/city.json').then(data => {
+                                    console.log('Cities data:', data);
+                                    const cities = data.filter(city => city.province_code === selectedProvinceCode);
+                                    console.log('Filtered cities:', cities);
+                                    populateDropdown(citiesSelect, cities, 'city_code', 'city_name');
+                                    barangaysSelect.innerHTML = '<option value="">Select Barangay</option>';
+                                });
+                            } else {
+                                citiesSelect.innerHTML = '<option value="">Select City/Municipality</option>';
+                                barangaysSelect.innerHTML = '<option value="">Select Barangay</option>';
+                            }
+                        });
+
+                        citiesSelect.addEventListener('change', function() {
+                            console.log('City changed:', this.value);
+                            const selectedCityCode = this.value;
+                            if (selectedCityCode) {
+                                fetchData('data/barangay.json').then(data => {
+                                    console.log('Barangays data:', data);
+                                    const barangays = data.filter(barangay => barangay.city_code === selectedCityCode);
+                                    console.log('Filtered barangays:', barangays);
+                                    populateDropdown(barangaysSelect, barangays, 'brgy_code', 'brgy_name');
+                                });
+                            } else {
+                                barangaysSelect.innerHTML = '<option value="">Select Barangay</option>';
+                            }
+                        });
+                    });
+                </script>
+
+
 
                 <!-- Family Information -->
                 <div class="row mb-4">
@@ -288,10 +418,11 @@
 
                 <div class="row">
                     <div class="col-md-12 text-right button-container">
-                        <button type="button" class="btn btn-custom btn-primary-custom">Add</button>
+                        <button type="submit" class="btn btn-custom btn-primary-custom">Add</button>
                         <button type="button" class="btn btn-custom btn-secondary-custom">Cancel</button>
                     </div>
                 </div>
+            </form>
         </div>
     </div>
 

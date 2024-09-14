@@ -1,3 +1,4 @@
+
 .profile-picture-container {
     display: inline-block;
     width: 200px;
@@ -42,7 +43,7 @@
 
 /* Common button styling */
 .btn-custom {
-    width:10vh;
+    width: 10vh;
     border-radius: 4px;
     /* Rounded corners */
     padding: 5px 10px;
