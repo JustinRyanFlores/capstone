@@ -27,7 +27,6 @@ $contactNumber = isset($_POST['contactNumber']) ? $_POST['contactNumber'] : '';
 $streetAddress = isset($_POST['streetAddress']) ? $_POST['streetAddress'] : '';
 $houseNumber = isset($_POST['houseNumber']) ? $_POST['houseNumber'] : '';
 $subdivision = isset($_POST['subdivision']) ? $_POST['subdivision'] : '';
-$purok = isset($_POST['purok']) ? $_POST['purok'] : '';
 $barangay = isset($_POST['barangay']) ? $_POST['barangay'] : '';
 $city = isset($_POST['city']) ? $_POST['city'] : '';
 $province = isset($_POST['province']) ? $_POST['province'] : '';
@@ -53,23 +52,26 @@ $businessOwner = isset($_POST['businessOwner']) ? 1 : 0;
 
 // SQL query to insert data
 $sql = "INSERT INTO residents_records (first_name, middle_name, last_name, dob, age, gender, contact_number, 
-        street_address, house_number, subdivision, purok, barangay, city, province, region, zip_code, 
+        street_address, house_number, subdivision, barangay, city, province, region, zip_code, 
         mother_first_name, mother_middle_name, mother_last_name, father_first_name, father_middle_name, father_last_name, 
         educational_attainment, current_school, illness, medication, disability, teen_pregnancy, type_of_delivery, 
         organization, cases_violated, years_of_stay, business_owner) 
         VALUES ('$firstName', '$middleName', '$lastName', '$dob', '$age', '$gender', '$contactNumber', 
-                '$streetAddress', '$houseNumber', '$subdivision', '$purok', '$barangay', '$city', '$province', '$region', '$zipCode', 
+                '$streetAddress', '$houseNumber', '$subdivision', '$barangay', '$city', '$province', '$region', '$zipCode', 
                 '$motherFirstName', '$motherMiddleName', '$motherLastName', '$fatherFirstName', '$fatherMiddleName', '$fatherLastName', 
                 '$educationalAttainment', '$currentSchool', '$illness', '$medication', '$disability', '$teenPregnancy', '$typeOfDelivery', 
                 '$organization', '$casesViolated', '$yearsOfStay', '$businessOwner')";
 
-// Debugging: Output the SQL query
-echo $sql;
-
 if ($conn->query($sql) === TRUE) {
-    echo "Record added successfully";
+    // Redirect to add_records.php with a success message
+    header("Location: ../../pages/add_records.php?success=true");
+    exit();
 } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    // Redirect to add_records.php with an error message
+    header("Location: ../../pages/add_records.php?error=true");
+    exit();
 }
 
+// Close the connection (this line is unreachable and should be removed or placed before the exit statements)
 $conn->close();
+?>

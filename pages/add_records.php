@@ -1,3 +1,14 @@
+<?php
+if (isset($_GET['success']) && $_GET['success'] == 'true') {
+    echo "<script>alert('Record added successfully');</script>";
+}
+
+if (isset($_GET['error']) && $_GET['error'] == 'true') {
+    echo "<script>alert('An error occurred while adding the record');</script>";
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,6 +46,7 @@
 
         <!-- Scrollable container -->
         <div class="container-fluid bg-light p-4 rounded scrollable-container">
+
             <div class="row mb-4">
                 <div class="col-md-12 text-center">
                     <div class="profile-picture-container">
@@ -421,6 +433,14 @@
                         <button type="submit" class="btn btn-custom btn-primary-custom">Add</button>
                         <button type="button" class="btn btn-custom btn-secondary-custom">Cancel</button>
                     </div>
+                    <script>
+                        // Check if URL has a success parameter
+                        if (window.location.search.includes('success=1')) {
+                            alert('Record added successfully!');
+                            // Optionally, you can scroll to the top or perform other actions
+                            window.scrollTo(0, 0);
+                        }
+                    </script>
                 </div>
             </form>
         </div>
