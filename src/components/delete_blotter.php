@@ -1,5 +1,5 @@
 <?php
-include('../src/configs/connection.php'); // Ensure correct database connections are included
+include('../configs/connection.php'); // Ensure correct database connections are included
 
 if (isset($_POST['blotterId'])) {
     $blotterId = $_POST['blotterId'];
@@ -8,8 +8,8 @@ if (isset($_POST['blotterId'])) {
     error_log("Blotter ID received: $blotterId");
 
     // Move record to the archive database
-    $moveToArchiveQuery = "INSERT INTO archive.archive_blotter (blotter_id, type_incident, blotter_status, dt_reported, dt_incident, place_incident)
-                           SELECT blotter_id, type_incident, blotter_status, dt_reported, dt_incident, place_incident 
+    $moveToArchiveQuery = "INSERT INTO archive.archive_blotter (blotter_id, type_incident, blotter_status, dt_reported, dt_incident, place_incident, name_complainant, name_accused,user_in_charge, narrative)
+                           SELECT blotter_id, type_incident, blotter_status, dt_reported, dt_incident, place_incident, name_complainant, name_accused,user_in_charge, narrative
                            FROM blotter_records.blotter WHERE blotter_id = ?";
     
     $stmtMove = $mysqlConn4->prepare($moveToArchiveQuery);

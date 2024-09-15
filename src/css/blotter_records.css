@@ -93,6 +93,18 @@
             border-color: #610000;
             color: #610000; /* Optional: Change text color */
         }
+
+        #markDoneBtn {
+            background-color: #1c2455;
+            border-color: #1c2455;
+            color: #ffffff; /* Optional: Change text color */
+        }
+        
+        #markDoneBtn:hover {
+            background-color: white;
+            border-color: #1c2455;
+            color: #1c2455; /* Optional: Change text color */
+        }
         
         .btn-secondary {
             background-color: #6c757d;

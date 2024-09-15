@@ -72,13 +72,19 @@ include("../src/configs/connection.php"); // Include your database connection
                             $start_from = ($page - 1) * $limit;
 
                             // Fetch data from the database
-                            $query = "SELECT * FROM blotter LIMIT $start_from, $limit";
+                            $query = "SELECT blotter_id, type_incident, blotter_status, dt_reported, dt_incident, place_incident, name_complainant, name_accused, user_in_charge, narrative 
+                                    FROM blotter 
+                                    LIMIT $start_from, $limit";
                             $result = $mysqlConn2->query($query);
 
                             // Loop through the records
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
-                                    echo "<tr data-id='{$row['blotter_id']}'>
+                                    echo "<tr data-id='{$row['blotter_id']}' 
+                                                data-name-complainant='{$row['name_complainant']}' 
+                                                data-name-accused='{$row['name_accused']}' 
+                                                data-user-in-charge='{$row['user_in_charge']}' 
+                                                data-narrative='{$row['narrative']}'>
                                         <td>{$row['blotter_id']}</td>
                                         <td>{$row['type_incident']}</td>
                                         <td>{$row['blotter_status']}</td>
@@ -87,8 +93,6 @@ include("../src/configs/connection.php"); // Include your database connection
                                         <td>{$row['place_incident']}</td>
                                     </tr>";
                                 }
-                            } else {
-                                echo "<tr><td colspan='6'>No records found.</td></tr>";
                             }
                             ?>
                         </tbody>
@@ -137,49 +141,76 @@ include("../src/configs/connection.php"); // Include your database connection
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="viewModalLabel">Blotter Record Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="modalForm">
-                        <div class="mb-3">
-                            <label for="blotterId" class="form-label">BlotterID</label>
-                            <input type="text" class="form-control" id="blotterId" readonly>
+<!-- Modal -->
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewModalLabel">Blotter Record Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="modalForm">
+                    <div class="row">
+                        <!-- Left side: Basic Information -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="blotterId" class="form-label">BlotterID</label>
+                                <input type="text" class="form-control" id="blotterId" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="typeIncident" class="form-label">Type of Incident</label>
+                                <input type="text" class="form-control" id="typeIncident" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="blotterStatus" class="form-label">Blotter Status</label>
+                                <input type="text" class="form-control" id="blotterStatus" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dtReported" class="form-label">Date & Time Reported</label>
+                                <input type="text" class="form-control" id="dtReported" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="dtIncident" class="form-label">Date & Time of Incident</label>
+                                <input type="text" class="form-control" id="dtIncident" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="placeIncident" class="form-label">Place of Incident</label>
+                                <input type="text" class="form-control" id="placeIncident" readonly>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="typeIncident" class="form-label">Type of Incident</label>
-                            <input type="text" class="form-control" id="typeIncident" readonly>
+
+                        <!-- Right side: Additional Information -->
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="nameComplainant" class="form-label">Name of Complainant</label>
+                                <input type="text" class="form-control" id="nameComplainant" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nameAccused" class="form-label">Name of Accused</label>
+                                <input type="text" class="form-control" id="nameAccused" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="userInCharge" class="form-label">Name of the Statement Writer</label>
+                                <input type="text" class="form-control" id="userInCharge" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label for="narrative" class="form-label">Narrative</label>
+                                <textarea class="form-control" id="narrative" rows="4" readonly></textarea>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="blotterStatus" class="form-label">Blotter Status</label>
-                            <input type="text" class="form-control" id="blotterStatus" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="dtReported" class="form-label">Date & Time Reported</label>
-                            <input type="text" class="form-control" id="dtReported" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="dtIncident" class="form-label">Date & Time of Incident</label>
-                            <input type="text" class="form-control" id="dtIncident" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="placeIncident" class="form-label">Place of Incident</label>
-                            <input type="text" class="form-control" id="placeIncident" readonly>
-                        </div>
-                        <div class="mb-3 text-end">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Exit</button>
-                            <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="mb-3 text-end">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Exit</button>
+                        <button type="button" class="btn btn-success" id="markDoneBtn" style="display: none;">Mark as Done</button>
+                        <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
+
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -197,6 +228,20 @@ include("../src/configs/connection.php"); // Include your database connection
                 $('#dtReported').val(row.find('td').eq(3).text());
                 $('#dtIncident').val(row.find('td').eq(4).text());
                 $('#placeIncident').val(row.find('td').eq(5).text());
+
+                // Assuming columns 6 to 9 are now used for the new fields in the table
+                $('#nameComplainant').val(row.data('name-complainant'));
+                $('#nameAccused').val(row.data('name-accused'));
+                $('#userInCharge').val(row.data('user-in-charge'));
+                $('#narrative').val(row.data('narrative'));
+
+                // Show or hide "Mark as Done" button based on status
+                if ($('#blotterStatus').val() === 'Pending') {
+                    $('#markDoneBtn').show();
+                } else {
+                    $('#markDoneBtn').hide();
+                }
+
                 $('#viewModal').modal('show');
             }
 
@@ -205,18 +250,42 @@ include("../src/configs/connection.php"); // Include your database connection
                 openModal($(this));
             });
 
-            // Attach click event to the Delete button in the modal
+            // Mark as Done button click event
+            $('#markDoneBtn').on('click', function() {
+                let blotterId = $('#blotterId').val();
+
+                $.ajax({
+                    url: '../src/components/update_blotter_status.php', // Path to your PHP script
+                    method: 'POST',
+                    data: { blotterId: blotterId, status: 'Done' },
+                    success: function(response) {
+                        if (response.trim() === 'Status updated successfully.') {
+                            selectedRow.find('td').eq(2).text('Done'); // Update status in the table
+                            $('#blotterStatus').val('Done'); // Update status in the modal
+                            $('#markDoneBtn').hide(); // Hide the button after marking as done
+                            alert('Blotter record marked as done.');
+                        } else {
+                            alert('Failed to update status.');
+                        }
+                        $('#viewModal').modal('hide');
+                    },
+                    error: function(xhr, status, error) {
+                        alert('An error occurred: ' + error);
+                    }
+                });
+            });
+
+            // Delete button click event
             $('#deleteBtn').on('click', function() {
                 let blotterId = $('#blotterId').val();
 
                 $.ajax({
-                    url: '../pages/delete_blotter.php', // Path to your PHP script
+                    url: '../src/components/delete_blotter.php', // Path to your PHP script
                     method: 'POST',
                     data: { blotterId: blotterId },
                     success: function(response) {
                         if (response.trim() === 'Record successfully moved and deleted.') {
-                            // Remove the row from the table
-                            selectedRow.remove();
+                            selectedRow.remove(); // Remove the row from the table
                             alert('Record successfully moved to archive.');
                         } else {
                             alert('Failed to move record to archive.');
@@ -229,8 +298,9 @@ include("../src/configs/connection.php"); // Include your database connection
                 });
             });
         });
-
     </script>
+
+
 </body>
 
 </html>
