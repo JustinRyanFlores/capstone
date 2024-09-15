@@ -35,7 +35,7 @@ $mysqlDbname3 = "user";
 $mysqlConn3 = new mysqli($mysqlServername3, $mysqlUsername3, $mysqlPassword3, $mysqlDbname3);
 if ($mysqlConn3->connect_error) {
     die("MySQL Connection 3 failed: " . $mysqlConn3->connect_error);
-}git p
+}
 
 // Fourth MySQL Connection (if needed)
 $mysqlServername4 = "localhost";
