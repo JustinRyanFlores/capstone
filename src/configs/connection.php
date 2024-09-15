@@ -5,7 +5,7 @@
 $mysqlServername = "localhost";
 $mysqlUsername = "root";
 $mysqlPassword = "";
-$mysqlDbname = "resident_db";
+$mysqlDbname = "residents_db";
 
 // Create MySQL connection
 $mysqlConn = new mysqli($mysqlServername, $mysqlUsername, $mysqlPassword, $mysqlDbname);
@@ -35,14 +35,7 @@ $mysqlDbname3 = "user";
 $mysqlConn3 = new mysqli($mysqlServername3, $mysqlUsername3, $mysqlPassword3, $mysqlDbname3);
 if ($mysqlConn3->connect_error) {
     die("MySQL Connection 3 failed: " . $mysqlConn3->connect_error);
-}
-
-// Create Fourth MySQL connection
-$mysqlConn3 = new mysqli($mysqlServername4, $mysqlUsername4, $mysqlPassword4, $mysqlDbname4);
-if ($mysqlConn4->connect_error) {
-    die("MySQL Connection 4 failed: " . $mysqlConn4->connect_error);
-}
-
+}git p
 
 // Fourth MySQL Connection (if needed)
 $mysqlServername4 = "localhost";

@@ -2,7 +2,7 @@
 
   include("../src/configs/connection.php");
 
-  $sql = "SELECT COUNT(*) AS total_population FROM resident";
+  $sql = "SELECT COUNT(*) AS total_population FROM residents_records";
   $result = $mysqlConn->query($sql);
 
   $sql = "SELECT COUNT(*) AS total_unsettled_cases FROM blotter WHERE blotter_status='Pending'";
