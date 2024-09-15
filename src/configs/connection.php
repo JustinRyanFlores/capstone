@@ -36,4 +36,18 @@ $mysqlConn3 = new mysqli($mysqlServername3, $mysqlUsername3, $mysqlPassword3, $m
 if ($mysqlConn3->connect_error) {
     die("MySQL Connection 3 failed: " . $mysqlConn3->connect_error);
 }
+
+// Fourth MySQL Connection (if needed)
+$mysqlServername4 = "localhost";
+$mysqlUsername4 = "root";
+$mysqlPassword4 = "";
+$mysqlDbname4 = "archive";
+
+// Create fourth MySQL connection
+$mysqlConn4 = new mysqli($mysqlServername4, $mysqlUsername4, $mysqlPassword4, $mysqlDbname4);
+if ($mysqlConn4->connect_error) {
+    die("MySQL Connection 4 failed: " . $mysqlConn4->connect_error);
+}
 ?>
+
+
