@@ -75,32 +75,46 @@
             color: white;
         }
 
-        .btn-view {
-            background-color: #1c2455;
-            border-color: #1c2455;
-            color: white;
-        }
-
-        .btn-delete {
-            background-color: #880808;
-            border-color: #880808;
-            color: white;
-        }
-
         /* Button hover effects */
         .btn-new-blotter:hover {
-            background-color: #026a39; /* Change hover color here */
-            color: white;
+            background-color: white; /* Change hover color here */
+            border-color: #08522e;
+            color: #08522e;
         }
 
-        .btn-view:hover {
-            background-color: #2b3472; /* Change hover color here */
-            color: white;
+        #deleteBtn {
+            background-color: #610000;
+            border-color: #610000;
+            color: #ffffff; /* Optional: Change text color */
+        }
+        
+        #deleteBtn:hover {
+            background-color: white;
+            border-color: #610000;
+            color: #610000; /* Optional: Change text color */
         }
 
-        .btn-delete:hover {
-            background-color: #b22222; /* Change hover color here */
-            color: white;
+        #markDoneBtn {
+            background-color: #1c2455;
+            border-color: #1c2455;
+            color: #ffffff; /* Optional: Change text color */
+        }
+        
+        #markDoneBtn:hover {
+            background-color: white;
+            border-color: #1c2455;
+            color: #1c2455; /* Optional: Change text color */
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #5a6268;
+            color: #ffffff; /* Optional: Change text color */
+        }
+        .btn-secondary:hover {
+            background-color: white;
+            border-color: #4e555b;
+            color: #4e555b;
         }
 
         /* Pagination active button color */
