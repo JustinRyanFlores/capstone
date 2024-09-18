@@ -1,5 +1,5 @@
         /* Table container */
-        .blotter-table-container {
+        .user-table-container {
             background-color: #fff;
             border-radius: 8px;
             padding: 20px;
@@ -69,14 +69,14 @@
         }
 
         /* Custom button colors for "New Blotter", "View", and "Delete" */
-        .btn-new-blotter {
+        .btn-new-user {
             background-color: #013220;
             border-color: #013220;
             color: white;
         }
 
         /* Button hover effects */
-        .btn-new-blotter:hover {
+        .btn-new-user:hover {
             background-color: white; /* Change hover color here */
             border-color: #08522e;
             color: #08522e;
@@ -106,6 +106,18 @@
             color: #1c2455; /* Optional: Change text color */
         }
         
+        .btn-primary {
+            background-color: #1c2455;
+            border-color: #1c2455;
+            color: #ffffff; /* Optional: Change text color */
+        }
+        
+        .btn-primary:hover {
+            background-color: white;
+            border-color: #1c2455;
+            color: #1c2455; /* Optional: Change text color */
+        }
+
         .btn-secondary {
             background-color: #6c757d;
             border-color: #5a6268;
