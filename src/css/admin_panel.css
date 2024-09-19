@@ -93,18 +93,6 @@
             border-color: #610000;
             color: #610000; /* Optional: Change text color */
         }
-
-        #markDoneBtn {
-            background-color: #1c2455;
-            border-color: #1c2455;
-            color: #ffffff; /* Optional: Change text color */
-        }
-        
-        #markDoneBtn:hover {
-            background-color: white;
-            border-color: #1c2455;
-            color: #1c2455; /* Optional: Change text color */
-        }
         
         .btn-primary {
             background-color: #1c2455;
@@ -146,33 +134,6 @@
             color: #1c2455;
         }
 
-
-        /* modal_buttons.css */
-        /* Ensure these styles are specific and use !important if necessary */
-
-        .text-end #exitModalBlotter {
-            background-color: #1c2455 !important; /* Custom background color */
-            border-color: #1c2455 !important;     /* Custom border color */
-            color: #ffffff !important;             /* Custom text color */
-        }
-
-        .text-end #exitModalBlotter:hover {
-            background-color: #ffffff !important; /* Hover background color */
-            border-color: #1c2455 !important;     /* Hover border color */
-            color: #1c2455 !important;             /* Hover text color */
-        }
-
-        .text-end #addModalBlotter {
-            background-color: #6c757d;             /* Custom background color */
-            border-color: #5a6268;                 /* Custom border color */
-            color: #ffffff;                        /* Custom text color */
-        }
-
-        .text-end #addModalBlotter:hover {
-            background-color: #ffffff;             /* Hover background color */
-            border-color: #5a6268;                 /* Hover border color */
-            color: #5a6268;                        /* Hover text color */
-        }
         /* Responsive adjustments */
         @media (max-width: 767.98px) {
             .action-buttons {

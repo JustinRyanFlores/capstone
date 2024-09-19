@@ -17,31 +17,6 @@ include("../src/configs/connection.php"); // Include your database connection
     <link rel="stylesheet" href="/capstone/src/css/admin_panel.css" />
     <?php include '/xampp/htdocs/capstone/src/components/header.php'; ?>
 </head>
-<style>
-    .text-end #exitModalUser {
-        background-color: #1c2455 ; 
-        border-color: #1c2455;     
-        color: #ffffff;             
-    }
-
-    .text-end #exitModalUser:hover {
-        background-color: #ffffff; 
-        border-color: #1c2455;    
-        color: #1c2455;          
-    }
-
-    .text-end #addModalUser {
-        background-color: #6c757d;          
-        border-color: #5a6268;
-        color: #ffffff;
-    }
-
-    .text-end #addModalUser:hover {
-        background-color: #ffffff;
-        border-color: #5a6268; 
-        color: #5a6268; 
-    }
-</style>
 <body>
     <?php include '/xampp/htdocs/capstone/src/components/moderator_navbar.php'; ?>
     <div class="container-fluid main-content">
@@ -272,8 +247,9 @@ include("../src/configs/connection.php"); // Include your database connection
                         </div>
                     </div>
                     <div class="mb-3 text-end">
-                        <button type="button" class="btn btn-danger" id="exitModalUser" data-bs-dismiss="modal">Exit</button>
-                        <button type="button" class="btn btn-primary" id="addModalUser" data-bs-dismiss="modal">Add</button>
+                        <button type="button" class="btn btn-secondary" id="exitModalUser" data-bs-dismiss="modal">Exit</button>
+                        <button type="button" class="btn btn-primary" id="editModalUser">Edit</button>
+                        <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
                     </div>
                 </form>
             </div>
@@ -312,6 +288,31 @@ $(document).ready(function() {
     $('.btn-new-user').on('click', function() {
         $('#addUserModal').modal('show');
     });
+
+// Delete button click event
+$('#deleteBtn').on('click', function() {
+    let userId = $('#userId').val();
+
+    $.ajax({
+        url: '../src/components/delete_user_panel.php', // Path to your PHP script
+        method: 'POST',
+        data: { userId: userId },
+        success: function(response) {
+            console.log(response); // Log the response for debugging
+            if (response.trim() === 'Record successfully moved and deleted.') {
+                $('tr[data-id="' + userId + '"]').remove(); // Remove the row from the table
+                alert('Record successfully moved to archive.');
+            } else {
+                alert('Failed to move record to archive.');
+            }
+            $('#viewModal').modal('hide');
+        },
+        error: function(xhr, status, error) {
+            console.log(xhr.responseText); // Log the server response
+            alert('An error occurred: ' + error);
+        }
+    });
+});
 
     // Handle form submission for adding a user
     $('#addUserForm').on('submit', function(e) {
