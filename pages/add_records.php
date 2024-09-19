@@ -46,17 +46,29 @@ if (isset($_GET['error']) && $_GET['error'] == 'true') {
 
         <!-- Scrollable container -->
         <div class="container-fluid bg-light p-4 rounded scrollable-container">
-
-            <div class="row mb-4">
-                <div class="col-md-12 text-center">
-                    <div class="profile-picture-container">
-                        <img src="/capstone/src/assets/kayanlog-logo.png" class="img-fluid rounded-circle border" alt="Profile Picture">
+            <form action="/capstone/src/components/submit.php" method="POST" enctype="multipart/form-data">
+                <div class="row mb-4">
+                    <div class="col-md-12 text-center">
+                        <div class="profile-picture-container">
+                            <img id="profile-picture" src="/capstone/src/assets/kayanlog-logo.png" class="img-fluid border" alt="Profile Picture">
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <form action="/capstone/src/components/submit.php" method="POST">
-
+                <div class="row mb-4">
+                    <div class="col-md-12 text-center">
+                        <input type="file" name="update_image" accept="image/jpg, image/jpeg, image/png" onchange="previewImage(event)" required>
+                    </div>
+                </div>
+                <script>
+                    function previewImage(event) {
+                        var reader = new FileReader();
+                        reader.onload = function() {
+                            var output = document.getElementById('profile-picture');
+                            output.src = reader.result;
+                        };
+                        reader.readAsDataURL(event.target.files[0]);
+                    }
+                </script>
 
                 <!-- Personal Information -->
                 <div class="row mb-4">
@@ -145,8 +157,6 @@ if (isset($_GET['error']) && $_GET['error'] == 'true') {
                         }
                     });
                 </script>
-
-
                 <!-- Address Information -->
                 <div class="row mb-4">
                     <div class="col-md-12">
@@ -227,11 +237,9 @@ if (isset($_GET['error']) && $_GET['error'] == 'true') {
                                     return [];
                                 });
                         }
-
                         fetchData('data/region.json').then(data => {
                             populateDropdown(regionsSelect, data, 'region_code', 'region_name');
                         });
-
                         regionsSelect.addEventListener('change', function() {
                             console.log('Region changed:', this.value);
                             const selectedRegionCode = this.value;
@@ -250,7 +258,6 @@ if (isset($_GET['error']) && $_GET['error'] == 'true') {
                                 barangaysSelect.innerHTML = '<option value="">Select Barangay</option>';
                             }
                         });
-
                         provincesSelect.addEventListener('change', function() {
                             console.log('Province changed:', this.value);
                             const selectedProvinceCode = this.value;
@@ -267,7 +274,6 @@ if (isset($_GET['error']) && $_GET['error'] == 'true') {
                                 barangaysSelect.innerHTML = '<option value="">Select Barangay</option>';
                             }
                         });
-
                         citiesSelect.addEventListener('change', function() {
                             console.log('City changed:', this.value);
                             const selectedCityCode = this.value;
@@ -284,9 +290,6 @@ if (isset($_GET['error']) && $_GET['error'] == 'true') {
                         });
                     });
                 </script>
-
-
-
                 <!-- Family Information -->
                 <div class="row mb-4">
                     <div class="col-md-12">
@@ -321,7 +324,6 @@ if (isset($_GET['error']) && $_GET['error'] == 'true') {
                         </div>
                     </div>
                 </div>
-
                 <!-- Educational Information -->
                 <div class="row mb-4">
                     <div class="col-md-12">
@@ -356,7 +358,6 @@ if (isset($_GET['error']) && $_GET['error'] == 'true') {
                         </div>
                     </div>
                 </div>
-
                 <!-- Health Information -->
                 <div class="row mb-4">
                     <div class="col-md-12">

@@ -1,77 +1,76 @@
 body,
 html {
-    height: 100%;
+  height: 100%;
 }
 
 .main-content {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: #f8f9fa;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
 }
 
 .content-row {
-    flex-grow: 1;
-    overflow: hidden; 
+  flex-grow: 1;
+  overflow: hidden;
 }
 
 .scrollable-container1 {
-    max-height: 87vh;
-    overflow-y: auto;
+  max-height: 87vh;
+  overflow-y: auto;
 }
 
 .scrollable-container2 {
-    max-height: 80vh;
-    overflow-y: auto;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 h5,
 h6 {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .search-header {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #495057;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #495057;
 }
 .details-header {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #495057;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #495057;
 }
 
 .search-bar {
-    border-radius: 25px;
-    padding: 10px 15px;
+  border-radius: 25px;
+  padding: 10px 15px;
 }
 
 .list-group-item {
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .list-group-item:hover {
-    background-color: #f1f3f5;
-    border-left: 4px solid #007bff;
+  background-color: #f1f3f5;
+  border-left: 4px solid #09090a;
 }
 
 .right-column {
-    max-height: 100vh; /* Set a maximum height */
-    overflow-y: auto; /* Enable vertical scrolling */
+  max-height: 100vh; /* Set a maximum height */
+  overflow-y: auto; /* Enable vertical scrolling */
 }
 
 .resident-details-card {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    height: 100%; /* Ensure the card occupies the entire height */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  overflow-y: auto;
 }
 
-
 .spinner-border {
-    width: 3rem;
-    height: 3rem;
+  width: 3rem;
+  height: 3rem;
 }

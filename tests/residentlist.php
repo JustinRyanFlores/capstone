@@ -1,118 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+// Database connection
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "residents_db";
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>My Web Application</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
-    <link rel="stylesheet" href="/capstone/src/css/header.css" />
-    <?php include '/xampp/htdocs/capstone/src/components/header.php'; ?>
-    <style>
-        body,
-        html {
-            height: 100%;
-        }
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-        .main-content {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
-        .content-row {
-            flex-grow: 1;
-        }
-    </style>
-</head>
+// Collect and sanitize form data
+$firstName = htmlspecialchars($_POST['firstName'] ?? '');
+$middleName = htmlspecialchars($_POST['middleName'] ?? '');
+$lastName = htmlspecialchars($_POST['lastName'] ?? '');
+$dobDay = htmlspecialchars($_POST['dobDay'] ?? '');
+$dobMonth = htmlspecialchars($_POST['dobMonth'] ?? '');
+$dobYear = htmlspecialchars($_POST['dobYear'] ?? '');
+$dob = "$dobYear-$dobMonth-$dobDay"; // Format the date as YYYY-MM-DD
+$age = htmlspecialchars($_POST['age'] ?? '');
+$gender = htmlspecialchars($_POST['gender'] ?? '');
+$contactNumber = htmlspecialchars($_POST['contactNumber'] ?? '');
+$streetAddress = htmlspecialchars($_POST['streetAddress'] ?? '');
+$houseNumber = htmlspecialchars($_POST['houseNumber'] ?? '');
+$subdivision = htmlspecialchars($_POST['subdivision'] ?? '');
+$barangay = htmlspecialchars($_POST['barangay'] ?? '');
+$city = htmlspecialchars($_POST['city'] ?? '');
+$province = htmlspecialchars($_POST['province'] ?? '');
+$region = htmlspecialchars($_POST['region'] ?? '');
+$zipCode = htmlspecialchars($_POST['zipCode'] ?? '');
+$motherFirstName = htmlspecialchars($_POST['motherFirstName'] ?? '');
+$motherMiddleName = htmlspecialchars($_POST['motherMiddleName'] ?? '');
+$motherLastName = htmlspecialchars($_POST['motherLastName'] ?? '');
+$fatherFirstName = htmlspecialchars($_POST['fatherFirstName'] ?? '');
+$fatherMiddleName = htmlspecialchars($_POST['fatherMiddleName'] ?? '');
+$fatherLastName = htmlspecialchars($_POST['fatherLastName'] ?? '');
+$educationalAttainment = htmlspecialchars($_POST['educationalAttainment'] ?? '');
+$currentSchool = htmlspecialchars($_POST['currentSchool'] ?? '');
+$illness = htmlspecialchars($_POST['illness'] ?? '');
+$medication = htmlspecialchars($_POST['medication'] ?? '');
+$disability = htmlspecialchars($_POST['disability'] ?? '');
+$teenPregnancy = isset($_POST['teenAgePregnancy']) ? 1 : 0;
+$typeOfDelivery = htmlspecialchars($_POST['typeOfDelivery'] ?? '');
+$organization = htmlspecialchars($_POST['organization'] ?? '');
+$casesViolated = htmlspecialchars($_POST['casesViolated'] ?? '');
+$yearsOfStay = htmlspecialchars($_POST['yearsOfStay'] ?? '');
+$businessOwner = isset($_POST['businessOwner']) ? 1 : 0;
 
+// Handle file upload
+$imagePath = '';
+if (isset($_FILES['update_image']) && $_FILES['update_image']['error'] == 0) {
+    $update_image = $_FILES['update_image']['name'];
+    $update_image_size = $_FILES['update_image']['size'];
+    $update_image_tmp_name = $_FILES['update_image']['tmp_name'];
 
-<body>
-    <?php include '/xampp/htdocs/capstone/src/components/moderator_navbar.php'; ?>
-    <div class="container-fluid main-content">
-        <div class="row">
-            <div class="h3 col-sm-6 col-md-6 text-start h5-sm">
-                Resident List
-                <div class="h6" style="font-style: italic; color: grey">
-                    Resident List
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-6 d-flex justify-content-sm-between justify-content-md-end">
-                <div>
-                    <?php displayDateTime(); ?>
-                </div>
-            </div>
-        </div>
-        <!-- Two Column Layout for selecting and displaying data -->
-        <div class="container-fluid content-row d-flex">
-            <div class="row flex-fill">
-                <div class="col-sm-6 border p-3 d-flex flex-column" style="background-color: #f7f7f7; border-right: 1px solid #ddd; height: 100%;">
-                    <!-- Left column with border -->
-                    <h5>Resident's Records Search</h5>
-                    <input type="text" class="form-control mb-3" placeholder="Type Here to Search...">
-                    <ul class="list-group flex-grow-1">
-                        <div class="list-group" id="resident-list">
-                            <?php
-                            $conn = new mysqli("localhost", "root", "", "residents_db");
-                            if ($conn->connect_error) {
-                                die("Connection failed: " . $conn->connect_error);
-                            }
-                            $query = "SELECT id, first_name, last_name FROM residents_records";
-                            $result = $conn->query($query);
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    echo '<li class="list-group-item list-group-item-action" onclick="fetchResidentDetails(' . $row['id'] . ')">' . $row['first_name'] . ' ' . $row['last_name'] . '</li>';
-                                }
-                            } else {
-                                echo "<li class='list-group-item'>No residents found</li>";
-                            }
-                            $conn->close();
-                            ?>
-                        </div>
-                    </ul>
-                </div>
-                <div class="col-sm-6 border p-3 d-flex flex-column" style="height: 100%;">
-                    <!-- Right column with border -->
-                    <h5>Resident Details</h5>
-                    <div class="card flex-grow-1">
-                        <dclass="card-body">
-                            <div id="resident-details">
-                                ????
-                                <!-- Details will be loaded here using AJAX -->
-                            </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    // Validate file size (e.g., max 2MB)
+    if ($update_image_size > 2 * 1024 * 1024) {
+        die("Error: File size is too large.");
+    }
 
+    // Validate file type (e.g., only jpg, jpeg, png)
+    $allowed_types = ['jpg', 'jpeg', 'png'];
+    $file_ext = strtolower(pathinfo($update_image, PATHINFO_EXTENSION));
+    if (!in_array($file_ext, $allowed_types)) {
+        die("Error: Invalid file type.");
+    }
 
+    // Move the uploaded file
+    $imagePath = '../../src/assets/resident_img/' . basename($update_image);
+    if (!move_uploaded_file($update_image_tmp_name, $imagePath)) {
+        die("Error: Failed to upload image.");
+    }
+}
 
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+// Prepare and bind
+$sql = "INSERT INTO residents_records (first_name, middle_name, last_name, dob, age, gender, contact_number, 
+        street_address, house_number, subdivision, barangay, city, province, region, zip_code, 
+        mother_first_name, mother_middle_name, mother_last_name, father_first_name, father_middle_name, father_last_name, 
+        educational_attainment, current_school, illness, medication, disability, teen_pregnancy, type_of_delivery, 
+        organization, cases_violated, years_of_stay, business_owner, image_path) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+$stmt = $conn->prepare($sql);
 
-    <script>
-        function fetchResidentDetails(residentId) {
-            $.ajax({
-                url: "/capstone/src/components/getResidentDetails.php",
-                type: "POST",
-                data: {
-                    id: residentId
-                },
-                success: function(data) {
-                    $("#resident-details").html(data);
-                },
-                error: function() {
-                    $("#resident-details").html("Unable to retrieve data.");
-                }
-            });
-        }
-    </script>
-</body>
+// Bind parameters
+$stmt->bind_param("ssssisssssssssssssssssssss", 
+    $firstName, $middleName, $lastName, $dob, $age, $gender, $contactNumber, 
+    $streetAddress, $houseNumber, $subdivision, $barangay, $city, $province, $region, $zipCode, 
+    $motherFirstName, $motherMiddleName, $motherLastName, $fatherFirstName, $fatherMiddleName, $fatherLastName, 
+    $educationalAttainment, $currentSchool, $illness, $medication, $disability, $teenPregnancy, $typeOfDelivery, 
+    $organization, $casesViolated, $yearsOfStay, $businessOwner, $imagePath);
 
-</html>
+// Execute the statement
+if ($stmt->execute()) {
+    // Redirect to add_records.php with a success message
+    header("Location: ../../pages/add_records.php?success=true");
+} else {
+    // Redirect to add_records.php with an error message
+    header("Location: ../../pages/add_records.php?error=true");
+}
+
+// Close the statement and connection
+$stmt->close();
+$conn->close();
+?>
