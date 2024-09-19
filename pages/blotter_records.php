@@ -17,7 +17,31 @@ include("../src/configs/connection.php"); // Include your database connection
     <link rel="stylesheet" href="/capstone/src/css/blotter_records.css" />
     <?php include '/xampp/htdocs/capstone/src/components/header.php'; ?>
 </head>
+<style>
+    .text-end #exitModalBlotter {
+        background-color: #1c2455 ; 
+        border-color: #1c2455;     
+        color: #ffffff;             
+    }
 
+    .text-end #exitModalBlotter:hover {
+        background-color: #ffffff; 
+        border-color: #1c2455;    
+        color: #1c2455;          
+    }
+
+    .text-end #addModalBlotter {
+        background-color: #6c757d;          
+        border-color: #5a6268;
+        color: #ffffff;
+    }
+
+    .text-end #addModalBlotter:hover {
+        background-color: #ffffff;
+        border-color: #5a6268; 
+        color: #5a6268; 
+    }
+</style>
 <body>
     <?php include '/xampp/htdocs/capstone/src/components/moderator_navbar.php'; ?>
     <div class="container-fluid main-content">
@@ -40,8 +64,9 @@ include("../src/configs/connection.php"); // Include your database connection
             <div class="col-md-12">
                 <input type="text" class="form-control" placeholder="Type Here to Search..." style="max-width: 300px;" />
                 <div class="action-buttons d-flex mt-3">
-                    <button class="btn btn-new-blotter">New Blotter</button>
+                    <button class="btn btn-new-blotter" data-bs-toggle="modal" data-bs-target="#addBlotterModal">New Blotter</button>
                 </div>
+
             </div>
         </div>
 
@@ -211,6 +236,64 @@ include("../src/configs/connection.php"); // Include your database connection
     </div>
 </div>
 
+<!-- Add Blotter Modal -->
+<div class="modal fade" id="addBlotterModal" tabindex="-1" aria-labelledby="addBlotterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addBlotterModalLabel">Add New Blotter</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addBlotterForm">
+                    <div class="mb-3">
+                        <label for="typeIncident" class="form-label">Type of Incident</label>
+                        <input type="text" class="form-control" id="typeIncident" name="typeIncident" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="blotterStatus" class="form-label">Blotter Status</label>
+                        <select class="form-control" id="blotterStatus" name="blotterStatus" required>
+                            <option value="Pending">Pending</option>
+                            <option value="Done">Done</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dtReported" class="form-label">Date & Time Reported</label>
+                        <input type="datetime-local" class="form-control" id="dtReported" name="dtReported" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dtIncident" class="form-label">Date & Time of Incident</label>
+                        <input type="datetime-local" class="form-control" id="dtIncident" name="dtIncident" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="placeIncident" class="form-label">Place of Incident</label>
+                        <input type="text" class="form-control" id="placeIncident" name="placeIncident" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nameComplainant" class="form-label">Name of Complainant</label>
+                        <input type="text" class="form-control" id="nameComplainant" name="nameComplainant" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nameAccused" class="form-label">Name of Accused</label>
+                        <input type="text" class="form-control" id="nameAccused" name="nameAccused" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userInCharge" class="form-label">Name of the Statement Writer</label>
+                        <input type="text" class="form-control" id="userInCharge" name="userInCharge" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="narrative" class="form-label">Narrative</label>
+                        <textarea class="form-control" id="narrative" name="narrative" rows="4" required></textarea>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-custom-exit" id="addModalBlotter" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-custom-add" id="exitModalBlotter">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -297,7 +380,34 @@ include("../src/configs/connection.php"); // Include your database connection
                     }
                 });
             });
+
+            // Show the "Add New Blotter" modal
+            $('.btn-new-blotter').on('click', function() {
+                $('#addBlotterModal').modal('show');
+            });
+
+            // Handle form submission
+            $('#addBlotterForm').on('submit', function(e) {
+                e.preventDefault(); // Prevent the default form submission
+
+                $.ajax({
+                    url: '../src/components/add_blotter.php', // Adjust path as needed
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        alert(response); // Show success message
+                        $('#addBlotterModal').modal('hide'); // Hide the modal
+                        // Optionally, you can refresh the table or page here
+                    },
+                    error: function(xhr, status, error) {
+                        alert('An error occurred: ' + error);
+                    }
+                });
+            });
+
         });
+
+
     </script>
 
 

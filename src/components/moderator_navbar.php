@@ -41,7 +41,7 @@
             <a class="nav-link" href="#"><i class="fas fa-question-circle me-2"></i> F.A.Q.s</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fas fa-sign-out-alt me-2"></i> Sign out</a>
+            <a class="nav-link" href="/capstone/website/login/login.php"><i class="fas fa-sign-out-alt me-2"></i> Sign out</a>
         </li>
     </ul>
 </div>
@@ -79,7 +79,7 @@
                 <a class="nav-link" href="#" style="padding-left: 15px;"><i class="fas fa-question-circle me-2"></i> F.A.Q.s</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" style="padding-left: 15px;"><i class="fas fa-sign-out-alt me-2"></i> Sign out</a>
+                <a class="nav-link" href="/capstone/website/login/login.php" style="padding-left: 15px;"><i class="fas fa-sign-out-alt me-2"></i> Sign out</a>
             </li>
         </ul>
     </div>

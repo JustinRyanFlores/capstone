@@ -1,80 +1,56 @@
-<?php
-// Start the session
-session_start();
-
-// Database connection settings
-$servername = "localhost";
-$dbname = "accounts";
-$username = "root"; // Change if you have a different username
-$password = ""; // Change if you have a password
-
-try {
-    // Create connection
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    // Set the PDO error mode to exception
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // Check if the form is submitted
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $user = $_POST['username'];
-        $pass = $_POST['password'];
-
-        // Prepare the SQL statement
-        $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
-        $stmt->bindParam(':username', $user);
-        $stmt->execute();
-
-        // Fetch the result
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Verify the password
-        if ($result && password_verify($pass, $result['password'])) {
-            // Password is correct
-            $_SESSION['username'] = $user;
-            $_SESSION['usertype'] = $result['usertype']; // Store usertype in session
-
-            // Redirect based on usertype
-            if ($result['usertype'] == 'admin') {
-                header("Location: admin_page.php");
-            } elseif ($result['usertype'] == 'moderator') {
-                header("Location: moderator_page.php");
-            } else {
-                // Default action if usertype is not recognized
-                header("Location: user_page.php");
-            }
-            exit(); // Ensure script termination after redirect
-        } else {
-            // Invalid credentials
-            echo "Invalid username or password.";
-        }
-    }
-} catch(PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Login</title>
-     <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <h2>Barangay Kay-anlog</h2>
-    <h3>Management Information System</h3>
-    <form action="login.php" method="post">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required /><br /><br />
-      <label for="password">Password:</label>
-      <input
-        type="password"
-        id="password"
-        name="password"
-        required
-      /><br /><br />
-      <input type="submit" value="Log in" />
-    </form>
-  </body>
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="/capstone/src/css/login.css"> <!-- Link to the CSS file -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="/capstone/src/assets/kayanlog-logo.png" alt="Barangay Logo">
+        </div>
+        <div class="title-container">
+            <h2>Barangay Kay-Anlog</h2>
+            <h3>Management Information System</h3>
+        </div>
+    </div>
+    </div>
+        <div class="login-box">
+            <h2>Sign in to your account</h2>
+            <p>Enter your username & password to login</p>
+            <form action="/capstone/src/components/fetch_login.php" method="POST">
+                <div class="input-group">
+                    <input type="text" id="username" name="username" required placeholder="Username">
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" name="password" required placeholder="Password">
+                    <span class="material-symbols-outlined toggle-password" onclick="togglePassword()" id="toggleIcon">visibility_off</span>
+                </div>
+                <button type="submit">Log In</button>
+            </form>
 
+        </div>
+        <footer>
+            <p>&copy; 2024</p>
+        </footer>
+    </div>
+
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById("password");
+            var toggleIcon = document.getElementById("toggleIcon");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.textContent = "visibility"; // Change to "visibility" when password is shown
+            } else {
+                passwordField.type = "password";
+                toggleIcon.textContent = "visibility_off"; // Change back to "visibility_off" when password is hidden
+            }
+        }
+    </script>
+</body>
+</html>
