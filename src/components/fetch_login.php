@@ -9,20 +9,16 @@ include('../configs/connection.php');
 $username = trim($_POST['username']);
 $password = trim($_POST['password']);
 
-// Sanitize inputs to prevent SQL injection
-$username = $mysqlConn3->real_escape_string($username);
-
-// Query the `user` table to find matching credentials
-$sql = "SELECT * FROM user WHERE username = '$username'";
-$result = $mysqlConn3->query($sql);
+// Use prepared statements to avoid SQL injection
+$stmt = $mysqlConn3->prepare("SELECT * FROM user WHERE username = ?");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     // Fetch the row
     $row = $result->fetch_assoc();
 
-    // Debugging output
-    echo "Stored Hash: " . htmlspecialchars($row['password']) . "<br>";
-    
     // Verify the password
     if (password_verify($password, $row['password'])) {
         // Store user data in the session
@@ -33,11 +29,15 @@ if ($result->num_rows > 0) {
         header("Location: /capstone/pages/dahsboard.php");
         exit();
     } else {
-        // Invalid password
-        echo "Invalid password!";
+        // Invalid password: Set error message and redirect back to login
+        $_SESSION['error_message'] = "Invalid username or password!";
+        header("Location: /capstone/website/login/login.php");
+        exit();
     }
 } else {
-    // No user found
-    echo "Invalid username!";
+    // No user found: Set error message and redirect back to login
+    $_SESSION['error_message'] = "Invalid username or password!";
+    header("Location: /capstone/website/login/login.php");
+    exit();
 }
 ?>

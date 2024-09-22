@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <link rel="stylesheet" href="/capstone/src/css/login.css"> <!-- Link to the CSS file -->
+    <link rel="stylesheet" href="/capstone/src/css/login.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
@@ -17,26 +17,34 @@
             <h3>Management Information System</h3>
         </div>
     </div>
-    </div>
-        <div class="login-box">
-            <h2>Sign in to your account</h2>
-            <p>Enter your username & password to login</p>
-            <form action="/capstone/src/components/fetch_login.php" method="POST">
-                <div class="input-group">
-                    <input type="text" id="username" name="username" required placeholder="Username">
-                </div>
-                <div class="input-group">
-                    <input type="password" id="password" name="password" required placeholder="Password">
-                    <span class="material-symbols-outlined toggle-password" onclick="togglePassword()" id="toggleIcon">visibility_off</span>
-                </div>
-                <button type="submit">Log In</button>
-            </form>
 
-        </div>
-        <footer>
-            <p>&copy; 2024</p>
-        </footer>
+    <div class="login-box">
+        <h2>Sign in to your account</h2>
+        <p>Enter your username & password to login</p>
+
+        <?php
+        session_start();
+        if (isset($_SESSION['error_message'])) {
+            echo '<p style="color:red;">' . $_SESSION['error_message'] . '</p>';
+            unset($_SESSION['error_message']); // Clear the message after displaying
+        }
+        ?>
+
+        <form action="/capstone/src/components/fetch_login.php" method="POST">
+            <div class="input-group">
+                <input type="text" id="username" name="username" required placeholder="Username">
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" name="password" required placeholder="Password">
+                <span class="material-symbols-outlined toggle-password" onclick="togglePassword()" id="toggleIcon">visibility_off</span>
+            </div>
+            <button type="submit">Log In</button>
+        </form>
     </div>
+
+    <footer>
+        <p>&copy; 2024</p>
+    </footer>
 
     <script>
         function togglePassword() {
