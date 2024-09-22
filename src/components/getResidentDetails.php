@@ -30,7 +30,7 @@ if ($row = $result->fetch_assoc()) {
         <style>
             /* Card Styles */
             .card {
-                width: 80vh;
+                width: 100%;
                 background-color: #fff;
                 border-radius: 8px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -114,7 +114,7 @@ if ($row = $result->fetch_assoc()) {
                 <table class="table table-striped">
                     <tbody>
                         <tr>
-                            <th>Profile Picture</th>
+                            <th>Resident Image</th>
                             <td>
                                 <div class="profile-picture-container">
                                     <?php if ($update_image): ?>
@@ -152,6 +152,14 @@ if ($row = $result->fetch_assoc()) {
                         <tr>
                             <th>Father's Name</th>
                             <td><?php echo htmlspecialchars($row['father_first_name'] . ' ' . $row['father_middle_name'] . ' ' . $row['father_last_name']); ?></td>
+                        </tr>
+                        <tr>
+                            <th>Out Of School Youth</th>
+                            <td><?php echo $row['osy'] ? 'Yes' : 'No'; ?></td>
+                        </tr>
+                        <tr>
+                            <th>Alternative Learning System</th>
+                            <td><?php echo $row['als'] ? 'Yes' : 'No'; ?></td>
                         </tr>
                         <tr>
                             <th>Educational Attainment</th>
@@ -199,8 +207,33 @@ if ($row = $result->fetch_assoc()) {
                         </tr>
                     </tbody>
                 </table>
-            </div>
-        </div>
+                <!-- Action Buttons -->
+                <div class="button-container">
+                    <button class="btn btn-primary" onclick="editResident(<?php echo $residentId; ?>)">Edit</button>
+                    <button class="btn btn-danger" onclick="deleteResident()">Delete</button>
+                    <button class="btn btn-secondary" onclick="cancelAction()">Cancel</button>
+                </div>
+
+                <script>
+                    function editResident(residentId) {
+                        // Redirect to add_records.php with the resident ID as a query parameter
+                        window.location.href = "/capstone/pages/add_records.php?id=" + residentId;
+                    }
+
+                    function deleteResident() {
+                        if (confirm('Are you sure you want to delete this resident?')) {
+                            alert('Delete button clicked. Implement the delete logic here.');
+                        }
+                    }
+
+                    function cancelAction() {
+                        // Logic to cancel the action or clear the form
+                        document.getElementById('resident-details').innerHTML = '<span class="text-muted">Select a resident to view details</span>';
+                        // Optionally hide buttons if needed
+                        $("#action-buttons").addClass('d-none');
+                    }
+                </script>
+
     </body>
 
     </html>
