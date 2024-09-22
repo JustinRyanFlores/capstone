@@ -1,4 +1,12 @@
 <?php
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: /capstone/website/login/login.php");
+    exit();
+}
+
 if (isset($_GET['success']) && $_GET['success'] == 'true') {
     echo "<script>alert('Record added successfully');</script>";
 }

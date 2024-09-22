@@ -41,7 +41,12 @@
             <a class="nav-link" href="#"><i class="fas fa-question-circle me-2"></i> F.A.Q.s</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/capstone/website/login/login.php"><i class="fas fa-sign-out-alt me-2"></i> Sign out</a>
+            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Admin'): ?>
+                <a class="nav-link" href="admin_panel.php"><i class="fas fa-user-cog me-2"></i> Admin Panel</a>
+            <?php endif; ?>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/capstone/website/login/logout.php"><i class="fas fa-sign-out-alt me-2"></i> Sign out</a>
         </li>
     </ul>
 </div>
@@ -76,10 +81,15 @@
                 <a class="nav-link" href="blotter_records.php" style="padding-left: 15px;"><i class="fas fa-book me-2"></i> Blotter Records</a>
             </li>
             <li class="nav-item">
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                    <a class="nav-link" href="admin_panel.php"><i class="fas fa-user-cog me-2"></i> Admin Panel</a>
+                <?php endif; ?>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="#" style="padding-left: 15px;"><i class="fas fa-question-circle me-2"></i> F.A.Q.s</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/capstone/website/login/login.php" style="padding-left: 15px;"><i class="fas fa-sign-out-alt me-2"></i> Sign out</a>
+                <a class="nav-link" href="/capstone/website/login/logout.php" style="padding-left: 15px;"><i class="fas fa-sign-out-alt me-2"></i> Sign out</a>
             </li>
         </ul>
     </div>
