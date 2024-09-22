@@ -42,7 +42,7 @@ if (isset($_GET['id'])) {
     $result = $stmt->get_result();
 
     if ($row = $result->fetch_assoc()) {
-        $residentImage = htmlspecialchars('/capstone/src/assets/' . $row['residents_img']);
+        $residentImage = htmlspecialchars('/capstone/src/assets/' . (!empty($row['residents_img']) ? $row['residents_img'] : 'kayanlog-logo.png'));
         $firstName = htmlspecialchars($row['first_name']);
         $middleName = htmlspecialchars($row['middle_name']);
         $lastName = htmlspecialchars($row['last_name']);
