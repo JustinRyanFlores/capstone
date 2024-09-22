@@ -32,7 +32,7 @@
         <!-- Two Column Layout for selecting and displaying data -->
         <div class="row flex-grow-1">
             <!-- Left Column -->
-            <div class="col-md-6 p-4 scrollable-container1" style="background-color: #f7f7f7; border-right: 1px solid #ddd;">
+            <div class="col-md-5 p-4 scrollable-container1" style="background-color: #f7f7f7; border-right: 1px solid #ddd;">
                 <div class="search-header">Resident's Records Search</div>
                 <input type="text" class="form-control search-bar mb-3" placeholder="Search by name..." aria-label="Search residents">
 
@@ -56,10 +56,10 @@
                 </ul>
             </div>
 
+
             <!-- Right Column -->
-            <!-- Right Column -->
-            <div class="col-md-6 p-4 d-flex flex-column right-column">
-            <div class="details-header">Resident's Records Search</div>
+            <div class="col-md-7 p-4 d-flex flex-column right-column">
+                <div class="details-header">Resident's Records Search</div>
                 <div class="card resident-details-card flex-grow-1 p-3 scrollable-container2">
                     <div id="resident-details" class="d-flex justify-content-center align-items-center">
                         <span class="text-muted">Select a resident to view details</span>
@@ -93,7 +93,22 @@
                 }
             });
         }
+
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const residentId = urlParams.get('residentId');
+
+            if (residentId) {
+                fetchResidentDetails(residentId); // Automatically load details if residentId is in the URL
+            }
+        });
+
+        if (window.location.search.includes('success=updated')) {
+            alert('Record updated successfully!');
+            window.scrollTo(0, 0); // Scroll to top
+        }
     </script>
+
 </body>
 
 </html>

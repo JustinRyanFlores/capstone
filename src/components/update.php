@@ -13,6 +13,13 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Check if resident ID is passed
+if (!isset($_GET['id'])) {
+    die("Error: No resident ID provided.");
+}
+
+$residentId = intval($_GET['id']); // Sanitize the ID
+
 // Sanitize and validate input
 $firstName = htmlspecialchars($_POST['firstName'] ?? '', ENT_QUOTES);
 $middleName = htmlspecialchars($_POST['middleName'] ?? '', ENT_QUOTES);
@@ -53,7 +60,7 @@ $yearsOfStay = htmlspecialchars($_POST['yearsOfStay'] ?? '', ENT_QUOTES);
 $businessOwner = isset($_POST['businessOwner']) ? 1 : 0;
 
 // Handle file upload
-$imagePath = '';
+$imagePath = ''; // Default image path
 if (isset($_FILES['update_image']) && $_FILES['update_image']['error'] == 0) {
     $update_image = $_FILES['update_image']['name'];
     $update_image_size = $_FILES['update_image']['size'];
@@ -78,32 +85,60 @@ if (isset($_FILES['update_image']) && $_FILES['update_image']['error'] == 0) {
     }
 }
 
-// Prepare SQL statement
-$sql = "INSERT INTO residents_records 
-        (first_name, middle_name, last_name, dob, age, gender, contact_number, 
-        street_address, house_number, subdivision, barangay, city, province, region, zip_code, 
-        mother_first_name, mother_middle_name, mother_last_name, father_first_name, father_middle_name, father_last_name, 
-        osy, als, educational_attainment, current_school, illness, medication, disability, 
-        teen_pregnancy, type_of_delivery, organization, cases_violated, years_of_stay, business_owner, residents_img) 
-        VALUES 
-        ('$firstName', '$middleName', '$lastName', '$dob', '$age', '$gender', '$contactNumber', 
-        '$streetAddress', '$houseNumber', '$subdivision', '$barangay', '$city', '$province', '$region', '$zipCode', 
-        '$motherFirstName', '$motherMiddleName', '$motherLastName', '$fatherFirstName', '$fatherMiddleName', '$fatherLastName', 
-        '$osy', '$als', '$educationalAttainment', '$currentSchool', '$illness', '$medication', '$disability', 
-        '$teenPregnancy', '$typeOfDelivery', '$organization', '$casesViolated', '$yearsOfStay', '$businessOwner', '$update_image')";
+// If a new image was uploaded, include it in the SQL query, otherwise skip the image update
+$imageSql = $imagePath ? ", residents_img = '$imagePath'" : "";
 
-// Execute the statement
+// Prepare SQL statement to update resident data
+$sql = "UPDATE residents_records 
+        SET 
+            first_name = '$firstName',
+            middle_name = '$middleName',
+            last_name = '$lastName',
+            dob = '$dob',
+            age = '$age',
+            gender = '$gender',
+            contact_number = '$contactNumber',
+            street_address = '$streetAddress',
+            house_number = '$houseNumber',
+            subdivision = '$subdivision',
+            barangay = '$barangay',
+            city = '$city',
+            province = '$province',
+            region = '$region',
+            zip_code = '$zipCode',
+            mother_first_name = '$motherFirstName',
+            mother_middle_name = '$motherMiddleName',
+            mother_last_name = '$motherLastName',
+            father_first_name = '$fatherFirstName',
+            father_middle_name = '$fatherMiddleName',
+            father_last_name = '$fatherLastName',
+            osy = '$osy',
+            als = '$als',
+            educational_attainment = '$educationalAttainment',
+            current_school = '$currentSchool',
+            illness = '$illness',
+            medication = '$medication',
+            disability = '$disability',
+            teen_pregnancy = '$teenPregnancy',
+            type_of_delivery = '$typeOfDelivery',
+            organization = '$organization',
+            cases_violated = '$casesViolated',
+            years_of_stay = '$yearsOfStay',
+            business_owner = '$businessOwner'
+            $imageSql
+        WHERE id = $residentId";
+
+// Execute the update statement
 if ($conn->query($sql) === TRUE) {
     // Redirect to add_records.php with a success message
-    header("Location: ../../pages/add_records.php?success=true");
+    header("Location: ../../pages/resident_list.php?residentId=$residentId&success=updated");
     exit();
 } else {
-    // Log the error (instead of redirecting)
+    // Log the error
     error_log("SQL error: " . $conn->error);
-    header("Location: ../../pages/add_records.php?error=true");
+    header("Location: ../../pages/resident_list.php?residentId=$residentId&success=updated");
     exit();
 }
 
 // Close the connection
 $conn->close();
-?>
