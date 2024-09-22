@@ -59,24 +59,30 @@ if (isset($_FILES['update_image']) && $_FILES['update_image']['error'] == 0) {
     $update_image_size = $_FILES['update_image']['size'];
     $update_image_tmp_name = $_FILES['update_image']['tmp_name'];
 
-    // Validate file size (max 2MB)
-    if ($update_image_size > 2 * 1024 * 1024) {
-        die("Error: File size is too large.");
+    if ($update_image_size > 10 * 1024 * 1024) {
+        echo "<script>alert('Error: File size is too large.'); window.history.back();</script>";
+        exit();
     }
 
     // Validate file type (only jpg, jpeg, png)
     $allowed_types = ['jpg', 'jpeg', 'png'];
     $file_ext = strtolower(pathinfo($update_image, PATHINFO_EXTENSION));
     if (!in_array($file_ext, $allowed_types) || !getimagesize($update_image_tmp_name)) {
-        die("Error: Invalid file type or not an image.");
+        echo "<script>alert('Error: Invalid file type or not an image.'); window.history.back();</script>";
+        exit();
     }
 
     // Move the uploaded file
     $imagePath = '../../src/assets/' . basename($update_image);
     if (!move_uploaded_file($update_image_tmp_name, $imagePath)) {
-        die("Error: Failed to upload image.");
+        echo "<script>alert('Error: Failed to upload image.'); window.history.back();</script>";
+        exit();
     }
+
+    // If the upload is successful, you can redirect or show a success message
+    echo "<script>alert('Image uploaded successfully!'); window.history.back();</script>";
 }
+
 
 // Prepare SQL statement
 $sql = "INSERT INTO residents_records 
@@ -106,4 +112,3 @@ if ($conn->query($sql) === TRUE) {
 
 // Close the connection
 $conn->close();
-?>
