@@ -24,7 +24,8 @@ if ($result->num_rows > 0) {
         // Store user data in the session
         $_SESSION['user_id'] = $row['user_id'];
         $_SESSION['username'] = $row['username'];
-        
+        $_SESSION['role'] = $row['role']; // Store the user's role
+
         // Redirect to the dashboard or a secure page
         header("Location: /capstone/pages/dahsboard.php");
         exit();

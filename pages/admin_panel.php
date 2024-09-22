@@ -45,11 +45,12 @@ include("../src/configs/connection.php"); // Include your database connection
         <!-- Search and Buttons -->
         <div class="row mt-4 search-bar-container">
             <div class="col-md-12">
-                <input type="text" class="form-control" placeholder="Type Here to Search..." style="max-width: 300px;" />
-                <div class="action-buttons d-flex mt-3">
-                    <button class="btn btn-new-user" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
-                </div>
-
+                <form method="GET" action="admin_panel.php">
+                    <input type="text" class="form-control" name="search" placeholder="Type Here to Search..." style="max-width: 300px;" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" />
+                    <div class="action-buttons d-flex mt-3">
+                        <button type="button" class="btn btn-new-user" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -77,10 +78,27 @@ include("../src/configs/connection.php"); // Include your database connection
                             }
                             $start_from = ($page - 1) * $limit;
 
+                            // Initialize search query
+                            $search_query = "";
+                            if (isset($_GET['search'])) {
+                                $search_query = trim($_GET['search']);
+                            }
+
                             // Fetch data from the database
-                            $query = "SELECT user_id, fname, lname, role, contact_no, address, username, password
-                                    FROM user 
-                                    LIMIT $start_from, $limit";
+                            if (!empty($search_query)) {
+                                $query = "SELECT user_id, fname, lname, role, contact_no, address, username, password 
+                                        FROM user 
+                                        WHERE fname LIKE '%$search_query%' 
+                                        OR lname LIKE '%$search_query%' 
+                                        OR role LIKE '%$search_query%'
+                                        OR contact_no LIKE '%$search_query%' 
+                                        LIMIT $start_from, $limit";
+                            } else {
+                                $query = "SELECT user_id, fname, lname, role, contact_no, address, username, password 
+                                        FROM user 
+                                        LIMIT $start_from, $limit";
+                            }
+
                             $result = $mysqlConn3->query($query);
 
                             // Loop through the records
@@ -119,23 +137,23 @@ include("../src/configs/connection.php"); // Include your database connection
                         </div>
                         <ul class="pagination">
                             <?php
-                            // Generate pagination links
                             $total_pages = ceil($total_records / $limit);
+                            $search_param = !empty($search_query) ? "&search=" . urlencode($search_query) : "";
 
                             if ($page > 1) {
-                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . "'>Previous</a></li>";
+                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . $search_param . "'>Previous</a></li>";
                             }
 
                             for ($i = 1; $i <= $total_pages; $i++) {
                                 if ($i == $page) {
-                                    echo "<li class='page-item active'><a class='page-link' href='?page=$i'>$i</a></li>";
+                                    echo "<li class='page-item active'><a class='page-link' href='?page=$i$search_param'>$i</a></li>";
                                 } else {
-                                    echo "<li class='page-item'><a class='page-link' href='?page=$i'>$i</a></li>";
+                                    echo "<li class='page-item'><a class='page-link' href='?page=$i$search_param'>$i</a></li>";
                                 }
                             }
 
                             if ($page < $total_pages) {
-                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . "'>Next</a></li>";
+                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . $search_param . "'>Next</a></li>";
                             }
                             ?>
                         </ul>
@@ -269,27 +287,46 @@ include("../src/configs/connection.php"); // Include your database connection
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
 <script>
 $(document).ready(function() {
-    // Event handler for table row click (already provided)
-    $('tbody tr').click(function() {
-        var user_id = $(this).data('id');
-        var fname = $(this).find('td:eq(1)').text();
-        var lname = $(this).find('td:eq(2)').text();
-        var contact_no = $(this).data('name-contact');
-        var address = $(this).data('address');
-        var username = $(this).data('username');
-        var password = $(this).data('password');
-        var role = $(this).find('td:eq(3)').text();
+    // Function to bind click event
+    function bindRowClick() {
+        $('tbody tr').click(function() {
+            var user_id = $(this).data('id');
+            var fname = $(this).find('td:eq(1)').text();
+            var lname = $(this).find('td:eq(2)').text();
+            var contact_no = $(this).data('name-contact');
+            var address = $(this).data('address');
+            var username = $(this).data('username');
+            var password = $(this).data('password');
+            var role = $(this).find('td:eq(3)').text();
 
-        $('#userId').val(user_id);
-        $('#firstName').val(fname);
-        $('#lastName').val(lname);
-        $('#contactNumber').val(contact_no);
-        $('#address').val(address);
-        $('#username').val(username);
-        $('#password').val(password);
-        $('#role').val(role);
+            $('#userId').val(user_id);
+            $('#firstName').val(fname);
+            $('#lastName').val(lname);
+            $('#contactNumber').val(contact_no);
+            $('#address').val(address);
+            $('#username').val(username);
+            $('#password').val(password);
+            $('#role').val(role);
 
-        $('#viewModal').modal('show');
+            $('#viewModal').modal('show');
+        });
+    }
+
+    // Initial binding of the row click event
+    bindRowClick();
+
+    // Rebind click event after search
+    $('input[name="search"]').on('keyup', function() {
+        let searchValue = $(this).val();
+        $.ajax({
+            url: 'admin_panel.php',
+            method: 'GET',
+            data: { search: searchValue },
+            success: function(response) {
+                $('tbody').html($(response).find('tbody').html());
+                bindRowClick(); // Rebind click event after updating tbody
+            }
+        });
     });
 
     // Show the "Add New User" modal

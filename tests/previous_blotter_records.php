@@ -8,14 +8,6 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 include("../src/configs/connection.php"); // Include your database connection
-
-// Initialize search_query to prevent undefined variable warning
-$search_query = "";
-
-// Check if search query is set
-if (isset($_GET['search'])) {
-    $search_query = trim($_GET['search']);
-}
 ?>
 
 <!DOCTYPE html>
@@ -78,9 +70,9 @@ if (isset($_GET['search'])) {
     <!-- Search and Buttons -->
     <div class="row mt-4 search-bar-container">
         <div class="col-md-12">
-        <form method="GET" action="blotter_records.php">
-            <input type="text" name="search" class="form-control" placeholder="Type Here to Search..." style="max-width: 300px;" value="<?php echo htmlspecialchars($search_query); ?>" />
-        </form>
+            <form method="GET" action="blotter_records.php">
+                <input type="text" name="search" class="form-control" placeholder="Type Here to Search..." style="max-width: 300px;" value="<?php echo htmlspecialchars($search_query); ?>" />
+            </form>
             <div class="action-buttons d-flex mt-3">
                 <button class="btn btn-new-blotter" data-bs-toggle="modal" data-bs-target="#addBlotterModal">New Blotter</button>
             </div>
@@ -104,6 +96,11 @@ if (isset($_GET['search'])) {
                         </thead>
                         <tbody>
                             <?php
+                            // Capture the search input
+                            $search_query = "";
+                            if (isset($_GET['search'])) {
+                                $search_query = trim($_GET['search']);
+                            }
 
                             // Pagination settings
                             $limit = 8; // Number of records per page
@@ -320,52 +317,31 @@ if (isset($_GET['search'])) {
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
-    $(document).ready(function() {
-        let selectedRow;
+        $(document).ready(function() {
+            let selectedRow;
 
-        function openModal(row) {
-            selectedRow = row;
-            $('#blotterId').val(row.find('td').eq(0).text());
-            $('#nameComplainant').val(row.find('td').eq(1).text());
-            $('#nameAccused').val(row.find('td').eq(2).text());
-            $('#typeIncident').val(row.find('td').eq(3).text());
-            $('#blotterStatus').val(row.find('td').eq(4).text());
-            $('#placeIncident').val(row.find('td').eq(5).text());
-            $('#dtReported').val(row.data('dt-reported'));
-            $('#dtIncident').val(row.data('dt-incident'));
-            $('#userInCharge').val(row.data('user-in-charge'));
-            $('#narrative').val(row.data('narrative'));
+            function openModal(row) {
+                selectedRow = row;
+                $('#blotterId').val(row.find('td').eq(0).text());
+                $('#nameComplainant').val(row.find('td').eq(1).text());
+                $('#nameAccused').val(row.find('td').eq(2).text());
+                $('#typeIncident').val(row.find('td').eq(3).text());
+                $('#blotterStatus').val(row.find('td').eq(4).text());
+                $('#placeIncident').val(row.find('td').eq(5).text());
+                $('#dtReported').val(row.data('dt-reported'));
+                $('#dtIncident').val(row.data('dt-incident'));
+                $('#userInCharge').val(row.data('user-in-charge'));
+                $('#narrative').val(row.data('narrative'));
 
-            if ($('#blotterStatus').val() === 'Pending') {
-                $('#markDoneBtn').show();
-            } else {
-                $('#markDoneBtn').hide();
-            }
-
-            $('#viewModal').modal('show');
-        }
-
-        $('table tbody tr').on('click', function() {
-            openModal($(this));
-        });
-
-        // Rebind click event after search
-        $('input[name="search"]').on('keyup', function() {
-            let searchValue = $(this).val();
-            $.ajax({
-                url: 'blotter_records.php',
-                method: 'GET',
-                data: { search: searchValue },
-                success: function(response) {
-                    $('tbody').html($(response).find('tbody').html());
-
-                    // Rebind click event to rows
-                    $('table tbody tr').on('click', function() {
-                        openModal($(this));
-                    });
+                // Show or hide "Mark as Done" button based on status
+                if ($('#blotterStatus').val() === 'Pending') {
+                    $('#markDoneBtn').show();
+                } else {
+                    $('#markDoneBtn').hide();
                 }
-            });
-        });
+
+                $('#viewModal').modal('show');
+            }
 
             // Attach click event to rows
             $('table tbody tr').on('click', function() {
@@ -441,6 +417,29 @@ if (isset($_GET['search'])) {
                     error: function(xhr, status, error) {
                         alert('An error occurred: ' + error);
                     }
+                });
+            });
+
+            //SEARCH
+
+            $('input[name="search"]').on('keyup', function() {
+                let searchValue = $(this).val();
+                $.ajax({
+                    url: 'blotter_records.php',
+                    method: 'GET',
+                    data: { search: searchValue },
+                    success: function(response) {
+                        // Replace the table with the new search results
+                        $('tbody').html($(response).find('tbody').html());
+                    }
+                });
+            });
+
+
+            $('#searchInput').on('keyup', function() {
+                var searchQuery = $(this).val().toLowerCase();
+                $('#blotterTable tr').filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(searchQuery) > -1);
                 });
             });
 
