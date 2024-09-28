@@ -31,6 +31,15 @@ $residentImage = $firstName = $middleName = $lastName = $dob = $year = $month = 
     $illness = $medication = $disability = $teenAgePregnancy = $typeOfDelivery =
     $organization = $casesViolated = $yearsOfStay = $businessOwner = "";
 
+// Function to calculate age from date of birth
+function calculateAge($dob)
+{
+    $dobDate = new DateTime($dob);
+    $currentDate = new DateTime(); // Current date
+    $age = $dobDate->diff($currentDate)->y; // Difference in years
+    return $age;
+}
+
 // Check if an ID is passed in the URL (Edit mode)
 if (isset($_GET['id'])) {
     $residentId = $_GET['id'];
@@ -48,7 +57,10 @@ if (isset($_GET['id'])) {
         $lastName = htmlspecialchars($row['last_name']);
         $dob = htmlspecialchars($row['dob']);
         list($year, $month, $day) = explode('-', $dob);
-        $age = htmlspecialchars($row['age']);
+
+        // Dynamically calculate age based on date of birth
+        $age = calculateAge($dob);
+
         $gender = htmlspecialchars($row['gender']);
         $contactNumber = htmlspecialchars($row['contact_number']);
         $streetAddress = htmlspecialchars($row['street_address']);
@@ -229,6 +241,7 @@ $isEdit = isset($_GET['id']) ? true : false;
                                 <select class="form-control" id="gender" name="gender">
                                     <option value="Male" <?php echo ($gender === 'Male') ? 'selected' : ''; ?>>Male</option>
                                     <option value="Female" <?php echo ($gender === 'Female') ? 'selected' : ''; ?>>Female</option>
+                                    <option value="Other" <?php echo ($gender === 'Other') ? 'selected' : ''; ?>>Other</option>
                                 </select>
                             </div>
                             <div class="col-md-4 mb-3">
@@ -512,11 +525,21 @@ $isEdit = isset($_GET['id']) ? true : false;
                                     </div>
                                     <div class="col-md-6 mb-3" id="deliveryContainer" style="display: none;">
                                         <label for="typeOfDelivery">Type of Delivery:</label>
-                                        <input type="text" class="form-control" id="typeOfDelivery" name="typeOfDelivery" value="<?php echo $typeOfDelivery; ?>">
+                                        <select class="form-control" id="typeOfDelivery" name="typeOfDelivery">
+                                            <option value="Vaginal Delivery" <?php echo ($typeOfDelivery === 'Vaginal Delivery') ? 'selected' : ''; ?>>Vaginal Delivery</option>
+                                            <option value="Assisted Vaginal Delivery" <?php echo ($typeOfDelivery === 'Assisted Vaginal Delivery') ? 'selected' : ''; ?>>Assisted Vaginal Delivery</option>
+                                            <option value="Cesarean Section" <?php echo ($typeOfDelivery === 'Cesarean Section') ? 'selected' : ''; ?>>Cesarean Section (C-section)</option>
+                                            <option value="Vaginal Birth After Cesarean" <?php echo ($typeOfDelivery === 'Vaginal Birth After Cesarean') ? 'selected' : ''; ?>>Vaginal Birth After Cesarean (VBAC)</option>
+                                            <option value="Elective C-section" <?php echo ($typeOfDelivery === 'Elective C-section') ? 'selected' : ''; ?>>Elective C-section</option>
+                                            <option value="Emergency C-section" <?php echo ($typeOfDelivery === 'Emergency C-section') ? 'selected' : ''; ?>>Emergency C-section</option>
+                                            <option value="Induced Labor" <?php echo ($typeOfDelivery === 'Induced Labor') ? 'selected' : ''; ?>>Induced Labor</option>
+                                            <option value="Other" <?php echo ($typeOfDelivery === 'Other') ? 'selected' : ''; ?>>Other</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <!-- Toggle script for the teenage pregnancy option -->
                         <script>
                             document.addEventListener('DOMContentLoaded', function() {
@@ -574,7 +597,8 @@ $isEdit = isset($_GET['id']) ? true : false;
                                 <button id="submitButton" type="submit" class="btn btn-custom btn-primary-custom">
                                     <?php echo $isEdit ? 'Update' : 'Add'; ?>
                                 </button>
-                                <button type="button" class="btn btn-custom btn-secondary-custom">Cancel</button>
+                                <button class="btn btn-custom btn-secondary-custom" onclick="window.location.href='resident_list.php'">Cancel</button>
+
                             </div>
                             <script>
                                 if (window.location.search.includes('success=1')) {

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Map - OpenStreetMap</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Leaflet Map - OpenStreetMap</h1>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([14.162525303855341, 121.11590938129102], 15);
+
+        // Use OpenStreetMap tiles (no token required)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Add a polygon for a sector
+        var sector1 = L.polygon([
+            [14.156987501471228, 121.10225239305838], 
+            [14.161133939499035, 121.10488677002489], 
+            [14.164108131116082, 121.10880224811896], 
+            [14.162096182226602, 121.11273576989086], 
+            [14.153628306303592, 121.11352969171638], 
+            [14.156760057532859, 121.10806245732698], 
+            [14.156932411052473, 121.10805708007629]
+        ], {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.5
+        }).addTo(map);
+
+        // Handle click events
+        sector1.on('click', function() {
+            alert('Sector 1 clicked!');
+        });
+    </script>
+
+</body>
+</html>

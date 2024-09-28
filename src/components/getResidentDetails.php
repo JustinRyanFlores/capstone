@@ -16,9 +16,73 @@ $stmt->bind_param("i", $residentId);
 $stmt->execute();
 $result = $stmt->get_result();
 
+// Correct file paths to your JSON files
+$barangayFilePath = __DIR__ . '/../../pages/data/barangay.json';
+$cityFilePath = __DIR__ . '/../../pages/data/city.json';
+$provinceFilePath = __DIR__ . '/../../pages/data/province.json';
+
+// Read and decode JSON files
+$barangayData = file_get_contents($barangayFilePath);
+$cityData = file_get_contents($cityFilePath);
+$provinceData = file_get_contents($provinceFilePath);
+
+$barangayArray = json_decode($barangayData, true);
+$cityArray = json_decode($cityData, true);
+$provinceArray = json_decode($provinceData, true);
+
+// Function to map barangay code to barangay name
+function getBarangayName($brgy_code, $barangayArray)
+{
+    foreach ($barangayArray as $barangay) {
+        if ($barangay['brgy_code'] == $brgy_code) {
+            return $barangay['brgy_name'];
+        }
+    }
+    return 'Unknown Barangay';
+}
+
+// Function to map city code to city name
+function getCityName($city_code, $cityArray)
+{
+    foreach ($cityArray as $city) {
+        if ($city['city_code'] == $city_code) {
+            return $city['city_name'];
+        }
+    }
+    return 'Unknown City';
+}
+
+// Function to map province code to province name
+function getProvinceName($province_code, $provinceArray)
+{
+    foreach ($provinceArray as $province) {
+        if ($province['province_code'] == $province_code) {
+            return $province['province_name'];
+        }
+    }
+    return 'Unknown Province';
+}
+
+// Function to calculate age from date of birth
+function calculateAge($dob) {
+    $dobDate = new DateTime($dob);
+    $currentDate = new DateTime(); // Current date
+    $age = $dobDate->diff($currentDate)->y; // Difference in years
+    return $age;
+}
+
 if ($row = $result->fetch_assoc()) {
     ob_start();
     $update_image = htmlspecialchars($row['residents_img']);
+    $imagePath = $update_image ? "/capstone/src/assets/$update_image" : "/path/to/default-image.jpg";
+
+    // Get the barangay, city, and province names using the codes from the database
+    $barangayName = getBarangayName($row['barangay'], $barangayArray);
+    $cityName = getCityName($row['city'], $cityArray);
+    $provinceName = getProvinceName($row['province'], $provinceArray);
+    
+    // Calculate age using the date of birth
+    $age = calculateAge($row['dob']);
 ?>
     <!DOCTYPE html>
     <html lang="en">
@@ -26,213 +90,149 @@ if ($row = $result->fetch_assoc()) {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Resident details page for viewing and managing resident information">
         <title>Resident Details</title>
-        <style>
-            /* Card Styles */
-            .card {
-                width: 100%;
-                background-color: #fff;
-                border-radius: 8px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                border: 1px solid #ddd;
-            }
-
-            .card-header {
-                padding: 15px;
-                background-color: #1c2455;
-                color: #fff;
-                text-align: center;
-            }
-
-            .card-header h5 {
-                margin: 0;
-                font-size: 24px;
-                font-weight: 600;
-            }
-
-            /* Table Styles */
-            .card-body {
-                padding: 15px;
-            }
-
-            .table {
-                width: 100%;
-                margin-bottom: 1rem;
-                color: #333;
-            }
-
-            .table-striped tbody tr:nth-of-type(odd) {
-                background-color: #f2f2f2;
-            }
-
-            .table th,
-            .table td {
-                padding: 12px;
-                vertical-align: top;
-                border-top: 1px solid #ddd;
-            }
-
-            .table th {
-                font-weight: bold;
-                width: 30%;
-                background-color: #f1f1f1;
-                color: #333;
-            }
-
-            .table td {
-                width: 70%;
-            }
-
-            .profile-picture {
-                width: 150px;
-                height: 150px;
-                object-fit: cover;
-                border-radius: 50%;
-                border: 2px solid #ddd;
-                margin: 10px 0;
-            }
-
-            .profile-picture-container {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-                background-color: #f9f9f9;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-        </style>
     </head>
 
-    <body>
-        <div class="card">
-            <div class="card-header">
-                <h5><?php echo htmlspecialchars($row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']); ?></h5>
-            </div>
-            <div class="card-body">
-                <table class="table table-striped">
-                    <tbody>
-                        <tr>
-                            <th>Resident Image</th>
-                            <td>
-                                <div class="profile-picture-container">
-                                    <?php if ($update_image): ?>
-                                        <img src="/capstone/src/assets/<?php echo $update_image; ?>" alt="Resident Image" class="profile-picture">
-                                    <?php else: ?>
-                                        <p>No image available.</p>
-                                    <?php endif; ?>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Date of Birth</th>
-                            <td><?php echo htmlspecialchars($row['dob']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Age</th>
-                            <td><?php echo htmlspecialchars($row['age']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Gender</th>
-                            <td><?php echo htmlspecialchars($row['gender']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Contact Number</th>
-                            <td><?php echo htmlspecialchars($row['contact_number']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Address</th>
-                            <td><?php echo htmlspecialchars($row['house_number'] . ' ' . $row['street_address'] . ', ' . $row['subdivision'] . ', ' . $row['barangay'] . ', ' . $row['city'] . ', ' . $row['province'] . ' ' . $row['zip_code']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Mother's Name</th>
-                            <td><?php echo htmlspecialchars($row['mother_first_name'] . ' ' . $row['mother_middle_name'] . ' ' . $row['mother_last_name']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Father's Name</th>
-                            <td><?php echo htmlspecialchars($row['father_first_name'] . ' ' . $row['father_middle_name'] . ' ' . $row['father_last_name']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Out Of School Youth</th>
-                            <td><?php echo $row['osy'] ? 'Yes' : 'No'; ?></td>
-                        </tr>
-                        <tr>
-                            <th>Alternative Learning System</th>
-                            <td><?php echo $row['als'] ? 'Yes' : 'No'; ?></td>
-                        </tr>
-                        <tr>
-                            <th>Educational Attainment</th>
-                            <td><?php echo htmlspecialchars($row['educational_attainment']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Current School</th>
-                            <td><?php echo htmlspecialchars($row['current_school']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Illness</th>
-                            <td><?php echo htmlspecialchars($row['illness']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Medication</th>
-                            <td><?php echo htmlspecialchars($row['medication']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Disability</th>
-                            <td><?php echo htmlspecialchars($row['disability']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Teen Pregnancy</th>
-                            <td><?php echo $row['teen_pregnancy'] ? 'Yes' : 'No'; ?></td>
-                        </tr>
-                        <tr>
-                            <th>Type of Delivery</th>
-                            <td><?php echo htmlspecialchars($row['type_of_delivery']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Organization</th>
-                            <td><?php echo htmlspecialchars($row['organization']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Cases Violated</th>
-                            <td><?php echo htmlspecialchars($row['cases_violated']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Years of Stay</th>
-                            <td><?php echo htmlspecialchars($row['years_of_stay']); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Business Owner</th>
-                            <td><?php echo $row['business_owner'] ? 'Yes' : 'No'; ?></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <!-- Action Buttons -->
-                <div class="button-container">
-                    <button class="btn btn-primary" onclick="editResident(<?php echo $residentId; ?>)">Edit</button>
-                    <button class="btn btn-danger" onclick="deleteResident()">Delete</button>
-                    <button class="btn btn-secondary" onclick="cancelAction()">Cancel</button>
+    <body class="bg-light">
+        <div class="container py-1">
+            <div class="card shadow-sm">
+                <div class="card-body shadow">
+                    <!-- Profile Section -->
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-3 text-center">
+                            <img src="<?php echo $imagePath; ?>" alt="Resident Image" class="img-fluid border" style="width: 150px; height: 150px; object-fit: cover;">
+                        </div>
+                        <div class="col-md-9">
+                            <h3 class="text-primary"><?php echo htmlspecialchars($row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']); ?></h3>
+                            <p>Date of Birth: <?php echo htmlspecialchars($row['dob']); ?></p>
+                            <p>Age: <?php echo $age; ?></p> <!-- Dynamically calculated age -->
+                            <p>Gender: <?php echo htmlspecialchars($row['gender']); ?></p>
+                            <p>Contact Number: <?php echo htmlspecialchars($row['contact_number']); ?></p>
+                        </div>
+                    </div>
+
+                    <!-- Address Information -->
+                    <h4 class="text-primary">Address Information</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <?php
+                                $address_fields = [
+                                    'Street Address' => 'street_address',
+                                    'House Number' => 'house_number',
+                                    '   division' => 'subdivision',
+                                    'Barangay' => $barangayName, // Barangay name from JSON
+                                    'City' => $cityName,         // City name from JSON
+                                    'Province' => $provinceName, // Province name from JSON
+                                    'Zip Code' => 'zip_code'
+                                ];
+                                foreach ($address_fields as $label => $field) {
+                                    if (in_array($label, ['Barangay', 'City', 'Province'])) {
+                                        echo "<tr><th>$label</th><td>" . htmlspecialchars($field) . "</td></tr>";
+                                    } else {
+                                        echo "<tr><th>$label</th><td>" . htmlspecialchars($row[$field]) . "</td></tr>";
+                                    }
+                                }
+                                ?>
+                            </table>
+                        </div>
+
+                        <!-- Family Information -->
+                        <div class="col-md-6">
+                            <h4 class="text-primary">Family Information</h4>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Mother's Name</th>
+                                    <td><?php echo htmlspecialchars($row['mother_first_name'] . ' ' . $row['mother_middle_name'] . ' ' . $row['mother_last_name']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Father's Name</th>
+                                    <td><?php echo htmlspecialchars($row['father_first_name'] . ' ' . $row['father_middle_name'] . ' ' . $row['father_last_name']); ?></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Educational and Health Information -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 class="text-primary">Educational Information</h4>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Out of School Youth</th>
+                                    <td><?php echo $row['osy'] ? 'Yes' : 'No'; ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Educational Attainment</th>
+                                    <td><?php echo htmlspecialchars($row['educational_attainment']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Enrolled in ALS</th>
+                                    <td><?php echo $row['als'] ? 'Yes' : 'No'; ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Current School</th>
+                                    <td><?php echo htmlspecialchars($row['current_school']); ?></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Health Information -->
+                        <div class="col-md-6">
+                            <h4 class="text-primary">Health Information</h4>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Illness</th>
+                                    <td><?php echo htmlspecialchars($row['illness']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Medication</th>
+                                    <td><?php echo htmlspecialchars($row['medication']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Disability</th>
+                                    <td><?php echo htmlspecialchars($row['disability']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Teen Pregnancy</th>
+                                    <td><?php echo $row['teen_pregnancy'] ? 'Yes' : 'No'; ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Type of Delivery</th>
+                                    <td><?php echo htmlspecialchars($row['type_of_delivery']); ?></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4 class="text-primary">Additional Information</h4>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Organization</th>
+                                    <td><?php echo htmlspecialchars($row['organization']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Cases Violated</th>
+                                    <td><?php echo htmlspecialchars($row['cases_violated']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Years of Stay</th>
+                                    <td><?php echo htmlspecialchars($row['years_of_stay']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Business Owner</th>
+                                    <td><?php echo $row['business_owner'] ? 'Yes' : 'No'; ?></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-
-                <script>
-                    function editResident(residentId) {
-                        // Redirect to add_records.php with the resident ID as a query parameter
-                        window.location.href = "/capstone/pages/add_records.php?id=" + residentId;
-                    }
-
-                    function deleteResident() {
-                        if (confirm('Are you sure you want to delete this resident?')) {
-                            alert('Delete button clicked. Implement the delete logic here.');
-                        }
-                    }
-
-                    function cancelAction() {
-                        // Logic to cancel the action or clear the form
-                        document.getElementById('resident-details').innerHTML = '<span class="text-muted">Select a resident to view details</span>';
-                        // Optionally hide buttons if needed
-                        $("#action-buttons").addClass('d-none');
-                    }
-                </script>
+            </div>
+        </div>
 
     </body>
 
