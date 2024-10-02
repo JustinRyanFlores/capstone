@@ -32,7 +32,7 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fas fa-file-alt me-2"></i> Reports</a>
+            <a class="nav-link" href="report.php"><i class="fas fa-file-alt me-2"></i> Reports</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="blotter_records.php"><i class="fas fa-book me-2"></i> Blotter Records</a>
@@ -75,7 +75,7 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" style="padding-left: 15px;"><i class="fas fa-file-alt me-2"></i> Reports</a>
+                <a class="nav-link" href="report.php" style="padding-left: 15px;"><i class="fas fa-file-alt me-2"></i> Reports</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="blotter_records.php" style="padding-left: 15px;"><i class="fas fa-book me-2"></i> Blotter Records</a>
