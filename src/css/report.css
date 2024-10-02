@@ -1,0 +1,58 @@
+.scrollable-graphs {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.chart-container {
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    width: 100%; /* Ensure container takes full width */
+    max-width: 1100px; /* Optionally set a max-width */
+    height: auto; /* Allow height to adjust based on content */
+}
+
+.collapse-button {
+    display: inline-block;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+}
+
+.collapse-button:hover {
+    background-color: #0056b3;
+}
+
+.demographics-header {
+    background-color: #1c2455;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.demographics-header h4 {
+    margin: 0;
+    display: inline-block;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-content .container {
+    padding-left: 0; /* Align containers to the left */
+}
+
+#genderPieChart, #ageHistogram {
+    width: 100% !important; /* Force the charts to be full width */
+    height: 400px; /* Default height */
+}
+
