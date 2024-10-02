@@ -31,6 +31,9 @@ $dob = "$dobYear-$dobMonth-$dobDay"; // Format the date as YYYY-MM-DD
 $age = htmlspecialchars($_POST['age'] ?? '', ENT_QUOTES);
 $gender = htmlspecialchars($_POST['gender'] ?? '', ENT_QUOTES);
 $contactNumber = htmlspecialchars($_POST['contactNumber'] ?? '', ENT_QUOTES);
+$religion = htmlspecialchars($_POST['religion'] ?? '', ENT_QUOTES);
+$philhealth = htmlspecialchars($_POST['philhealth'] ?? '', ENT_QUOTES);
+$voterstatus = isset($_POST['voterstatus']) ? 1 : 0;
 $streetAddress = htmlspecialchars($_POST['streetAddress'] ?? '', ENT_QUOTES);
 $houseNumber = htmlspecialchars($_POST['houseNumber'] ?? '', ENT_QUOTES);
 $subdivision = htmlspecialchars($_POST['subdivision'] ?? '', ENT_QUOTES);
@@ -52,8 +55,11 @@ $currentSchool = htmlspecialchars($_POST['currentSchool'] ?? '', ENT_QUOTES);
 $illness = htmlspecialchars($_POST['illness'] ?? '', ENT_QUOTES);
 $medication = htmlspecialchars($_POST['medication'] ?? '', ENT_QUOTES);
 $disability = htmlspecialchars($_POST['disability'] ?? '', ENT_QUOTES);
+$immunization = htmlspecialchars($_POST['immunization'] ?? '', ENT_QUOTES);
+$pwd = isset($_POST['pwd']) ? 1 : 0;
 $teenPregnancy = isset($_POST['teenAgePregnancy']) ? 1 : 0;
 $typeOfDelivery = htmlspecialchars($_POST['typeOfDelivery'] ?? '', ENT_QUOTES);
+$assisted_by = htmlspecialchars($_POST['assisted_by'] ?? '', ENT_QUOTES);
 $organization = htmlspecialchars($_POST['organization'] ?? '', ENT_QUOTES);
 $casesViolated = htmlspecialchars($_POST['casesViolated'] ?? '', ENT_QUOTES);
 $yearsOfStay = htmlspecialchars($_POST['yearsOfStay'] ?? '', ENT_QUOTES);
@@ -85,9 +91,6 @@ if (isset($_FILES['update_image']) && $_FILES['update_image']['error'] == 0) {
         echo "<script>alert('Error: Failed to upload image.'); window.history.back();</script>";
         exit();
     }
-
-    // If the upload is successful, you can redirect or show a success message
-    echo "<script>alert('Image uploaded successfully!'); window.history.back();</script>";
 }
 
 // If a new image was uploaded, include it in the SQL query, otherwise skip the image update
@@ -103,6 +106,9 @@ $sql = "UPDATE residents_records
             age = '$age',
             gender = '$gender',
             contact_number = '$contactNumber',
+            religion = '$religion',
+            philhealth = '$philhealth',
+            voterstatus = '$voterstatus',
             street_address = '$streetAddress',
             house_number = '$houseNumber',
             subdivision = '$subdivision',
@@ -124,8 +130,11 @@ $sql = "UPDATE residents_records
             illness = '$illness',
             medication = '$medication',
             disability = '$disability',
+            immunization = '$immunization',
+            pwd = '$pwd',
             teen_pregnancy = '$teenPregnancy',
             type_of_delivery = '$typeOfDelivery',
+            assisted_by = '$assisted_by',
             organization = '$organization',
             cases_violated = '$casesViolated',
             years_of_stay = '$yearsOfStay',
@@ -135,13 +144,14 @@ $sql = "UPDATE residents_records
 
 // Execute the update statement
 if ($conn->query($sql) === TRUE) {
-    // Redirect to add_records.php with a success message
+    // Redirect to resident_list.php with a success message
     header("Location: ../../pages/resident_list.php?residentId=$residentId&success=updated");
     exit();
 } else {
     // Log the error
     error_log("SQL error: " . $conn->error);
-    header("Location: ../../pages/resident_list.php?residentId=$residentId&success=updated");
+    // Redirect with an error message
+    header("Location: ../../pages/resident_list.php?residentId=$residentId&error=update_failed");
     exit();
 }
 

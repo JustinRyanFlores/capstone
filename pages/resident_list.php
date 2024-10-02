@@ -43,7 +43,7 @@ if (!isset($_SESSION['user_id'])) {
             <!-- Resident's Records Search -->
             <div class="col-md-12 p-4 scrollable-container1" style="background-color: #f7f7f7; border-right: 1px solid #ddd;">
                 <div class="search-header">Resident's Records Search</div>
-                <input type="text" class="form-control search-bar mb-3" placeholder="Search by name..." aria-label="Search residents">
+                <input type="text" id="searchInput" class="form-control search-bar mb-3" placeholder="Search by name..." aria-label="Search residents" onkeyup="searchResidents()">
 
                 <ul class="list-group" id="resident-list">
                     <?php
@@ -63,10 +63,26 @@ if (!isset($_SESSION['user_id'])) {
                     $conn->close();
                     ?>
                 </ul>
+
+                <script>
+                    function searchResidents() {
+                        var query = document.getElementById("searchInput").value.toLowerCase();
+                        var residentList = document.getElementById("resident-list");
+                        var residents = residentList.getElementsByTagName("li");
+
+                        for (var i = 0; i < residents.length; i++) {
+                            var residentName = residents[i].innerText.toLowerCase();
+                            if (residentName.includes(query)) {
+                                residents[i].style.display = "";
+                            } else {
+                                residents[i].style.display = "none";
+                            }
+                        }
+                    }
+                </script>
             </div>
         </div>
     </div>
-
     <!-- Resident Details Modal -->
     <div class="modal fade" id="residentDetailsModal" tabindex="-1" role="dialog" aria-labelledby="residentDetailsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
