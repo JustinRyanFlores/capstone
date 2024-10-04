@@ -21,12 +21,12 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
     <link rel="stylesheet" href="/capstone/src/css/header.css" />
     <link rel="stylesheet" href="/capstone/src/css/resident_list.css" />
-    <?php include '/xampp/htdocs/capstone/src/components/header.php'; ?>
+    <?php include '../src/components/header.php'; ?>
 
 </head>
 
 <body>
-    <?php include '/xampp/htdocs/capstone/src/components/moderator_navbar.php'; ?>
+    <?php include '../src/components/moderator_navbar.php'; ?>
 
     <div class="container-fluid main-content">
         <div class="row mb-4">
@@ -43,30 +43,51 @@ if (!isset($_SESSION['user_id'])) {
             <!-- Resident's Records Search -->
             <div class="col-md-12 p-4 scrollable-container1" style="background-color: #f7f7f7; border-right: 1px solid #ddd;">
                 <div class="search-header">Resident's Records Search</div>
-                <input type="text" class="form-control search-bar mb-3" placeholder="Search by name..." aria-label="Search residents">
+                <input type="text" id="searchInput" class="form-control search-bar mb-3" placeholder="Search by name..." aria-label="Search residents" onkeyup="searchResidents()">
 
                 <ul class="list-group" id="resident-list">
                     <?php
-                    $conn = new mysqli("localhost", "root", "", "residents_db");
-                    if ($conn->connect_error) {
-                        die("Connection failed: " . $conn->connect_error);
+                    // Include the connection from the external file
+                    include('../src/configs/connection.php');
+
+                    // Check if the connection exists and is successful
+                    if (!$mysqlConn) {
+                        die("Connection failed: " . mysqli_connect_error());
                     }
 
                     // Fetch all residents to display in the list
                     $query = "SELECT id, first_name, last_name FROM residents_records";
-                    $result = $conn->query($query);
+                    $result = $mysqlConn->query($query);
 
+                    // Loop through the results and display each resident
                     while ($row = $result->fetch_assoc()) {
                         echo '<li class="list-group-item list-group-item-action" onclick="fetchResidentDetails(' . $row['id'] . ')">' . $row['first_name'] . ' ' . $row['last_name'] . '</li>';
                     }
 
-                    $conn->close();
+                    // Close the connection (optional)
+                    $mysqlConn->close();
                     ?>
                 </ul>
+
+                <script>
+                    function searchResidents() {
+                        var query = document.getElementById("searchInput").value.toLowerCase();
+                        var residentList = document.getElementById("resident-list");
+                        var residents = residentList.getElementsByTagName("li");
+
+                        for (var i = 0; i < residents.length; i++) {
+                            var residentName = residents[i].innerText.toLowerCase();
+                            if (residentName.includes(query)) {
+                                residents[i].style.display = "";
+                            } else {
+                                residents[i].style.display = "none";
+                            }
+                        }
+                    }
+                </script>
             </div>
         </div>
     </div>
-
     <!-- Resident Details Modal -->
     <div class="modal fade" id="residentDetailsModal" tabindex="-1" role="dialog" aria-labelledby="residentDetailsModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">

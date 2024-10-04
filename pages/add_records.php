@@ -18,17 +18,18 @@ if (isset($_GET['error']) && $_GET['error'] == 'true') {
 
 <?php
 // Connect to the database
-$conn = new mysqli("localhost", "root", "", "residents_db");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+include('../src/configs/connection.php');
+// Check if the connection exists and is successful
+if (!$mysqlConn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
 // Initialize variables to hold form values
-$residentImage = $firstName = $middleName = $lastName = $dob = $year = $month = $day = $age = $gender = $contactNumber =
+$residentImage = $firstName = $middleName = $lastName = $dob = $year = $month = $day = $age = $gender = $contactNumber = $religion = $philhealth = $voterstatus =
     $streetAddress = $houseNumber = $subdivision = $barangay = $city = $province = $region = $zipCode =
     $motherFirstName = $motherMiddleName =  $motherLastName = $fatherFirstName = $fatherMiddleName = $fatherLastName =
     $outOfSchoolYouth = $alternativeLearningSystem = $educationalAttainment = $currentSchool = $illness =
-    $illness = $medication = $disability = $teenAgePregnancy = $typeOfDelivery =
+    $illness = $medication = $disability = $immunization = $pwd =  $teenAgePregnancy = $typeOfDelivery = $assisted_by =
     $organization = $casesViolated = $yearsOfStay = $businessOwner = "";
 
 // Function to calculate age from date of birth
@@ -45,7 +46,7 @@ if (isset($_GET['id'])) {
     $residentId = $_GET['id'];
     // Fetch resident data from the database
     $query = "SELECT * FROM residents_records WHERE id = ?";
-    $stmt = $conn->prepare($query);
+    $stmt = $mysqlConn->prepare($query);
     $stmt->bind_param("i", $residentId);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -57,12 +58,12 @@ if (isset($_GET['id'])) {
         $lastName = htmlspecialchars($row['last_name']);
         $dob = htmlspecialchars($row['dob']);
         list($year, $month, $day) = explode('-', $dob);
-
-        // Dynamically calculate age based on date of birth
         $age = calculateAge($dob);
-
         $gender = htmlspecialchars($row['gender']);
         $contactNumber = htmlspecialchars($row['contact_number']);
+        $religion = htmlspecialchars($row['religion']);
+        $philhealth = htmlspecialchars($row['philhealth']);
+        $voterstatus = htmlspecialchars($row['voterstatus']);
         $streetAddress = htmlspecialchars($row['street_address']);
         $houseNumber = htmlspecialchars($row['house_number']);
         $subdivision = htmlspecialchars($row['subdivision']);
@@ -84,8 +85,11 @@ if (isset($_GET['id'])) {
         $illness = htmlspecialchars($row['illness']);
         $medication = htmlspecialchars($row['medication']);
         $disability = htmlspecialchars($row['disability']);
+        $immunization = htmlspecialchars($row['immunization']);
+        $pwd = htmlspecialchars($row['pwd']);
         $teenAgePregnancy = htmlspecialchars($row['teen_pregnancy']);
         $typeOfDelivery = htmlspecialchars($row['type_of_delivery']);
+        $assisted_by = htmlspecialchars($row['assisted_by']);
         $organization = htmlspecialchars($row['organization']);
         $casesViolated = htmlspecialchars($row['cases_violated']);
         $yearsOfStay = htmlspecialchars($row['years_of_stay']);
@@ -95,7 +99,7 @@ if (isset($_GET['id'])) {
     $stmt->close();
 }
 
-$conn->close();
+$mysqlConn->close();
 ?>
 
 <?php
@@ -118,11 +122,11 @@ $isEdit = isset($_GET['id']) ? true : false;
     <link rel="stylesheet" href="/capstone/src/css/header.css" />
     <link rel="stylesheet" href="/capstone/src/css/add_records.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <?php include '/xampp/htdocs/capstone/src/components/header.php'; ?>
+    <?php include '../src/components/header.php'; ?>
 </head>
 
 <body>
-    <?php include '/xampp/htdocs/capstone/src/components/moderator_navbar.php'; ?>
+    <?php include '../src/components/moderator_navbar.php'; ?>
     <div class="container-fluid main-content mt-3">
         <div class="row mb-4">
             <div class="col-sm-6 col-md-6 text-start">
@@ -239,19 +243,36 @@ $isEdit = isset($_GET['id']) ? true : false;
                             <div class="col-md-2 mb-3">
                                 <label for="gender">Gender:</label>
                                 <select class="form-control" id="gender" name="gender">
+                                    <option value="" <?php echo (empty($gender)) ? 'selected' : ''; ?>>-- Select Gender --</option>
                                     <option value="Male" <?php echo ($gender === 'Male') ? 'selected' : ''; ?>>Male</option>
                                     <option value="Female" <?php echo ($gender === 'Female') ? 'selected' : ''; ?>>Female</option>
                                     <option value="Other" <?php echo ($gender === 'Other') ? 'selected' : ''; ?>>Other</option>
                                 </select>
                             </div>
+
                             <div class="col-md-4 mb-3">
                                 <label for="contactNumber">Contact Number:</label>
                                 <input type="text" class="form-control" id="contactNumber" name="contactNumber"
                                     pattern="\d{10,11}" title="Please enter a valid contact number." value="<?php echo $contactNumber; ?>" required>
                                 <small class="form-text text-muted">Please enter a valid contact number with 10 or 11 digits.</small>
                             </div>
-
-
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="voterstatus">Voter Status:</label>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="voterstatus" name="voterstatus" <?php echo ($voterstatus) ? 'checked' : ''; ?>>
+                                    <label class="form-check-label" for="voterstatus">Yes</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="philhealth">PhilHealth Number:</label>
+                                <input type="text" class="form-control" id="philhealth" name="philhealth" value="<?php echo $philhealth; ?>">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="religion">Religion:</label>
+                                <input type="text" class="form-control" id="religion" name="religion" value="<?php echo $religion; ?>">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -516,53 +537,50 @@ $isEdit = isset($_GET['id']) ? true : false;
                                         <label for="disability">Disability:</label>
                                         <input type="text" class="form-control" id="disability" name="disability" value="<?php echo $disability; ?>">
                                     </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-6 mb-3">
+                                        <label for="pwd">PWD:</label>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="pwd" name="pwd" <?php echo ($pwd) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label" for="pwd">Yes</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="immunization"> Immunization Status:</label>
+                                        <input type="text" class="form-control" id="immunization" name="immunization" value="<?php echo $immunization; ?>">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
                                         <label for="teenAgePregnancy">Teen Age Pregnancy:</label>
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input" id="teenAgePregnancy" name="teenAgePregnancy" <?php echo ($teenAgePregnancy) ? 'checked' : ''; ?>>
                                             <label class="form-check-label" for="teenAgePregnancy">Yes</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-3" id="deliveryContainer" style="display: none;">
+                                    <div class="col-md-4 mb-3" id="deliveryContainer">
                                         <label for="typeOfDelivery">Type of Delivery:</label>
                                         <select class="form-control" id="typeOfDelivery" name="typeOfDelivery">
+                                            <option value="" <?php echo (empty($typeOfDelivery)) ? 'selected' : ''; ?>>-- Select Type of Delivery --</option>
                                             <option value="Vaginal Delivery" <?php echo ($typeOfDelivery === 'Vaginal Delivery') ? 'selected' : ''; ?>>Vaginal Delivery</option>
-                                            <option value="Assisted Vaginal Delivery" <?php echo ($typeOfDelivery === 'Assisted Vaginal Delivery') ? 'selected' : ''; ?>>Assisted Vaginal Delivery</option>
                                             <option value="Cesarean Section" <?php echo ($typeOfDelivery === 'Cesarean Section') ? 'selected' : ''; ?>>Cesarean Section (C-section)</option>
-                                            <option value="Vaginal Birth After Cesarean" <?php echo ($typeOfDelivery === 'Vaginal Birth After Cesarean') ? 'selected' : ''; ?>>Vaginal Birth After Cesarean (VBAC)</option>
-                                            <option value="Elective C-section" <?php echo ($typeOfDelivery === 'Elective C-section') ? 'selected' : ''; ?>>Elective C-section</option>
-                                            <option value="Emergency C-section" <?php echo ($typeOfDelivery === 'Emergency C-section') ? 'selected' : ''; ?>>Emergency C-section</option>
-                                            <option value="Induced Labor" <?php echo ($typeOfDelivery === 'Induced Labor') ? 'selected' : ''; ?>>Induced Labor</option>
-                                            <option value="Other" <?php echo ($typeOfDelivery === 'Other') ? 'selected' : ''; ?>>Other</option>
+                                            <option value="N/A" <?php echo ($typeOfDelivery === 'N/A') ? 'selected' : ''; ?>>N/A</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4 mb-3">
+                                        <label for="assisted_by">Assisted By:</label>
+                                        <select class="form-control" id="assisted_by" name="assisted_by">
+                                            <option value="" <?php echo (empty($assisted_by)) ? 'selected' : ''; ?>>-- Select Assistance --</option>
+                                            <option value="Doctor" <?php echo ($assisted_by === 'Doctor') ? 'selected' : ''; ?>>Doctor</option>
+                                            <option value="Midwife" <?php echo ($assisted_by === 'Midwife') ? 'selected' : ''; ?>>Midwife</option>
+                                            <option value="Nurse" <?php echo ($assisted_by === 'Nurse') ? 'selected' : ''; ?>>Nurse</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Toggle script for the teenage pregnancy option -->
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                const teenAgePregnancyCheckbox = document.getElementById('teenAgePregnancy');
-                                const deliveryContainer = document.getElementById('deliveryContainer');
-
-                                // Function to toggle delivery container based on checkbox state
-                                function toggleDeliveryContainer() {
-                                    if (teenAgePregnancyCheckbox.checked) {
-                                        deliveryContainer.style.display = 'block';
-                                    } else {
-                                        deliveryContainer.style.display = 'none';
-                                    }
-                                }
-
-                                // Initial check to set display based on autofill or default value
-                                toggleDeliveryContainer();
-
-                                // Add event listener for checkbox change
-                                teenAgePregnancyCheckbox.addEventListener('change', toggleDeliveryContainer);
-                            });
-                        </script>
-
 
                         <!-- Additional Information -->
                         <div class="row mb-4">

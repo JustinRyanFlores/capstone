@@ -4,14 +4,17 @@ if (!isset($_POST['id'])) {
     exit();
 }
 
-$conn = new mysqli("localhost", "root", "", "residents_db");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Include the MySQL connection file
+include('../configs/connection.php');
+
+// Check if the connection exists and is successful
+if (!$mysqlConn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
 $residentId = $_POST['id'];
 $query = "SELECT * FROM residents_records WHERE id = ?";
-$stmt = $conn->prepare($query);
+$stmt = $mysqlConn->prepare($query);
 $stmt->bind_param("i", $residentId);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -64,7 +67,8 @@ function getProvinceName($province_code, $provinceArray)
 }
 
 // Function to calculate age from date of birth
-function calculateAge($dob) {
+function calculateAge($dob)
+{
     $dobDate = new DateTime($dob);
     $currentDate = new DateTime(); // Current date
     $age = $dobDate->diff($currentDate)->y; // Difference in years
@@ -80,7 +84,7 @@ if ($row = $result->fetch_assoc()) {
     $barangayName = getBarangayName($row['barangay'], $barangayArray);
     $cityName = getCityName($row['city'], $cityArray);
     $provinceName = getProvinceName($row['province'], $provinceArray);
-    
+
     // Calculate age using the date of birth
     $age = calculateAge($row['dob']);
 ?>
@@ -100,28 +104,31 @@ if ($row = $result->fetch_assoc()) {
                 <div class="card-body shadow">
                     <!-- Profile Section -->
                     <div class="row align-items-center mb-4">
-                        <div class="col-md-3 text-center">
-                            <img src="<?php echo $imagePath; ?>" alt="Resident Image" class="img-fluid border" style="width: 150px; height: 150px; object-fit: cover;">
+                        <div class="col-md-4 text-center">
+                            <img src="<?php echo $imagePath; ?>" alt="Resident Image" class="img-fluid" style="width: 180px; height: 180px; object-fit: cover; border: 2px solid black;">
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-md-8">
                             <h3 class="text-primary"><?php echo htmlspecialchars($row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']); ?></h3>
-                            <p>Date of Birth: <?php echo htmlspecialchars($row['dob']); ?></p>
-                            <p>Age: <?php echo $age; ?></p> <!-- Dynamically calculated age -->
-                            <p>Gender: <?php echo htmlspecialchars($row['gender']); ?></p>
-                            <p>Contact Number: <?php echo htmlspecialchars($row['contact_number']); ?></p>
+                            <p><strong>Date of Birth:</strong> <?php echo htmlspecialchars($row['dob']); ?></p>
+                            <p><strong>Age:</strong> <?php echo $age; ?></p> <!-- Dynamically calculated age -->
+                            <p><strong>Gender:</strong> <?php echo htmlspecialchars($row['gender']); ?></p>
+                            <p><strong>Contact Number:</strong> <?php echo htmlspecialchars($row['contact_number']); ?></p>
+                            <p><strong>Religion:</strong> <?php echo htmlspecialchars($row['religion']); ?></p>
+                            <p><strong>Philhealth Number:</strong> <?php echo htmlspecialchars($row['philhealth']); ?></p>
+                            <p><strong>Voter Status:</strong> <?php echo $row['voterstatus'] ? 'Yes' : 'No'; ?></p>
                         </div>
                     </div>
 
                     <!-- Address Information -->
-                    <h4 class="text-primary">Address Information</h4>
                     <div class="row">
                         <div class="col-md-6">
+                            <h4 class="text-primary">Address Information</h4>
                             <table class="table table-bordered">
                                 <?php
                                 $address_fields = [
                                     'Street Address' => 'street_address',
                                     'House Number' => 'house_number',
-                                    '   division' => 'subdivision',
+                                    'Subdivision' => 'subdivision',
                                     'Barangay' => $barangayName, // Barangay name from JSON
                                     'City' => $cityName,         // City name from JSON
                                     'Province' => $provinceName, // Province name from JSON
@@ -195,12 +202,24 @@ if ($row = $result->fetch_assoc()) {
                                     <td><?php echo htmlspecialchars($row['disability']); ?></td>
                                 </tr>
                                 <tr>
+                                    <th>PWD</th>
+                                    <td><?php echo $row['teen_pregnancy'] ? 'Yes' : 'No'; ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Immunization Status</th>
+                                    <td><?php echo htmlspecialchars($row['immunization']); ?></td>
+                                </tr>
+                                <tr>
                                     <th>Teen Pregnancy</th>
                                     <td><?php echo $row['teen_pregnancy'] ? 'Yes' : 'No'; ?></td>
                                 </tr>
                                 <tr>
                                     <th>Type of Delivery</th>
                                     <td><?php echo htmlspecialchars($row['type_of_delivery']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Assisted By</th>
+                                    <td><?php echo htmlspecialchars($row['assisted_by']); ?></td>
                                 </tr>
                             </table>
                         </div>
@@ -244,5 +263,5 @@ if ($row = $result->fetch_assoc()) {
 }
 
 $stmt->close();
-$conn->close();
+$mysqlConn->close();
 ?>
