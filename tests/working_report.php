@@ -105,7 +105,7 @@ while ($row = $populationResult->fetch_assoc()) {
                 ?>
             ]);
 
-            var options = { 
+            var options = {
                 responsive: true,
                 title: 'Gender Distribution of Residents',
                 is3D: true,
@@ -134,17 +134,8 @@ while ($row = $populationResult->fetch_assoc()) {
                 title: 'Age Distribution of Residents',
                 legend: { position: 'none' },
                 chartArea: { width: '85%', height: '75%' },
-                hAxis: {
-                    title: 'Age Groups',
-                    minValue: 0
-                },
-                vAxis: {
-                    title: 'Number of Residents',
-                    format: '0', // This ensures that only whole numbers are displayed on the Y-axis
-                    viewWindow: {
-                        min: 0 // This can ensure the Y-axis starts at 0
-                    }
-                }
+                hAxis: { title: 'Age Groups', minValue: 0 },
+                vAxis: { title: 'Number of Residents', format: '0', viewWindow: { min: 0 } }
             };
 
             var chart = new google.visualization.ColumnChart(document.getElementById('ageHistogram'));
@@ -166,7 +157,6 @@ while ($row = $populationResult->fetch_assoc()) {
                 ?>
             ]);
 
-            
             var dashboard = new google.visualization.Dashboard(
                 document.getElementById('populationDashboard')
             );
@@ -191,7 +181,7 @@ while ($row = $populationResult->fetch_assoc()) {
                 containerId: 'populationLineChart',
                 options: {
                     title: 'Population Growth Over Time',
-                    hAxis: { title: 'Date', format: 'yyyy-MMM-dd' }, // Format the x-axis as dates
+                    hAxis: { title: 'Date', format: 'yyyy-MM-dd' }, // Format the x-axis as dates
                     vAxis: { title: 'Number of Residents' },
                     chartArea: { width: '85%', height: '70%' },
                 }
@@ -205,7 +195,6 @@ while ($row = $populationResult->fetch_assoc()) {
         window.addEventListener('resize', function () {
             drawCharts();
         });
-
     </script>
 </head>
 
@@ -237,68 +226,30 @@ while ($row = $populationResult->fetch_assoc()) {
                     </button>
                 </div>
             </div>
-
             <div class="collapse show" id="demographicsSection">
-                <div class="scrollable-graphs mt-3">
-                    <!-- Gender Pie Chart in its own container -->
-                    <div class="chart-container">
-                        <h5>Gender Distribution</h5>
-                        <div id="genderPieChart" style="width: 100%; height: 500px;"></div>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div id="genderPieChart"></div>
                     </div>
-
-                    <!-- Age Distribution Histogram -->
-                    <div class="chart-container">
-                        <h5>Age Distribution</h5>
-                        <div id="ageHistogram" style="width: 100%; height: 500px;"></div>
-                    </div>
-
-                    <!-- Population Growth Line Chart -->
-                    <div class="chart-container">
-                        <h5>Population Growth Over Time</h5>
-                        <div id="populationDashboard">
-                            <div id="filter_div" style="height: 100px;"></div>
-                            <div id="populationLineChart" style="height: 400px;"></div>
-                        </div>
+                    <div class="col-md-6 mb-4">
+                        <div id="ageHistogram"></div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Health and Social Issues Section -->
+
+        <!-- Population Growth Section -->
         <div class="container mt-4">
-            <div class="demographics-header">
-                <div class="header-container">
-                    <h4>Health and Social Issues</h4>
-                    <button class="collapse-button" data-toggle="collapse" href="#demographicsSection" role="button" aria-expanded="false" aria-controls="demographicsSection">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                </div>
+            <h4>Population Growth Over Time</h4>
+            <div id="populationDashboard">
+                <div id="filter_div" style="height: 100px;"></div>
+                <div id="populationLineChart" style="height: 400px;"></div>
             </div>
-
-            <div class="collapse show" id="demographicsSection">
-                <div class="scrollable-graphs mt-3">
-                    <!-- Gender Pie Chart in its own container -->
-                    <div class="chart-container">
-                        <h5>Gender Distribution</h5>
-                        <div id="genderPieChart" style="width: 100%; height: 500px;"></div>
-                    </div>
-
-                    <!-- Age Distribution Histogram -->
-                    <div class="chart-container">
-                        <h5>Age Distribution</h5>
-                        <div id="ageHistogram" style="width: 100%; height: 400px;"></div>
-                    </div>
-
-                    <!-- Add more graphs in separate containers if needed -->
-                </div>
-            </div>
-            
         </div>
-        
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
