@@ -7,23 +7,23 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-  include("../src/configs/connection.php");
+include("../src/configs/connection.php");
 
-  $sql = "SELECT COUNT(*) AS total_population FROM residents_records";
-  $result = $mysqlConn->query($sql);
+$sql = "SELECT COUNT(*) AS total_population FROM residents_records";
+$result = $mysqlConn->query($sql);
 
-  $sql = "SELECT COUNT(*) AS total_unsettled_cases FROM blotter WHERE blotter_status='Pending'";
-  $result_total_blotter = $mysqlConn2->query($sql);
-  
-  if ($result->num_rows > 0) {
+$sql = "SELECT COUNT(*) AS total_unsettled_cases FROM blotter WHERE blotter_status='Pending'";
+$result_total_blotter = $mysqlConn2->query($sql);
+
+if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
     echo "" . $row['total_population'];
-} 
+}
 
 if ($result_total_blotter->num_rows > 0) {
     $row_blotter = $result_total_blotter->fetch_assoc();
     echo "" . $row_blotter['total_unsettled_cases'];
-} 
+}
 ?>
 
 
@@ -40,11 +40,11 @@ if ($result_total_blotter->num_rows > 0) {
     <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
     <link rel="stylesheet" href="/capstone/src/css/header.css" />
     <link rel="stylesheet" href="/capstone/src/css/dashboard.css" />
-    <?php include '/xampp/htdocs/capstone/src/components/header.php'; ?>
+    <?php include '../src/components/header.php'; ?>
 </head>
 
 <body>
-    <?php include '/xampp/htdocs/capstone/src/components/moderator_navbar.php'; ?>
+    <?php include '../src/components/moderator_navbar.php'; ?>
     <div class="container-fluid main-content">
         <div class="row">
             <div class="h3 col-sm-6 col-md-6 text-start h5-sm">
@@ -91,4 +91,3 @@ if ($result_total_blotter->num_rows > 0) {
 </body>
 
 </html>
-

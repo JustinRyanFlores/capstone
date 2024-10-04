@@ -4,14 +4,17 @@ if (!isset($_POST['id'])) {
     exit();
 }
 
-$conn = new mysqli("localhost", "root", "", "residents_db");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Include the MySQL connection file
+include('../configs/connection.php');
+
+// Check if the connection exists and is successful
+if (!$mysqlConn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
 $residentId = $_POST['id'];
 $query = "SELECT * FROM residents_records WHERE id = ?";
-$stmt = $conn->prepare($query);
+$stmt = $mysqlConn->prepare($query);
 $stmt->bind_param("i", $residentId);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -260,5 +263,5 @@ if ($row = $result->fetch_assoc()) {
 }
 
 $stmt->close();
-$conn->close();
+$mysqlConn->close();
 ?>

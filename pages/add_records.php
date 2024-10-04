@@ -18,9 +18,10 @@ if (isset($_GET['error']) && $_GET['error'] == 'true') {
 
 <?php
 // Connect to the database
-$conn = new mysqli("localhost", "root", "", "residents_db");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+include('../src/configs/connection.php');
+// Check if the connection exists and is successful
+if (!$mysqlConn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
 // Initialize variables to hold form values
@@ -45,7 +46,7 @@ if (isset($_GET['id'])) {
     $residentId = $_GET['id'];
     // Fetch resident data from the database
     $query = "SELECT * FROM residents_records WHERE id = ?";
-    $stmt = $conn->prepare($query);
+    $stmt = $mysqlConn->prepare($query);
     $stmt->bind_param("i", $residentId);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -98,7 +99,7 @@ if (isset($_GET['id'])) {
     $stmt->close();
 }
 
-$conn->close();
+$mysqlConn->close();
 ?>
 
 <?php
@@ -121,11 +122,11 @@ $isEdit = isset($_GET['id']) ? true : false;
     <link rel="stylesheet" href="/capstone/src/css/header.css" />
     <link rel="stylesheet" href="/capstone/src/css/add_records.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <?php include '/xampp/htdocs/capstone/src/components/header.php'; ?>
+    <?php include '../src/components/header.php'; ?>
 </head>
 
 <body>
-    <?php include '/xampp/htdocs/capstone/src/components/moderator_navbar.php'; ?>
+    <?php include '../src/components/moderator_navbar.php'; ?>
     <div class="container-fluid main-content mt-3">
         <div class="row mb-4">
             <div class="col-sm-6 col-md-6 text-start">

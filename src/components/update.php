@@ -1,16 +1,9 @@
 <?php
 // Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "residents_db";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
+include('../configs/connection.php');
 // Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if ($mysqlConn->connect_error) {
+    die("Connection failed: " . $mysqlConn->connect_error);
 }
 
 // Check if resident ID is passed
@@ -143,17 +136,17 @@ $sql = "UPDATE residents_records
         WHERE id = $residentId";
 
 // Execute the update statement
-if ($conn->query($sql) === TRUE) {
+if ($mysqlConn->query($sql) === TRUE) {
     // Redirect to resident_list.php with a success message
     header("Location: ../../pages/resident_list.php?residentId=$residentId&success=updated");
     exit();
 } else {
     // Log the error
-    error_log("SQL error: " . $conn->error);
+    error_log("SQL error: " . $mysqlConn->error);
     // Redirect with an error message
     header("Location: ../../pages/resident_list.php?residentId=$residentId&error=update_failed");
     exit();
 }
 
 // Close the connection
-$conn->close();
+$mysqlConn->close();

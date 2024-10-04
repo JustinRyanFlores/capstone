@@ -66,7 +66,7 @@ $ageGroups = array_merge([
     <link rel="stylesheet" href="/capstone/src/css/header.css" />
     <link rel="stylesheet" href="/capstone/src/css/dashboard.css" />
     <link rel="stylesheet" href="/capstone/src/css/report.css" />
-    <?php include '/xampp/htdocs/capstone/src/components/header.php'; ?>
+    <?php include '../src/components/header.php'; ?>
 
     <!-- Google Charts API -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -145,7 +145,7 @@ $ageGroups = array_merge([
 </head>
 
 <body>
-    <?php include '/xampp/htdocs/capstone/src/components/moderator_navbar.php'; ?>
+    <?php include '../src/components/moderator_navbar.php'; ?>
 
     <div class="container-fluid main-content">
         <div class="row">

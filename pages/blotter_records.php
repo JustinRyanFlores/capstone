@@ -31,7 +31,7 @@ if (isset($_GET['search'])) {
     <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
     <link rel="stylesheet" href="/capstone/src/css/header.css" />
     <link rel="stylesheet" href="/capstone/src/css/blotter_records.css" />
-    <?php include '/xampp/htdocs/capstone/src/components/header.php'; ?>
+    <?php include '../src/components/header.php'; ?>
 </head>
 <style>
     .text-end #exitModalBlotter {
@@ -59,7 +59,7 @@ if (isset($_GET['search'])) {
     }
 </style>
 <body>
-    <?php include '/xampp/htdocs/capstone/src/components/moderator_navbar.php'; ?>
+    <?php include '../src/components/moderator_navbar.php'; ?>
     <div class="container-fluid main-content">
         <div class="row">
             <div class="h3 col-sm-6 col-md-6 text-start h5-sm">

@@ -21,12 +21,12 @@ if (!isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
     <link rel="stylesheet" href="/capstone/src/css/header.css" />
     <link rel="stylesheet" href="/capstone/src/css/resident_list.css" />
-    <?php include '/xampp/htdocs/capstone/src/components/header.php'; ?>
+    <?php include '../src/components/header.php'; ?>
 
 </head>
 
 <body>
-    <?php include '/xampp/htdocs/capstone/src/components/moderator_navbar.php'; ?>
+    <?php include '../src/components/moderator_navbar.php'; ?>
 
     <div class="container-fluid main-content">
         <div class="row mb-4">
@@ -47,20 +47,25 @@ if (!isset($_SESSION['user_id'])) {
 
                 <ul class="list-group" id="resident-list">
                     <?php
-                    $conn = new mysqli("localhost", "root", "", "residents_db");
-                    if ($conn->connect_error) {
-                        die("Connection failed: " . $conn->connect_error);
+                    // Include the connection from the external file
+                    include('../src/configs/connection.php');
+
+                    // Check if the connection exists and is successful
+                    if (!$mysqlConn) {
+                        die("Connection failed: " . mysqli_connect_error());
                     }
 
                     // Fetch all residents to display in the list
                     $query = "SELECT id, first_name, last_name FROM residents_records";
-                    $result = $conn->query($query);
+                    $result = $mysqlConn->query($query);
 
+                    // Loop through the results and display each resident
                     while ($row = $result->fetch_assoc()) {
                         echo '<li class="list-group-item list-group-item-action" onclick="fetchResidentDetails(' . $row['id'] . ')">' . $row['first_name'] . ' ' . $row['last_name'] . '</li>';
                     }
 
-                    $conn->close();
+                    // Close the connection (optional)
+                    $mysqlConn->close();
                     ?>
                 </ul>
 

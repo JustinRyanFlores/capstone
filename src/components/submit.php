@@ -1,16 +1,10 @@
 <?php
-// Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "residents_db";
 
 // Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-
+include('../configs/connection.php');
 // Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+if ($mysqlConn->connect_error) {
+    die("Connection failed: " . $mysqlConn->connect_error);
 }
 
 // Sanitize and validate input
@@ -104,15 +98,15 @@ $sql = "INSERT INTO residents_records
         '$teenPregnancy', '$typeOfDelivery', '$assisted_by', '$organization', '$casesViolated', '$yearsOfStay', '$businessOwner', '$imagePath')";
 
 // Execute the statement and handle potential errors
-if ($conn->query($sql) === TRUE) {
+if ($mysqlConn->query($sql) === TRUE) {
     // Redirect to add_records.php with a success message
     header("Location: ../../pages/add_records.php?success=true");
     exit();
 } else {
     // Display the SQL error for debugging
-    echo "SQL Error: " . $conn->error;
+    echo "SQL Error: " . $mysqlConn->error;
     exit();
 }
 
 // Close the connection
-$conn->close();
+$mysqlConn->close();
