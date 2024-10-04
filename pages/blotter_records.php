@@ -458,3 +458,4 @@ if (isset($_GET['search'])) {
 // Closing connection at the end of the script
 $mysqlConn2->close();
 ?>
+

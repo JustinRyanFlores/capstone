@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <div class="logo">
-            <img src="/capstone/src/assets/kayanlog-logo.png" alt="Barangay Logo">
+            <img src="/capstone/src/assets/kayanlog-logo-removebg-preview.png" alt="Barangay Logo">
         </div>
         <div class="title-container">
             <h2>Barangay Kay-Anlog</h2>
