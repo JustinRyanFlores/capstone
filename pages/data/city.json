@@ -29,7 +29,7 @@
     },
     {
         "city_code": "012805",
-        "city_name": "City Of Batac",
+        "city_name": "Batac",
         "province_code": "0128",
         "psgc_code": "012805000",
         "region_desc": "01"
@@ -197,7 +197,7 @@
     },
     {
         "city_code": "012906",
-        "city_name": "City Of Candon",
+        "city_name": "Candon",
         "province_code": "0129",
         "psgc_code": "012906000",
         "region_desc": "01"
@@ -393,7 +393,7 @@
     },
     {
         "city_code": "012934",
-        "city_name": "City Of Vigan (Capital)",
+        "city_name": "Vigan (Capital)",
         "province_code": "0129",
         "psgc_code": "012934000",
         "region_desc": "01"
@@ -491,7 +491,7 @@
     },
     {
         "city_code": "013314",
-        "city_name": "City Of San Fernando (Capital)",
+        "city_name": "San Fernando (Capital)",
         "province_code": "0133",
         "psgc_code": "013314000",
         "region_desc": "01"
@@ -554,7 +554,7 @@
     },
     {
         "city_code": "015503",
-        "city_name": "City Of Alaminos",
+        "city_name": "Alaminos",
         "province_code": "0155",
         "psgc_code": "015503000",
         "region_desc": "01"
@@ -855,7 +855,7 @@
     },
     {
         "city_code": "015546",
-        "city_name": "City Of Urdaneta",
+        "city_name": "Urdaneta",
         "province_code": "0155",
         "psgc_code": "015546000",
         "region_desc": "01"
@@ -1170,7 +1170,7 @@
     },
     {
         "city_code": "023108",
-        "city_name": "City Of Cauayan",
+        "city_name": "Cauayan",
         "province_code": "0231",
         "psgc_code": "023108000",
         "region_desc": "02"
@@ -1359,7 +1359,7 @@
     },
     {
         "city_code": "023135",
-        "city_name": "City Of Santiago",
+        "city_name": "Santiago",
         "province_code": "0231",
         "psgc_code": "023135000",
         "region_desc": "02"
@@ -1541,7 +1541,7 @@
     },
     {
         "city_code": "030803",
-        "city_name": "City Of Balanga (Capital)",
+        "city_name": "Balanga (Capital)",
         "province_code": "0308",
         "psgc_code": "030803000",
         "region_desc": "03"
@@ -1674,7 +1674,7 @@
     },
     {
         "city_code": "031410",
-        "city_name": "City Of Malolos (Capital)",
+        "city_name": "Malolos (Capital)",
         "province_code": "0314",
         "psgc_code": "031410000",
         "region_desc": "03"
@@ -1688,7 +1688,7 @@
     },
     {
         "city_code": "031412",
-        "city_name": "City Of Meycauayan",
+        "city_name": "Meycauayan",
         "province_code": "0314",
         "psgc_code": "031412000",
         "region_desc": "03"
@@ -1744,7 +1744,7 @@
     },
     {
         "city_code": "031420",
-        "city_name": "City Of San Jose Del Monte",
+        "city_name": "San Jose Del Monte",
         "province_code": "0314",
         "psgc_code": "031420000",
         "region_desc": "03"
@@ -1828,7 +1828,7 @@
     },
     {
         "city_code": "034908",
-        "city_name": "City Of Gapan",
+        "city_name": "Gapan",
         "province_code": "0349",
         "psgc_code": "034908000",
         "region_desc": "03"
@@ -1891,7 +1891,7 @@
     },
     {
         "city_code": "034917",
-        "city_name": "Science City Of Muñoz",
+        "city_name": "Science  Muñoz",
         "province_code": "0349",
         "psgc_code": "034917000",
         "region_desc": "03"
@@ -2108,7 +2108,7 @@
     },
     {
         "city_code": "035416",
-        "city_name": "City Of San Fernando (Capital)",
+        "city_name": "San Fernando (Capital)",
         "province_code": "0354",
         "psgc_code": "035416000",
         "region_desc": "03"
@@ -2262,7 +2262,7 @@
     },
     {
         "city_code": "036916",
-        "city_name": "City Of Tarlac (Capital)",
+        "city_name": "Tarlac (Capital)",
         "province_code": "0369",
         "psgc_code": "036916000",
         "region_desc": "03"
@@ -2647,7 +2647,7 @@
     },
     {
         "city_code": "041031",
-        "city_name": "City Of Tanauan",
+        "city_name": "Tanauan",
         "province_code": "0410",
         "psgc_code": "041031000",
         "region_desc": "04"
@@ -2710,7 +2710,7 @@
     },
     {
         "city_code": "042106",
-        "city_name": "City Of Dasmariñas",
+        "city_name": "Dasmariñas",
         "province_code": "0421",
         "psgc_code": "042106000",
         "region_desc": "04"
@@ -2850,21 +2850,21 @@
     },
     {
         "city_code": "043403",
-        "city_name": "City Of Biñan",
+        "city_name": "Biñan",
         "province_code": "0434",
         "psgc_code": "043403000",
         "region_desc": "04"
     },
     {
         "city_code": "043404",
-        "city_name": "Cabuyao City",
+        "city_name": "Cabuyao",
         "province_code": "0434",
         "psgc_code": "043404000",
         "region_desc": "04"
     },
     {
         "city_code": "043405",
-        "city_name": "City Of Calamba",
+        "city_name": "Calamba",
         "province_code": "0434",
         "psgc_code": "043405000",
         "region_desc": "04"
@@ -3004,7 +3004,7 @@
     },
     {
         "city_code": "043425",
-        "city_name": "City Of San Pedro",
+        "city_name": "San Pedro",
         "province_code": "0434",
         "psgc_code": "043425000",
         "region_desc": "04"
@@ -3025,7 +3025,7 @@
     },
     {
         "city_code": "043428",
-        "city_name": "City Of Santa Rosa",
+        "city_name": "Santa Rosa",
         "province_code": "0434",
         "psgc_code": "043428000",
         "region_desc": "04"
@@ -3312,7 +3312,7 @@
     },
     {
         "city_code": "045647",
-        "city_name": "City Of Tayabas",
+        "city_name": "Tayabas",
         "province_code": "0456",
         "psgc_code": "045647000",
         "region_desc": "04"
@@ -3340,7 +3340,7 @@
     },
     {
         "city_code": "045802",
-        "city_name": "City Of Antipolo",
+        "city_name": "Antipolo",
         "province_code": "0458",
         "psgc_code": "045802000",
         "region_desc": "04"
@@ -3578,7 +3578,7 @@
     },
     {
         "city_code": "175205",
-        "city_name": "City Of Calapan (Capital)",
+        "city_name": "Calapan (Capital)",
         "province_code": "1752",
         "psgc_code": "175205000",
         "region_desc": "17"
@@ -3991,7 +3991,7 @@
     },
     {
         "city_code": "050508",
-        "city_name": "City Of Ligao",
+        "city_name": "Ligao",
         "province_code": "0505",
         "psgc_code": "050508000",
         "region_desc": "05"
@@ -4054,7 +4054,7 @@
     },
     {
         "city_code": "050517",
-        "city_name": "City Of Tabaco",
+        "city_name": "Tabaco",
         "province_code": "0505",
         "psgc_code": "050517000",
         "region_desc": "05"
@@ -4558,7 +4558,7 @@
     },
     {
         "city_code": "054111",
-        "city_name": "City Of Masbate (Capital)",
+        "city_name": "Masbate (Capital)",
         "province_code": "0541",
         "psgc_code": "054111000",
         "region_desc": "05"
@@ -4733,7 +4733,7 @@
     },
     {
         "city_code": "056216",
-        "city_name": "City Of Sorsogon (Capital)",
+        "city_name": "Sorsogon (Capital)",
         "province_code": "0562",
         "psgc_code": "056216000",
         "region_desc": "05"
@@ -5321,7 +5321,7 @@
     },
     {
         "city_code": "063035",
-        "city_name": "City Of Passi",
+        "city_name": "Passi",
         "province_code": "0630",
         "psgc_code": "063035000",
         "region_desc": "06"
@@ -5468,14 +5468,14 @@
     },
     {
         "city_code": "064509",
-        "city_name": "City Of Escalante",
+        "city_name": "Escalante",
         "province_code": "0645",
         "psgc_code": "064509000",
         "region_desc": "06"
     },
     {
         "city_code": "064510",
-        "city_name": "City Of Himamaylan",
+        "city_name": "Himamaylan",
         "province_code": "0645",
         "psgc_code": "064510000",
         "region_desc": "06"
@@ -5510,7 +5510,7 @@
     },
     {
         "city_code": "064515",
-        "city_name": "City Of Kabankalan",
+        "city_name": "Kabankalan",
         "province_code": "0645",
         "psgc_code": "064515000",
         "region_desc": "06"
@@ -5594,14 +5594,14 @@
     },
     {
         "city_code": "064527",
-        "city_name": "City Of Sipalay",
+        "city_name": "Sipalay",
         "province_code": "0645",
         "psgc_code": "064527000",
         "region_desc": "06"
     },
     {
         "city_code": "064528",
-        "city_name": "City Of Talisay",
+        "city_name": "Talisay",
         "province_code": "0645",
         "psgc_code": "064528000",
         "region_desc": "06"
@@ -5622,7 +5622,7 @@
     },
     {
         "city_code": "064531",
-        "city_name": "City Of Victorias",
+        "city_name": "Victorias",
         "province_code": "0645",
         "psgc_code": "064531000",
         "region_desc": "06"
@@ -6077,7 +6077,7 @@
     },
     {
         "city_code": "072211",
-        "city_name": "City Of Bogo",
+        "city_name": "Bogo",
         "province_code": "0722",
         "psgc_code": "072211000",
         "region_desc": "07"
@@ -6098,7 +6098,7 @@
     },
     {
         "city_code": "072214",
-        "city_name": "City Of Carcar",
+        "city_name": "Carcar",
         "province_code": "0722",
         "psgc_code": "072214000",
         "region_desc": "07"
@@ -6238,7 +6238,7 @@
     },
     {
         "city_code": "072234",
-        "city_name": "City Of Naga",
+        "city_name": "Naga",
         "province_code": "0722",
         "psgc_code": "072234000",
         "region_desc": "07"
@@ -6350,7 +6350,7 @@
     },
     {
         "city_code": "072250",
-        "city_name": "City Of Talisay",
+        "city_name": "Talisay",
         "province_code": "0722",
         "psgc_code": "072250000",
         "region_desc": "07"
@@ -6413,7 +6413,7 @@
     },
     {
         "city_code": "074606",
-        "city_name": "City Of Bayawan (Tulong)",
+        "city_name": "Bayawan (Tulong)",
         "province_code": "0746",
         "psgc_code": "074606000",
         "region_desc": "07"
@@ -6448,7 +6448,7 @@
     },
     {
         "city_code": "074611",
-        "city_name": "City Of Guihulngan",
+        "city_name": "Guihulngan",
         "province_code": "0746",
         "psgc_code": "074611000",
         "region_desc": "07"
@@ -6518,7 +6518,7 @@
     },
     {
         "city_code": "074621",
-        "city_name": "City Of Tanjay",
+        "city_name": "Tanjay",
         "province_code": "0746",
         "psgc_code": "074621000",
         "region_desc": "07"
@@ -6616,7 +6616,7 @@
     },
     {
         "city_code": "082604",
-        "city_name": "City Of Borongan (Capital)",
+        "city_name": "Borongan (Capital)",
         "province_code": "0826",
         "psgc_code": "082604000",
         "region_desc": "08"
@@ -6798,7 +6798,7 @@
     },
     {
         "city_code": "083708",
-        "city_name": "City Of Baybay",
+        "city_name": "Baybay",
         "province_code": "0837",
         "psgc_code": "083708000",
         "region_desc": "08"
@@ -7253,7 +7253,7 @@
     },
     {
         "city_code": "086005",
-        "city_name": "City Of Catbalogan (Capital)",
+        "city_name": "Catbalogan (Capital)",
         "province_code": "0860",
         "psgc_code": "086005000",
         "region_desc": "08"
@@ -7449,7 +7449,7 @@
     },
     {
         "city_code": "086407",
-        "city_name": "City Of Maasin (Capital)",
+        "city_name": "Maasin (Capital)",
         "province_code": "0864",
         "psgc_code": "086407000",
         "region_desc": "08"
@@ -8093,7 +8093,7 @@
     },
     {
         "city_code": "099701",
-        "city_name": "City Of Isabela",
+        "city_name": "Isabela",
         "province_code": "0997",
         "psgc_code": "099701000",
         "region_desc": "09"
@@ -8177,7 +8177,7 @@
     },
     {
         "city_code": "101312",
-        "city_name": "City Of Malaybalay (Capital)",
+        "city_name": "Malaybalay (Capital)",
         "province_code": "1013",
         "psgc_code": "101312000",
         "region_desc": "10"
@@ -8240,7 +8240,7 @@
     },
     {
         "city_code": "101321",
-        "city_name": "City Of Valencia",
+        "city_name": "Valencia",
         "province_code": "1013",
         "psgc_code": "101321000",
         "region_desc": "10"
@@ -8611,7 +8611,7 @@
     },
     {
         "city_code": "104307",
-        "city_name": "City Of El Salvador",
+        "city_name": "El Salvador",
         "province_code": "1043",
         "psgc_code": "104307000",
         "region_desc": "10"
@@ -8779,14 +8779,14 @@
     },
     {
         "city_code": "112315",
-        "city_name": "City Of Panabo",
+        "city_name": "Panabo",
         "province_code": "1123",
         "psgc_code": "112315000",
         "region_desc": "11"
     },
     {
         "city_code": "112317",
-        "city_name": "Island Garden City Of Samal",
+        "city_name": "Island Garden  Samal",
         "province_code": "1123",
         "psgc_code": "112317000",
         "region_desc": "11"
@@ -8800,7 +8800,7 @@
     },
     {
         "city_code": "112319",
-        "city_name": "City Of Tagum (Capital)",
+        "city_name": "Tagum (Capital)",
         "province_code": "1123",
         "psgc_code": "112319000",
         "region_desc": "11"
@@ -8842,7 +8842,7 @@
     },
     {
         "city_code": "112403",
-        "city_name": "City Of Digos (Capital)",
+        "city_name": "Digos (Capital)",
         "province_code": "1124",
         "psgc_code": "112403000",
         "region_desc": "11"
@@ -8961,7 +8961,7 @@
     },
     {
         "city_code": "112509",
-        "city_name": "City Of Mati (Capital)",
+        "city_name": "Mati (Capital)",
         "province_code": "1125",
         "psgc_code": "112509000",
         "region_desc": "11"
@@ -9115,7 +9115,7 @@
     },
     {
         "city_code": "124704",
-        "city_name": "City Of Kidapawan (Capital)",
+        "city_name": "Kidapawan (Capital)",
         "province_code": "1247",
         "psgc_code": "124704000",
         "region_desc": "12"
@@ -9234,7 +9234,7 @@
     },
     {
         "city_code": "126306",
-        "city_name": "City Of Koronadal (Capital)",
+        "city_name": "Koronadal (Capital)",
         "province_code": "1263",
         "psgc_code": "126306000",
         "region_desc": "12"
@@ -9374,7 +9374,7 @@
     },
     {
         "city_code": "126511",
-        "city_name": "City Of Tacurong",
+        "city_name": "Tacurong",
         "province_code": "1265",
         "psgc_code": "126511000",
         "region_desc": "12"
@@ -9542,21 +9542,21 @@
     },
     {
         "city_code": "137401",
-        "city_name": "City Of Mandaluyong",
+        "city_name": "Mandaluyong",
         "province_code": "1374",
         "psgc_code": "137401000",
         "region_desc": "13"
     },
     {
         "city_code": "137402",
-        "city_name": "City Of Marikina",
+        "city_name": "Marikina",
         "province_code": "1374",
         "psgc_code": "137402000",
         "region_desc": "13"
     },
     {
         "city_code": "137403",
-        "city_name": "City Of Pasig",
+        "city_name": "Pasig",
         "province_code": "1374",
         "psgc_code": "137403000",
         "region_desc": "13"
@@ -9570,7 +9570,7 @@
     },
     {
         "city_code": "137405",
-        "city_name": "City Of San Juan",
+        "city_name": "San Juan",
         "province_code": "1374",
         "psgc_code": "137405000",
         "region_desc": "13"
@@ -9584,49 +9584,49 @@
     },
     {
         "city_code": "137502",
-        "city_name": "City Of Malabon",
+        "city_name": "Malabon",
         "province_code": "1375",
         "psgc_code": "137502000",
         "region_desc": "13"
     },
     {
         "city_code": "137503",
-        "city_name": "City Of Navotas",
+        "city_name": "Navotas",
         "province_code": "1375",
         "psgc_code": "137503000",
         "region_desc": "13"
     },
     {
         "city_code": "137504",
-        "city_name": "City Of Valenzuela",
+        "city_name": "Valenzuela",
         "province_code": "1375",
         "psgc_code": "137504000",
         "region_desc": "13"
     },
     {
         "city_code": "137601",
-        "city_name": "City Of Las Piñas",
+        "city_name": "Las Piñas",
         "province_code": "1376",
         "psgc_code": "137601000",
         "region_desc": "13"
     },
     {
         "city_code": "137602",
-        "city_name": "City Of Makati",
+        "city_name": "Makati",
         "province_code": "1376",
         "psgc_code": "137602000",
         "region_desc": "13"
     },
     {
         "city_code": "137603",
-        "city_name": "City Of Muntinlupa",
+        "city_name": "Muntinlupa",
         "province_code": "1376",
         "psgc_code": "137603000",
         "region_desc": "13"
     },
     {
         "city_code": "137604",
-        "city_name": "City Of Parañaque",
+        "city_name": "Parañaque",
         "province_code": "1376",
         "psgc_code": "137604000",
         "region_desc": "13"
@@ -10053,7 +10053,7 @@
     },
     {
         "city_code": "143213",
-        "city_name": "City Of Tabuk (Capital)",
+        "city_name": "Tabuk (Capital)",
         "province_code": "1432",
         "psgc_code": "143213000",
         "region_desc": "14"
@@ -10193,7 +10193,7 @@
     },
     {
         "city_code": "150702",
-        "city_name": "City Of Lamitan",
+        "city_name": "Lamitan",
         "province_code": "1507",
         "psgc_code": "150702000",
         "region_desc": "15"
@@ -11033,7 +11033,7 @@
     },
     {
         "city_code": "160203",
-        "city_name": "City Of Cabadbaran",
+        "city_name": "Cabadbaran",
         "province_code": "1602",
         "psgc_code": "160203000",
         "region_desc": "16"
@@ -11103,7 +11103,7 @@
     },
     {
         "city_code": "160301",
-        "city_name": "City Of Bayugan",
+        "city_name": "Bayugan",
         "province_code": "1603",
         "psgc_code": "160301000",
         "region_desc": "16"
@@ -11362,7 +11362,7 @@
     },
     {
         "city_code": "166803",
-        "city_name": "City Of Bislig",
+        "city_name": "Bislig",
         "province_code": "1668",
         "psgc_code": "166803000",
         "region_desc": "16"
@@ -11474,7 +11474,7 @@
     },
     {
         "city_code": "166819",
-        "city_name": "City Of Tandag (Capital)",
+        "city_name": "Tandag (Capital)",
         "province_code": "1668",
         "psgc_code": "166819000",
         "region_desc": "16"
