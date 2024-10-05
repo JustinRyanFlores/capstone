@@ -203,7 +203,7 @@ if ($row = $result->fetch_assoc()) {
                                 </tr>
                                 <tr>
                                     <th>PWD</th>
-                                    <td><?php echo $row['teen_pregnancy'] ? 'Yes' : 'No'; ?></td>
+                                    <td><?php echo $row['pwd'] ? 'Yes' : 'No'; ?></td>
                                 </tr>
                                 <tr>
                                     <th>Immunization Status</th>
