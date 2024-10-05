@@ -90,7 +90,7 @@ if (!isset($_SESSION['user_id'])) {
     </div>
     <!-- Resident Details Modal -->
     <div class="modal fade" id="residentDetailsModal" tabindex="-1" role="dialog" aria-labelledby="residentDetailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="residentDetailsModalLabel">Resident's Details</h5>
@@ -117,7 +117,11 @@ if (!isset($_SESSION['user_id'])) {
                             window.location.href = "/capstone/pages/add_records.php?id=" + residentId;
                         }
 
+                        var selectedResidentId; // Declare a global variable
+
                         function fetchResidentDetails(residentId) {
+                            selectedResidentId = residentId; // Store the resident ID in the global variable
+
                             // Show a loading spinner
                             $("#resident-details").html('<div class="d-flex justify-content-center align-items-center"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>');
 
@@ -141,6 +145,7 @@ if (!isset($_SESSION['user_id'])) {
                             });
                         }
 
+
                         $(document).ready(function() {
                             const urlParams = new URLSearchParams(window.location.search);
                             const residentId = urlParams.get('residentId');
@@ -154,8 +159,6 @@ if (!isset($_SESSION['user_id'])) {
                             alert('Record updated successfully!');
                             window.scrollTo(0, 0); // Scroll to top
                         }
-
-
 
                         function printResidentDetails() {
                             // Get the content of the modal that we want to print
@@ -181,14 +184,60 @@ if (!isset($_SESSION['user_id'])) {
                             printWindow.document.write(printContent);
                             printWindow.document.write('</body></html>');
 
-                            // Close the document to finish writing and call the print function
+                            // Close the document to finish writing
                             printWindow.document.close();
-                            printWindow.focus(); // Make sure the print window has focus
 
-                            printWindow.print(); // Print the contents
-                            printWindow.close(); // Close the print window after printing
+                            // Wait for the new window to fully load before triggering print
+                            printWindow.onload = function() {
+                                printWindow.focus(); // Ensure the print window has focus
+                                printWindow.print(); // Trigger the print
+
+                                // Use a delay before closing the window to ensure the print dialog fully processes
+                                setTimeout(function() {
+                                    printWindow.close(); // Close the print window after a small delay
+                                }, 500); // 500ms delay
+                            };
                         }
 
+                        function deleteResident() {
+                            if (confirm("Are you sure you want to delete this resident?")) {
+                                $.ajax({
+                                    url: '/capstone/src/components/delete_resident.php',
+                                    type: 'POST',
+                                    data: {
+                                        residentId: selectedResidentId
+                                    },
+                                    success: function(response) {
+                                        alert(response); // Show success or error message
+
+                                        console.log("Page will reload now");
+                                        $('#residentDetailsModal').modal('hide'); // Close the modal
+
+                                        // Refresh the page to reflect the changes
+                                        window.location.reload();
+                                    },
+                                    error: function() {
+                                        alert("An error occurred while deleting the resident.");
+                                    }
+                                });
+                            }
+                        }
+
+
+                        function loadResidents() {
+                            // You need to implement this function to reload the resident list.
+                            // For example, you could do an AJAX request to fetch the updated list of residents from the server
+                            $.ajax({
+                                url: '/capstone/src/components/get_residents.php',
+                                type: 'GET',
+                                success: function(data) {
+                                    $('#resident-list').html(data); // Assuming the server returns the updated HTML list
+                                },
+                                error: function() {
+                                    alert("An error occurred while reloading the resident list.");
+                                }
+                            });
+                        }
 
                         function cancelAction() {
                             // Logic to cancel the action or clear the form

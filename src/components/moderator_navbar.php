@@ -2,7 +2,7 @@
 <div class="sidebar p-3 d-none d-md-block">
     <div class="d-flex align-items-center">
         <a href="dahsboard.php">
-            <img src="/capstone/src/assets/kayanlog-logo.png" alt="Logo" style="width: 80px; height: 80px; margin-right: 10px;">
+            <img src="/capstone/src/assets/kayanlog-logo-removebg-preview.png" alt="Logo" style="width: 80px; height: 80px; margin-right: 10px;">
         </a>
         <h5 class="mb-0">Barangay Kay-Anlog</h5>
     </div>
@@ -54,7 +54,7 @@
 <!-- Top Navbar for smaller screens -->
 <nav class="navbar navbar-expand-md bg-primary d-md-none fixed-top">
     <a class="navbar-brand" href="dahsboard.php">
-        <img src="/capstone/src/assets/kayanlog-logo.png" alt="Logo" style="width: 40px; height: 40px;">
+        <img src="/capstone/src/assets/kayanlog-logo-removebg-preview.png" alt="Logo" style="width: 40px; height: 40px;">
         Barangay Kay-Anlog
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
