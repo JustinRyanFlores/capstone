@@ -399,15 +399,16 @@ $isEdit = isset($_GET['id']) ? true : false;
                                     const selectedRegionCode = '04'; // Default region
                                     fetchData('data/province.json').then(data => {
                                         const provinces = data.filter(province => province.region_code === selectedRegionCode);
-                                        populateDropdown(provincesSelect, provinces, 'province_code', 'province_name', '0434', '<?php echo $province; ?>');
-                                            
-                                        const selectedProvinceCode = '0434';
+                                        populateDropdown(provincesSelect, provinces, 'province_code', 'province_name', '<?php echo $province; ?>');
+
+                                        const selectedProvinceCode = '<?php echo $province; ?>';
+
                                         if (selectedProvinceCode) {
                                             fetchData('data/city.json').then(data => {
                                                 const cities = data.filter(city => city.province_code === selectedProvinceCode);
-                                                populateDropdown(citiesSelect, cities, 'city_code', 'city_name','043405', '<?php echo $city; ?>');
+                                                populateDropdown(citiesSelect, cities, 'city_code', 'city_name', '<?php echo $city; ?>');
 
-                                                const selectedCityCode = '043405';
+                                                const selectedCityCode = '<?php echo $city; ?>';
                                                 if (selectedCityCode) {
                                                     fetchData('data/barangay.json').then(data => {
                                                         const barangays = data.filter(barangay => barangay.city_code === selectedCityCode);
@@ -635,23 +636,14 @@ $isEdit = isset($_GET['id']) ? true : false;
                                 <button id="submitButton" type="submit" class="btn btn-custom btn-primary-custom">
                                     <?php echo $isEdit ? 'Update' : 'Add'; ?>
                                 </button>
-                                <button class="btn btn-custom btn-secondary-custom" onclick="window.location.href='resident_list.php'">Cancel</button>
-
+                                <button type="button" class="btn btn-custom btn-secondary-custom" onclick="window.location.href='resident_list.php'">Cancel</button>
                             </div>
                             <script>
                                 if (window.location.search.includes('success=1')) {
                                     alert('Record added successfully!');
-
                                     window.scrollTo(0, 0);
                                 }
 
-                                if (window.location.search.includes('success=1')) {
-                                    alert('Record added successfully!');
-                                    window.scrollTo(0, 0);
-                                }
-                            </script>
-
-                            <script>
                                 const urlParams = new URLSearchParams(window.location.search);
                                 if (urlParams.has('id')) {
                                     document.getElementById('submitButton').textContent = 'Update';
@@ -660,12 +652,10 @@ $isEdit = isset($_GET['id']) ? true : false;
                                 }
                             </script>
                         </div>
+
             </form>
         </div>
     </div>
-
-
-
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
