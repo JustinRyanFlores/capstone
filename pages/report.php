@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 include('../src/configs/connection.php');
 
 // Query to get gender distribution
-$query = "SELECT gender, COUNT(*) as count FROM residents_records GROUP BY gender";
+$query = "SELECT gender, COUNT(*) as count FROM residents_records WHERE gender IS NOT NULL AND gender != 'N/A' AND gender != '' GROUP BY gender";
 $result = $mysqlConn->query($query);
 
 $genderData = [];
@@ -69,7 +69,8 @@ while ($row = $populationResult->fetch_assoc()) {
 // Query for illness data
 $illnessQuery = "
     SELECT illness, COUNT(*) as count 
-    FROM residents_records 
+    FROM residents_records
+    WHERE illness IS NOT NULL AND illness != 'N/A' AND illness != '' 
     GROUP BY illness
 ";
 $illnessResult = $mysqlConn->query($illnessQuery);
@@ -82,7 +83,8 @@ while ($row = $illnessResult->fetch_assoc()) {
 // Query for medication data
 $medicationQuery = "
     SELECT medication, COUNT(*) as count 
-    FROM residents_records 
+    FROM residents_records
+    WHERE medication IS NOT NULL AND medication != 'N/A' AND medication != '' 
     GROUP BY medication
 ";
 $medicationResult = $mysqlConn->query($medicationQuery);
@@ -95,7 +97,8 @@ while ($row = $medicationResult->fetch_assoc()) {
 // Query for delivery type distribution
 $deliveryQuery = "
     SELECT type_of_delivery, COUNT(*) as count 
-    FROM residents_records 
+    FROM residents_records
+    WHERE type_of_delivery IS NOT NULL AND type_of_delivery != 'N/A' AND type_of_delivery != '' 
     GROUP BY type_of_delivery
 ";
 $deliveryResult = $mysqlConn->query($deliveryQuery);
@@ -108,7 +111,8 @@ while ($row = $deliveryResult->fetch_assoc()) {
 // Query for disability distribution
 $disabilityQuery = "
     SELECT disability, COUNT(*) as count 
-    FROM residents_records 
+    FROM residents_records
+    WHERE disability IS NOT NULL AND disability != 'N/A' AND disability != '' 
     GROUP BY disability
 ";
 $disabilityResult = $mysqlConn->query($disabilityQuery);
@@ -116,6 +120,36 @@ $disabilityResult = $mysqlConn->query($disabilityQuery);
 $disabilityData = [];
 while ($row = $disabilityResult->fetch_assoc()) {
     $disabilityData[] = [$row['disability'], (int)$row['count']];
+}
+
+// Query for pwd over the years
+$pwdQuery = "
+    SELECT DATE(created_at) as date, COUNT(*) as count
+    FROM residents_records
+    WHERE pwd = '1'
+    GROUP BY DATE(created_at)
+    ORDER BY date ASC
+";
+$pwdResult = $mysqlConn->query($pwdQuery);
+
+$pwdData = [];
+while ($row = $pwdResult->fetch_assoc()) {
+    $pwdData[] = [$row['date'], (int)$row['count']];
+}
+
+// Query for teen pregnancy over the years
+$teenPregnancyQuery = "
+    SELECT DATE(created_at) as date, COUNT(*) as count
+    FROM residents_records
+    WHERE teen_pregnancy = '1'
+    GROUP BY DATE(created_at)
+    ORDER BY date ASC
+";
+$teenPregnancyResult = $mysqlConn->query($teenPregnancyQuery);
+
+$teenPregnancyData = [];
+while ($row = $teenPregnancyResult->fetch_assoc()) {
+    $teenPregnancyData[] = [$row['date'], (int)$row['count']];
 }
 
 ?>
@@ -150,6 +184,8 @@ while ($row = $disabilityResult->fetch_assoc()) {
             drawMedicationBarChart();
             drawDeliveryPieChart();
             drawDisabilityBarChart();
+            drawPwdLineChart();
+            drawTeenPregnancyLineChart();
         }
 
         function drawGenderPieChart() {
@@ -373,6 +409,98 @@ while ($row = $disabilityResult->fetch_assoc()) {
         chart.draw(data, options);
     }
 
+    function drawPwdLineChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'Date'); 
+            data.addColumn('number', 'Number of PWD');
+            
+            data.addRows([
+                <?php
+                foreach ($pwdData as $data) {
+                    $dateParts = explode('-', $data[0]);
+                    echo "[new Date(" . $dateParts[0] . ", " . ($dateParts[1] - 1) . ", " . $dateParts[2] . "), " . $data[1] . "],";
+                }
+                ?>
+            ]);
+
+            var dashboard = new google.visualization.Dashboard(document.getElementById('pwdDashboard'));
+
+            var control = new google.visualization.ControlWrapper({
+                controlType: 'ChartRangeFilter',
+                containerId: 'pwdFilter',
+                options: {
+                    filterColumnLabel: 'Date',
+                    ui: { 
+                        chartType: 'LineChart', 
+                        chartOptions: { 
+                            chartArea: { width: '60%' }, 
+                            hAxis: { format: 'yyyy-MM-dd' } 
+                        } 
+                    }
+                }
+            });
+
+            var chart = new google.visualization.ChartWrapper({
+                chartType: 'LineChart',
+                containerId: 'pwdLineChart',
+                options: {
+                    title: 'PWD Over Time',
+                    hAxis: { title: 'Date', format: 'yyyy-MMM-dd' },
+                    vAxis: { title: 'Number of PWD', format: '0' },
+                    chartArea: { width: '85%', height: '70%' },
+                }
+            });
+
+            dashboard.bind(control, chart);
+            dashboard.draw(data);
+        }
+
+        function drawTeenPregnancyLineChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'Date'); 
+            data.addColumn('number', 'Number of Teen Pregnancies');
+            
+            data.addRows([
+                <?php
+                foreach ($teenPregnancyData as $data) {
+                    $dateParts = explode('-', $data[0]);
+                    echo "[new Date(" . $dateParts[0] . ", " . ($dateParts[1] - 1) . ", " . $dateParts[2] . "), " . $data[1] . "],";
+                }
+                ?>
+            ]);
+
+            var dashboard = new google.visualization.Dashboard(document.getElementById('teenPregnancyDashboard'));
+
+            var control = new google.visualization.ControlWrapper({
+                controlType: 'ChartRangeFilter',
+                containerId: 'teenPregnancyFilter',
+                options: {
+                    filterColumnLabel: 'Date',
+                    ui: { 
+                        chartType: 'LineChart', 
+                        chartOptions: { 
+                            chartArea: { width: '60%' }, 
+                            hAxis: { format: 'yyyy-MM-dd' } 
+                        } 
+                    }
+                }
+            });
+
+            var chart = new google.visualization.ChartWrapper({
+                chartType: 'LineChart',
+                containerId: 'teenPregnancyLineChart',
+                options: {
+                    title: 'Teen Pregnancy Over Time',
+                    hAxis: { title: 'Date', format: 'yyyy-MMM-dd' },
+                    vAxis: { title: 'Number of Teen Pregnancies', format: '0' },
+                    chartArea: { width: '85%', height: '70%' },
+                }
+            });
+
+            dashboard.bind(control, chart);
+            dashboard.draw(data);
+        }
+
 
         window.addEventListener('resize', function () {
             drawCharts();
@@ -464,10 +592,23 @@ while ($row = $disabilityResult->fetch_assoc()) {
                         <div id="medicationBarChart" style="width: 100%; height: 500px;"></div>
                     </div>
 
+                    <!-- PWD Chart -->
+                    <div id="pwdDashboard" class="chart-container">
+                        <h5>PWD Distribution</h5>
+                        <div id="pwdFilter" style="width: 100%; height: 100px;"></div>
+                        <div id="pwdLineChart" style="width: 100%; height: 400px;"></div>
+                    </div>
+
                     <!-- Disability Distribution Bar Chart -->
                     <div class="chart-container">
                         <h5>Disability Distribution</h5>
                         <div id="disabilityBarChart" style="width: 100%; height: 400px;"></div>
+                    </div>
+
+                    <!-- Teen Pregnancy Chart -->
+                    <div id="teenPregnancyDashboard" class="chart-container">
+                        <div id="teenPregnancyFilter" style="width: 100%; height: 100px;"></div>
+                        <div id="teenPregnancyLineChart" style="width: 100%; height: 400px;"></div>
                     </div>
 
                     <!-- Type of Delivery Distribution Pie Chart -->
