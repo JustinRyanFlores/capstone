@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+// If the user is already logged in, redirect to the dashboard
+if (isset($_SESSION['user_id'])) {
+    header("Location: /capstone/pages/dahsboard.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,7 +32,6 @@
         <p>Enter your username & password to login</p>
 
         <?php
-        session_start();
         if (isset($_SESSION['error_message'])) {
             echo '<p style="color:red;">' . $_SESSION['error_message'] . '</p>';
             unset($_SESSION['error_message']); // Clear the message after displaying
