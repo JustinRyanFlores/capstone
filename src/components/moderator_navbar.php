@@ -1,14 +1,14 @@
-<!-- Sidebar for larger screens -->
+dashboard<!-- Sidebar for larger screens -->
 <div class="sidebar p-3 d-none d-md-block">
     <div class="d-flex align-items-center">
-        <a href="dahsboard.php">
+        <a href="dashboard.php">
             <img src="/capstone/src/assets/kayanlog-logo-removebg-preview.png" alt="Logo" style="width: 80px; height: 80px; margin-right: 10px;">
         </a>
         <h5 class="mb-0">Barangay Kay-Anlog</h5>
     </div>
     <ul class="nav flex-column mt-5">
         <li class="nav-item">
-            <a class="nav-link" href="dahsboard.php"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
+            <a class="nav-link" href="dashboard.php"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
         </li>
         <li class="nav-item">
             <a class="nav-link d-flex" data-bs-toggle="collapse" href="#residentRecords" aria-expanded="<?php echo (basename($_SERVER['PHP_SELF']) == 'resident_list.php' || basename($_SERVER['PHP_SELF']) == 'add_records.php') ? 'true' : 'false'; ?>" aria-controls="residentRecords">
@@ -53,7 +53,7 @@
 
 <!-- Top Navbar for smaller screens -->
 <nav class="navbar navbar-expand-md bg-primary d-md-none fixed-top">
-    <a class="navbar-brand" href="dahsboard.php">
+    <a class="navbar-brand" href="dashboard.php">
         <img src="/capstone/src/assets/kayanlog-logo-removebg-preview.png" alt="Logo" style="width: 40px; height: 40px;">
         Barangay Kay-Anlog
     </a>
@@ -63,7 +63,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="dahsboard.php" style="padding-left: 15px;"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
+                <a class="nav-link" href="dashboard.php" style="padding-left: 15px;"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</a>
             </li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding-left: 15px;">

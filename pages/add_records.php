@@ -32,6 +32,7 @@ $residentImage = $firstName = $middleName = $lastName = $dob = $year = $month = 
     $illness = $medication = $disability = $immunization = $pwd =  $teenAgePregnancy = $typeOfDelivery = $assisted_by =
     $organization = $casesViolated = $yearsOfStay = $businessOwner = "";
 
+
 // Function to calculate age from date of birth
 function calculateAge($dob)
 {
@@ -85,7 +86,9 @@ if (isset($_GET['id'])) {
         $illness = htmlspecialchars($row['illness']);
         $medication = htmlspecialchars($row['medication']);
         $disability = htmlspecialchars($row['disability']);
-        $immunization = htmlspecialchars($row['immunization']);
+        // Handle multi-checkbox immunization
+        $immunization = htmlspecialchars($row['immunization']); // Fetch immunization as a comma-separated string
+        $immunizationArray = explode(', ', $immunization); // Convert the string into an array
         $pwd = htmlspecialchars($row['pwd']);
         $teenAgePregnancy = htmlspecialchars($row['teen_pregnancy']);
         $typeOfDelivery = htmlspecialchars($row['type_of_delivery']);
@@ -95,6 +98,8 @@ if (isset($_GET['id'])) {
         $yearsOfStay = htmlspecialchars($row['years_of_stay']);
         $businessOwner = htmlspecialchars($row['business_owner']);
     }
+
+
 
     $stmt->close();
 }
@@ -302,7 +307,19 @@ $isEdit = isset($_GET['id']) ? true : false;
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="subdivision">Subdivision:</label>
-                                <input type="text" class="form-control" id="subdivision" name="subdivision" value="<?php echo $subdivision; ?>">
+                                <select class="form-control" id="subdivision" name="subdivision">
+                                    <option value="" <?php echo (empty($subdivision)) ? 'selected' : ''; ?>>-- Select Subdivision --</option>
+                                    <option value="Purok-1" <?php echo ($subdivision === 'Purok-1') ? 'selected' : ''; ?>>Purok-1</option>
+                                    <option value="Purok-2" <?php echo ($subdivision === 'Purok-2') ? 'selected' : ''; ?>>Purok-2</option>
+                                    <option value="Purok-3" <?php echo ($subdivision === 'Purok-3') ? 'selected' : ''; ?>>Purok-3</option>
+                                    <option value="Purok-4" <?php echo ($subdivision === 'Purok-4') ? 'selected' : ''; ?>>Purok-4</option>
+                                    <option value="Calambeño ville5" <?php echo ($subdivision === 'Calambeño ville 5') ? 'selected' : ''; ?>>Calambeño ville 5</option>
+                                    <option value="Mother ignacia" <?php echo ($subdivision === 'Mother ignacia') ? 'selected' : ''; ?>>Mother ignacia</option>
+                                    <option value="Villa javier" <?php echo ($subdivision === 'Villa Javier') ? 'selected' : ''; ?>>Villa Javier</option>
+                                    <option value="Villa andrea" <?php echo ($subdivision === 'Villa Andrea') ? 'selected' : ''; ?>>Villa Andrea</option>
+                                    <option value="Valley breeze" <?php echo ($subdivision === 'Valley Breeze') ? 'selected' : ''; ?>>Valley Breeze</option>
+                                    <option value="Southville 6" <?php echo ($subdivision === 'Southville 6') ? 'selected' : ''; ?>>Southville 6</option>
+                                </select>
                             </div>
                         </div>
 
@@ -376,37 +393,33 @@ $isEdit = isset($_GET['id']) ? true : false;
 
                                 // Fetch regions and populate the dropdown
                                 fetchData('data/region.json').then(data => {
-                                    populateDropdown(regionsSelect, data, 'region_code', 'region_name', '<?php echo $region; ?>');
+                                    populateDropdown(regionsSelect, data, 'region_code', 'region_name', '04', '<?php echo $region; ?>');
 
                                     // Check if a region is selected and fetch provinces
-                                    if ('<?php echo $region; ?>') {
-                                        const selectedRegionCode = '<?php echo $region; ?>';
-                                        fetchData('data/province.json').then(data => {
-                                            const provinces = data.filter(province => province.region_code === selectedRegionCode);
-                                            populateDropdown(provincesSelect, provinces, 'province_code', 'province_name', '<?php echo $province; ?>');
+                                    const selectedRegionCode = '04'; // Default region
+                                    fetchData('data/province.json').then(data => {
+                                        const provinces = data.filter(province => province.region_code === selectedRegionCode);
+                                        populateDropdown(provincesSelect, provinces, 'province_code', 'province_name', '<?php echo $province; ?>');
 
-                                            // If a province is selected, fetch cities
-                                            if ('<?php echo $province; ?>') {
-                                                const selectedProvinceCode = '<?php echo $province; ?>';
-                                                fetchData('data/city.json').then(data => {
-                                                    const cities = data.filter(city => city.province_code === selectedProvinceCode);
-                                                    populateDropdown(citiesSelect, cities, 'city_code', 'city_name', '<?php echo $city; ?>');
+                                        const selectedProvinceCode = '<?php echo $province; ?>';
+                                        if (selectedProvinceCode) {
+                                            fetchData('data/city.json').then(data => {
+                                                const cities = data.filter(city => city.province_code === selectedProvinceCode);
+                                                populateDropdown(citiesSelect, cities, 'city_code', 'city_name', '<?php echo $city; ?>');
 
-                                                    // If a city is selected, fetch barangays
-                                                    if ('<?php echo $city; ?>') {
-                                                        const selectedCityCode = '<?php echo $city; ?>';
-                                                        fetchData('data/barangay.json').then(data => {
-                                                            const barangays = data.filter(barangay => barangay.city_code === selectedCityCode);
-                                                            populateDropdown(barangaysSelect, barangays, 'brgy_code', 'brgy_name', '<?php echo $barangay; ?>');
-                                                        });
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    }
+                                                const selectedCityCode = '<?php echo $city; ?>';
+                                                if (selectedCityCode) {
+                                                    fetchData('data/barangay.json').then(data => {
+                                                        const barangays = data.filter(barangay => barangay.city_code === selectedCityCode);
+                                                        populateDropdown(barangaysSelect, barangays, 'brgy_code', 'brgy_name', '<?php echo $barangay; ?>');
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
                                 });
 
-                                // Event listeners for dropdowns (as before)
+                                // Event listeners for dropdowns
                                 regionsSelect.addEventListener('change', function() {
                                     const selectedRegionCode = this.value;
                                     if (selectedRegionCode) {
@@ -547,8 +560,15 @@ $isEdit = isset($_GET['id']) ? true : false;
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="immunization"> Immunization Status:</label>
-                                        <input type="text" class="form-control" id="immunization" name="immunization" value="<?php echo $immunization; ?>">
+                                        <label for="immunization">Immunization Status:</label>
+                                        <div>
+                                            <input type="checkbox" id="bcg" name="immunization[]" value="BCG" <?php if (strpos($immunization, 'BCG') !== false) echo 'checked'; ?>> BCG<br>
+                                            <input type="checkbox" id="penta" name="immunization[]" value="PENTA" <?php if (strpos($immunization, 'PENTA') !== false) echo 'checked'; ?>> PENTA<br>
+                                            <input type="checkbox" id="opv" name="immunization[]" value="OPV" <?php if (strpos($immunization, 'OPV') !== false) echo 'checked'; ?>> OPV<br>
+                                            <input type="checkbox" id="pcv" name="immunization[]" value="PCV" <?php if (strpos($immunization, 'PCV') !== false) echo 'checked'; ?>> PCV<br>
+                                            <input type="checkbox" id="mcv1" name="immunization[]" value="MCV1" <?php if (strpos($immunization, 'MCV1') !== false) echo 'checked'; ?>> MCV1<br>
+                                            <input type="checkbox" id="mcv2" name="immunization[]" value="MCV2" <?php if (strpos($immunization, 'MCV2') !== false) echo 'checked'; ?>> MCV2<br>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">

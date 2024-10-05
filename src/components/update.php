@@ -48,7 +48,12 @@ $currentSchool = htmlspecialchars($_POST['currentSchool'] ?? '', ENT_QUOTES);
 $illness = htmlspecialchars($_POST['illness'] ?? '', ENT_QUOTES);
 $medication = htmlspecialchars($_POST['medication'] ?? '', ENT_QUOTES);
 $disability = htmlspecialchars($_POST['disability'] ?? '', ENT_QUOTES);
-$immunization = htmlspecialchars($_POST['immunization'] ?? '', ENT_QUOTES);
+// Handle multi-checkbox immunization
+if (isset($_POST['immunization']) && is_array($_POST['immunization'])) {
+    $immunization = implode(', ', $_POST['immunization']); // Convert array to a comma-separated string
+} else {
+    $immunization = ''; // If no immunization selected
+}
 $pwd = isset($_POST['pwd']) ? 1 : 0;
 $teenPregnancy = isset($_POST['teenAgePregnancy']) ? 1 : 0;
 $typeOfDelivery = htmlspecialchars($_POST['typeOfDelivery'] ?? '', ENT_QUOTES);
@@ -57,6 +62,8 @@ $organization = htmlspecialchars($_POST['organization'] ?? '', ENT_QUOTES);
 $casesViolated = htmlspecialchars($_POST['casesViolated'] ?? '', ENT_QUOTES);
 $yearsOfStay = htmlspecialchars($_POST['yearsOfStay'] ?? '', ENT_QUOTES);
 $businessOwner = isset($_POST['businessOwner']) ? 1 : 0;
+
+
 
 // Handle file upload
 $imagePath = ''; // Default image path

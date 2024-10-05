@@ -9,28 +9,34 @@ if (isset($_POST['residentId'])) {
     error_log("Resident ID received: $residentId");
 
     // Check if the connections are valid before proceeding
-    if (!$mysqlConn || !$mysqlConn4) {
-        error_log("Database connection failed.");
-        echo "Database connection error.";
+    if (!$mysqlConn) {
+        error_log("Main database connection failed.");
+        echo "Main database connection error.";
+        exit();
+    }
+
+    if (!$mysqlConn4) {
+        error_log("Archive database connection failed.");
+        echo "Archive database connection error.";
         exit();
     }
 
     // Move to archive
     $moveToArchiveQuery = "INSERT INTO archive.residents_records 
-        (id, first_name, middle_name, last_name, dob, age, gender, contact_number, religion, philhealth, voterstatus, street_address, house_number, subdivision, barangay, city, province, region, zip_code, mother_first_name, mother_middle_name, mother_last_name, father_first_name, father_middle_name, father_last_name, osy, als, educational_attainment, current_school, illness, medication, disability, immunization, pwd, teen_pregnancy, type_of_delivery, assisted_by, organization, cases_violated, years_of_stay, business_owner, residents_img)
-        SELECT id, first_name, middle_name, last_name, dob, age, gender, contact_number, religion, philhealth, voterstatus, street_address, house_number, subdivision, barangay, city, province, region, zip_code, mother_first_name, mother_middle_name, mother_last_name, father_first_name, father_middle_name, father_last_name, osy, als, educational_attainment, current_school, illness, medication, disability, immunization, pwd, teen_pregnancy, type_of_delivery, assisted_by, organization, cases_violated, years_of_stay, business_owner, residents_img
+        (first_name, middle_name, last_name, dob, age, gender, contact_number, religion, philhealth, voterstatus, street_address, house_number, subdivision, barangay, city, province, region, zip_code, mother_first_name, mother_middle_name, mother_last_name, father_first_name, father_middle_name, father_last_name, osy, als, educational_attainment, current_school, illness, medication, disability, immunization, pwd, teen_pregnancy, type_of_delivery, assisted_by, organization, cases_violated, years_of_stay, business_owner, residents_img)
+        SELECT first_name, middle_name, last_name, dob, age, gender, contact_number, religion, philhealth, voterstatus, street_address, house_number, subdivision, barangay, city, province, region, zip_code, mother_first_name, mother_middle_name, mother_last_name, father_first_name, father_middle_name, father_last_name, osy, als, educational_attainment, current_school, illness, medication, disability, immunization, pwd, teen_pregnancy, type_of_delivery, assisted_by, organization, cases_violated, years_of_stay, business_owner, residents_img
         FROM residents_db.residents_records 
         WHERE id = ?";
 
     // Prepare statement for moving the resident record to archive
-    if ($stmtMove = $mysqlConn4->prepare($moveToArchiveQuery)) { // Assuming $mysqlConn4 connects to the archive database
+    if ($stmtMove = $mysqlConn4->prepare($moveToArchiveQuery)) {
         // Bind the resident ID and execute
         $stmtMove->bind_param('i', $residentId);
 
         if ($stmtMove->execute()) {
             // Now delete the record from the residents table
             $deleteQuery = "DELETE FROM residents_db.residents_records WHERE id = ?";
-            if ($stmtDelete = $mysqlConn->prepare($deleteQuery)) { // Assuming $mysqlConn connects to the main database
+            if ($stmtDelete = $mysqlConn->prepare($deleteQuery)) {
                 // Bind the resident ID and execute the delete statement
                 $stmtDelete->bind_param('i', $residentId);
 

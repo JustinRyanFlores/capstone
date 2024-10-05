@@ -27,7 +27,7 @@ if ($result->num_rows > 0) {
         $_SESSION['role'] = $row['role']; // Store the user's role
 
         // Redirect to the dashboard or a secure page
-        header("Location: /capstone/pages/dahsboard.php");
+        header("Location: /capstone/pages/dashboard.php");
         exit();
     } else {
         // Invalid password: Set error message and redirect back to login

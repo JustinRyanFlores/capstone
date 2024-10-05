@@ -41,7 +41,7 @@ function getBarangayName($brgy_code, $barangayArray)
             return $barangay['brgy_name'];
         }
     }
-    return 'Unknown Barangay';
+    return '';
 }
 
 // Function to map city code to city name
@@ -52,7 +52,7 @@ function getCityName($city_code, $cityArray)
             return $city['city_name'];
         }
     }
-    return 'Unknown City';
+    return '';
 }
 
 // Function to map province code to province name
@@ -63,7 +63,7 @@ function getProvinceName($province_code, $provinceArray)
             return $province['province_name'];
         }
     }
-    return 'Unknown Province';
+    return '';
 }
 
 // Function to calculate age from date of birth
@@ -203,7 +203,7 @@ if ($row = $result->fetch_assoc()) {
                                 </tr>
                                 <tr>
                                     <th>PWD</th>
-                                    <td><?php echo $row['teen_pregnancy'] ? 'Yes' : 'No'; ?></td>
+                                    <td><?php echo $row['pwd'] ? 'Yes' : 'No'; ?></td>
                                 </tr>
                                 <tr>
                                     <th>Immunization Status</th>
