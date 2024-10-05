@@ -117,10 +117,12 @@ if ($result_total_blotter->num_rows > 0) {
         <!-- Responsive row of three containers -->
         <div class="row mb-4">
             <div class="col-sm-4 mb-3">
-                <div class="custom-container">
-                    <h5>Population</h5>
-                    <h1><?php echo $row['total_population']; ?></h1>
-                </div>
+                <a href="report.php#demographicsSection" style="text-decoration: none;">
+                    <div class="custom-container">
+                        <h5>Total Population</h5>
+                        <h1><?php echo $row['total_population']; ?></h1>
+                    </div>
+                </a>
             </div>
             <div class="col-sm-4 mb-3">
                 <div class="custom-container">

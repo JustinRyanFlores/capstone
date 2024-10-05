@@ -65,6 +65,59 @@ $populationData = [];
 while ($row = $populationResult->fetch_assoc()) {
     $populationData[] = [$row['date'], (int)$row['count']];
 }
+
+// Query for illness data
+$illnessQuery = "
+    SELECT illness, COUNT(*) as count 
+    FROM residents_records 
+    GROUP BY illness
+";
+$illnessResult = $mysqlConn->query($illnessQuery);
+
+$illnessData = [];
+while ($row = $illnessResult->fetch_assoc()) {
+    $illnessData[] = [$row['illness'], (int)$row['count']];
+}
+
+// Query for medication data
+$medicationQuery = "
+    SELECT medication, COUNT(*) as count 
+    FROM residents_records 
+    GROUP BY medication
+";
+$medicationResult = $mysqlConn->query($medicationQuery);
+
+$medicationData = [];
+while ($row = $medicationResult->fetch_assoc()) {
+    $medicationData[] = [$row['medication'], (int)$row['count']];
+}
+
+// Query for delivery type distribution
+$deliveryQuery = "
+    SELECT type_of_delivery, COUNT(*) as count 
+    FROM residents_records 
+    GROUP BY type_of_delivery
+";
+$deliveryResult = $mysqlConn->query($deliveryQuery);
+
+$deliveryData = [];
+while ($row = $deliveryResult->fetch_assoc()) {
+    $deliveryData[] = [$row['type_of_delivery'], (int)$row['count']];
+}
+
+// Query for disability distribution
+$disabilityQuery = "
+    SELECT disability, COUNT(*) as count 
+    FROM residents_records 
+    GROUP BY disability
+";
+$disabilityResult = $mysqlConn->query($disabilityQuery);
+
+$disabilityData = [];
+while ($row = $disabilityResult->fetch_assoc()) {
+    $disabilityData[] = [$row['disability'], (int)$row['count']];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -90,9 +143,13 @@ while ($row = $populationResult->fetch_assoc()) {
         google.charts.setOnLoadCallback(drawCharts);
 
         function drawCharts() {
+            drawPopulationLineChart();
             drawGenderPieChart();
             drawAgeHistogram();
-            drawPopulationLineChart();
+            drawIllnessBarChart();
+            drawMedicationBarChart();
+            drawDeliveryPieChart();
+            drawDisabilityBarChart();
         }
 
         function drawGenderPieChart() {
@@ -192,7 +249,7 @@ while ($row = $populationResult->fetch_assoc()) {
                 options: {
                     title: 'Population Growth Over Time',
                     hAxis: { title: 'Date', format: 'yyyy-MMM-dd' }, // Format the x-axis as dates
-                    vAxis: { title: 'Number of Residents' },
+                    vAxis: { title: 'Number of Residents', format: '0' },
                     chartArea: { width: '85%', height: '70%' },
                 }
             });
@@ -200,6 +257,121 @@ while ($row = $populationResult->fetch_assoc()) {
             dashboard.bind(control, chart);
             dashboard.draw(data);
         }
+
+        function drawIllnessBarChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Illness', 'Count'],
+            <?php
+            foreach ($illnessData as $data) {
+                echo "['" . $data[0] . "', " . $data[1] . "],";
+            }
+            ?>
+        ]);
+
+        var options = {
+            responsive: true,
+            title: 'Illness Distribution',
+            legend: { position: 'none' },
+            chartArea: { width: '85%', height: '75%' },
+            hAxis: {
+                title: 'Illnesses',  // X-axis shows the categories (illnesses)
+                slantedText: true,
+                slantedTextAngle: 20 // Rotate labels if needed for long illness names
+            },
+            vAxis: {
+                title: 'Number of Cases',  // Y-axis shows the count
+                minValue: 0,
+                format: '0'
+            }
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('illnessBarChart'));
+        chart.draw(data, options);
+    }
+
+    function drawMedicationBarChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Medication', 'Count'],
+            <?php
+            foreach ($medicationData as $data) {
+                echo "['" . $data[0] . "', " . $data[1] . "],";
+            }
+            ?>
+        ]);
+
+        var options = {
+            responsive: true,
+            title: 'Medication Distribution',
+            legend: { position: 'none' },
+            chartArea: { width: '85%', height: '75%' },
+            hAxis: {
+                title: 'Medications',  // X-axis shows the categories (medications)
+                slantedText: true,
+                slantedTextAngle: 20 // Rotate labels if needed for long medication names
+            },
+            vAxis: {
+                title: 'Number of Cases',  // Y-axis shows the count
+                minValue: 0,
+                format: '0'
+            }
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('medicationBarChart'));
+        chart.draw(data, options);
+    }
+
+    function drawDeliveryPieChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Delivery Type', 'Count'],
+            <?php
+            foreach ($deliveryData as $data) {
+                echo "['" . $data[0] . "', " . $data[1] . "],";
+            }
+            ?>
+        ]);
+
+        var options = {
+            responsive: true,
+            title: 'Type of Delivery Distribution',
+            is3D: true,
+            legend: { position: 'bottom' },
+            chartArea: { width: '85%', height: '75%' },
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('deliveryPieChart'));
+        chart.draw(data, options);
+    }
+
+    function drawDisabilityBarChart() {
+        var data = google.visualization.arrayToDataTable([
+            ['Disability', 'Count'],
+            <?php
+            foreach ($disabilityData as $data) {
+                echo "['" . $data[0] . "', " . $data[1] . "],";
+            }
+            ?>
+        ]);
+
+        var options = {
+            responsive: true,
+            title: 'Disability Distribution',
+            legend: { position: 'none' },
+            chartArea: { width: '85%', height: '75%' },
+            hAxis: {
+                title: 'Disabilities',
+                slantedText: true,
+                slantedTextAngle: 20
+            },
+            vAxis: {
+                title: 'Number of Cases',
+                minValue: 0,
+                format: '0'
+            }
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('disabilityBarChart'));
+        chart.draw(data, options);
+    }
 
 
         window.addEventListener('resize', function () {
@@ -240,7 +412,17 @@ while ($row = $populationResult->fetch_assoc()) {
 
             <div class="collapse show" id="demographicsSection">
                 <div class="scrollable-graphs mt-3">
-                    <!-- Gender Pie Chart in its own container -->
+
+                    <!-- Population Growth Line Chart -->
+                    <div class="chart-container">
+                        <h5>Population Growth Over Time</h5>
+                        <div id="populationDashboard">
+                            <div id="filter_div" style="height: 100px;"></div>
+                            <div id="populationLineChart" style="height: 400px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Gender Pie Chart -->
                     <div class="chart-container">
                         <h5>Gender Distribution</h5>
                         <div id="genderPieChart" style="width: 100%; height: 500px;"></div>
@@ -252,14 +434,6 @@ while ($row = $populationResult->fetch_assoc()) {
                         <div id="ageHistogram" style="width: 100%; height: 500px;"></div>
                     </div>
 
-                    <!-- Population Growth Line Chart -->
-                    <div class="chart-container">
-                        <h5>Population Growth Over Time</h5>
-                        <div id="populationDashboard">
-                            <div id="filter_div" style="height: 100px;"></div>
-                            <div id="populationLineChart" style="height: 400px;"></div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -269,30 +443,41 @@ while ($row = $populationResult->fetch_assoc()) {
             <div class="demographics-header">
                 <div class="header-container">
                     <h4>Health and Social Issues</h4>
-                    <button class="collapse-button" data-toggle="collapse" href="#demographicsSection" role="button" aria-expanded="false" aria-controls="demographicsSection">
+                    <button class="collapse-button" data-toggle="collapse" href="#healthSection" role="button" aria-expanded="false" aria-controls="healthSection">
                         <i class="fas fa-chevron-down"></i>
                     </button>
                 </div>
             </div>
 
-            <div class="collapse show" id="demographicsSection">
+            <div class="collapse show" id="healthSection">
                 <div class="scrollable-graphs mt-3">
-                    <!-- Gender Pie Chart in its own container -->
+
+                    <!-- Illness Distribution Bar Chart -->
                     <div class="chart-container">
-                        <h5>Gender Distribution</h5>
-                        <div id="genderPieChart" style="width: 100%; height: 500px;"></div>
+                        <h5>Illness Distribution</h5>
+                        <div id="illnessBarChart" style="width: 100%; height: 500px;"></div>
                     </div>
 
-                    <!-- Age Distribution Histogram -->
+                    <!-- Medication Distribution Bar Chart -->
                     <div class="chart-container">
-                        <h5>Age Distribution</h5>
-                        <div id="ageHistogram" style="width: 100%; height: 400px;"></div>
+                        <h5>Medication Distribution</h5>
+                        <div id="medicationBarChart" style="width: 100%; height: 500px;"></div>
                     </div>
 
-                    <!-- Add more graphs in separate containers if needed -->
+                    <!-- Disability Distribution Bar Chart -->
+                    <div class="chart-container">
+                        <h5>Disability Distribution</h5>
+                        <div id="disabilityBarChart" style="width: 100%; height: 400px;"></div>
+                    </div>
+
+                    <!-- Type of Delivery Distribution Pie Chart -->
+                    <div class="chart-container">
+                        <h5>Type of Delivery Distribution</h5>
+                        <div id="deliveryPieChart" style="width: 100%; height: 400px;"></div>
+                    </div>
+
                 </div>
             </div>
-            
         </div>
         
     </div>
