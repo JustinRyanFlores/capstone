@@ -152,7 +152,78 @@ while ($row = $teenPregnancyResult->fetch_assoc()) {
     $teenPregnancyData[] = [$row['date'], (int)$row['count']];
 }
 
+// Query to get counts for ALS and OSY
+$alsOsyQuery = "
+    SELECT 
+        SUM(CASE WHEN als = 1 THEN 1 ELSE 0 END) AS als_count,
+        SUM(CASE WHEN osy = 1 THEN 1 ELSE 0 END) AS osy_count
+    FROM residents_records
+";
+$alsOsyResult = $mysqlConn->query($alsOsyQuery);
+$alsOsyData = $alsOsyResult->fetch_assoc();
+
+// Ensure ALS and OSY counts are integers
+$alsCount = (int)$alsOsyData['als_count'];
+$osyCount = (int)$alsOsyData['osy_count'];
+
+// Query to get counts for educational attainment
+$educationalAttainmentQuery = "
+    SELECT educational_attainment, COUNT(*) AS count
+    FROM residents_records
+    WHERE educational_attainment IS NOT NULL AND educational_attainment != 'N/A' AND educational_attainment != '' 
+    GROUP BY educational_attainment
+";
+$educationalAttainmentResult = $mysqlConn->query($educationalAttainmentQuery);
+
+$educationalData = [];
+while ($row = $educationalAttainmentResult->fetch_assoc()) {
+    $educationalData[] = [$row['educational_attainment'], (int)$row['count']];
+}
+
+// Fetch ALS Data
+$alsQuery = "
+    SELECT DATE(created_at) as date, COUNT(*) as count
+    FROM residents_records
+    WHERE als = '1'
+    GROUP BY DATE(created_at)
+    ORDER BY date ASC
+";
+$alsResult = $mysqlConn->query($alsQuery);
+
+$alsData = [];
+while ($row = $alsResult->fetch_assoc()) {
+    $alsData[] = [$row['date'], (int)$row['count']]; // Push date and count for ALS
+}
+
+// Fetch OSY Data
+$osyQuery = "
+    SELECT DATE(created_at) as date, COUNT(*) as count
+    FROM residents_records
+    WHERE osy = '1'
+    GROUP BY DATE(created_at)
+    ORDER BY date ASC
+";
+$osyResult = $mysqlConn->query($osyQuery);
+
+$osyData = [];
+while ($row = $osyResult->fetch_assoc()) {
+    $osyData[] = [$row['date'], (int)$row['count']]; // Push date and count for OSY
+}
+
+// Query to count business owners and non-business owners
+$query = "SELECT 
+    SUM(CASE WHEN business_owner = 1 THEN 1 ELSE 0 END) AS business_owners,
+    SUM(CASE WHEN business_owner = 0 THEN 1 ELSE 0 END) AS non_business_owners
+    FROM residents_records";
+
+$result = mysqli_query($mysqlConn, $query);
+$row = mysqli_fetch_assoc($result);
+
+$businessOwnersCount = $row['business_owners'];
+$nonBusinessOwnersCount = $row['non_business_owners'];
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -186,6 +257,11 @@ while ($row = $teenPregnancyResult->fetch_assoc()) {
             drawDisabilityBarChart();
             drawPwdLineChart();
             drawTeenPregnancyLineChart();
+            drawAlSOYChart();
+            drawEducationalAttainmentChart();
+            drawAlsLineChart();
+            drawOsyLineChart();
+            drawBusinessOwnerPieChart();
         }
 
         function drawGenderPieChart() {
@@ -501,6 +577,163 @@ while ($row = $teenPregnancyResult->fetch_assoc()) {
             dashboard.draw(data);
         }
 
+        function drawAlSOYChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Type', 'Count'],
+                ['ALS', <?php echo $alsCount; ?>],
+                ['OSY', <?php echo $osyCount; ?>]
+            ]);
+
+            var options = {
+                title: 'Comparison of ALS and OSY',
+                is3D: true,
+                legend: { position: 'bottom' },
+                chartArea: { width: '85%', height: '75%' },
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('alsOsyChart'));
+            chart.draw(data, options);
+        }
+
+        function drawEducationalAttainmentChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Educational Attainment', 'Count'],
+                <?php
+                foreach ($educationalData as $item) {
+                    echo "['" . $item[0] . "', " . $item[1] . "],";
+                }
+                ?>
+            ]);
+
+            var options = {
+                title: 'Educational Attainment Distribution',
+                hAxis: {
+                    title: 'Count',
+                    format: '0'
+                },
+                vAxis: {
+                    title: 'Educational Attainment'
+                },
+                legend: { position: 'bottom' },
+                bars: 'horizontal', // Use horizontal bars
+            };
+
+            var chart = new google.visualization.BarChart(document.getElementById('educationalAttainmentChart'));
+            chart.draw(data, options);
+        }
+
+        function drawAlsLineChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'Date');
+            data.addColumn('number', 'ALS Participation');
+
+            data.addRows([
+                <?php
+                foreach ($alsData as $data) {
+                    $dateParts = explode('-', $data[0]);
+                    echo "[new Date(" . $dateParts[0] . ", " . ($dateParts[1] - 1) . ", " . $dateParts[2] . "), " . $data[1] . "],";
+                }
+                ?>
+            ]);
+
+            var dashboard = new google.visualization.Dashboard(document.getElementById('alsDashboard'));
+
+            var control = new google.visualization.ControlWrapper({
+                controlType: 'ChartRangeFilter',
+                containerId: 'alsFilter',
+                options: {
+                    filterColumnLabel: 'Date',
+                    ui: {
+                        chartType: 'LineChart',
+                        chartOptions: {
+                            chartArea: { width: '60%' },
+                            hAxis: { format: 'yyyy-MM-dd' }
+                        }
+                    }
+                }
+            });
+
+            var chart = new google.visualization.ChartWrapper({
+                chartType: 'LineChart',
+                containerId: 'alsLineChart',
+                options: {
+                    title: 'ALS Participation Over Time',
+                    hAxis: { title: 'Date', format: 'yyyy-MMM-dd' },
+                    vAxis: { title: 'Number of ALS Participants', format: '0' },
+                    chartArea: { width: '85%', height: '70%' },
+                }
+            });
+
+            dashboard.bind(control, chart);
+            dashboard.draw(data);
+        }
+
+        function drawOsyLineChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'Date');
+            data.addColumn('number', 'OSY Participation');
+
+            data.addRows([
+                <?php
+                foreach ($osyData as $data) {
+                    $dateParts = explode('-', $data[0]);
+                    echo "[new Date(" . $dateParts[0] . ", " . ($dateParts[1] - 1) . ", " . $dateParts[2] . "), " . $data[1] . "],";
+                }
+                ?>
+            ]);
+
+            var dashboard = new google.visualization.Dashboard(document.getElementById('osyDashboard'));
+
+            var control = new google.visualization.ControlWrapper({
+                controlType: 'ChartRangeFilter',
+                containerId: 'osyFilter',
+                options: {
+                    filterColumnLabel: 'Date',
+                    ui: {
+                        chartType: 'LineChart',
+                        chartOptions: {
+                            chartArea: { width: '60%' },
+                            hAxis: { format: 'yyyy-MM-dd' }
+                        }
+                    }
+                }
+            });
+
+            var chart = new google.visualization.ChartWrapper({
+                chartType: 'LineChart',
+                containerId: 'osyLineChart',
+                options: {
+                    title: 'OSY Participation Over Time',
+                    hAxis: { title: 'Date', format: 'yyyy-MMM-dd' },
+                    vAxis: { title: 'Number of OSY Participants', format: '0' },
+                    chartArea: { width: '85%', height: '70%' },
+                }
+            });
+
+            dashboard.bind(control, chart);
+            dashboard.draw(data);
+        }
+
+        function drawBusinessOwnerPieChart() {
+        // Prepare the data for the pie chart
+        var data = google.visualization.arrayToDataTable([
+            ['Type', 'Count'],
+            ['Business Owners', <?php echo $businessOwnersCount; ?>],
+            ['Non-Business Owners', <?php echo $nonBusinessOwnersCount; ?>]
+        ]);
+
+        // Set the options for the pie chart
+        var options = {
+            title: 'Business Owners vs Non-Business Owners',
+            is3D: true,
+            legend: { position: 'bottom' },
+            chartArea: { width: '85%', height: '75%' },
+        };
+
+        // Create and draw the pie chart
+        var chart = new google.visualization.PieChart(document.getElementById('businessOwnerPieChart'));
+        chart.draw(data, options);
+    }
 
         window.addEventListener('resize', function () {
             drawCharts();
@@ -566,11 +799,11 @@ while ($row = $teenPregnancyResult->fetch_assoc()) {
             </div>
         </div>
         
-        <!-- Health and Social Issues Section -->
+        <!-- Health Section -->
         <div class="container mt-4">
             <div class="demographics-header">
                 <div class="header-container">
-                    <h4>Health and Social Issues</h4>
+                    <h4>Health</h4>
                     <button class="collapse-button" data-toggle="collapse" href="#healthSection" role="button" aria-expanded="false" aria-controls="healthSection">
                         <i class="fas fa-chevron-down"></i>
                     </button>
@@ -594,7 +827,7 @@ while ($row = $teenPregnancyResult->fetch_assoc()) {
 
                     <!-- PWD Chart -->
                     <div id="pwdDashboard" class="chart-container">
-                        <h5>PWD Distribution</h5>
+                        <h5>PWD over time</h5>
                         <div id="pwdFilter" style="width: 100%; height: 100px;"></div>
                         <div id="pwdLineChart" style="width: 100%; height: 400px;"></div>
                     </div>
@@ -621,6 +854,94 @@ while ($row = $teenPregnancyResult->fetch_assoc()) {
             </div>
         </div>
         
+        <!-- Character Records Section -->
+        <div class="container mt-4">
+            <div class="demographics-header">
+                <div class="header-container">
+                    <h4>Character Records</h4>
+                    <button class="collapse-button" data-toggle="collapse" href="#characterSection" role="button" aria-expanded="false" aria-controls="characterSection">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="collapse show" id="characterSection">
+                <div class="scrollable-graphs mt-3">
+
+
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Employment Section -->
+        <div class="container mt-4">
+            <div class="demographics-header">
+                <div class="header-container">
+                    <h4>Employment</h4>
+                    <button class="collapse-button" data-toggle="collapse" href="#employmentSection" role="button" aria-expanded="false" aria-controls="employmentSection">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="collapse show" id="employmentSection">
+                <div class="scrollable-graphs mt-3">
+
+                    <!-- Business Owner Pie Chart -->
+                    <div class="chart-container">
+                        <h4>Business Owners vs Non-Business Owners</h4>
+                        <div id="businessOwnerPieChart" style="height: 400px;"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Education Section -->
+        <div class="container mt-4">
+            <div class="demographics-header">
+                <div class="header-container">
+                    <h4>Education</h4>
+                    <button class="collapse-button" data-toggle="collapse" href="#educationSection" role="button" aria-expanded="false" aria-controls="educationSection">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="collapse show" id="educationSection">
+                <div class="scrollable-graphs mt-3">
+
+                    <!-- ALS vs OSY Pie Chart -->
+                    <div class="chart-container">
+                        <h5>ALS vs OSY</h5>
+                        <div id="alsOsyChart" style="width: 100%; height: 500px;"></div>
+                    </div>
+
+                    <!-- ALS Participation Dashboard -->
+                    <div id="alsDashboard" class="chart-container">
+                        <h5>ALS over time</h5>
+                        <div id="alsFilter" style="width: 100%; height: 100px;"></div>
+                        <div id="alsLineChart" style="width: 100%; height: 400px;"></div>
+                    </div>
+
+                    <!-- OSY Participation Dashboard -->
+                    <div id="osyDashboard" class="chart-container">
+                        <h5>OSY over time</h5>
+                        <div id="osyFilter" style="width: 100%; height: 100px;"></div>
+                        <div id="osyLineChart" style="width: 100%; height: 400px;"></div>
+                    </div>
+
+                    <!-- Educational Attainment Bar Chart -->
+                    <div class="chart-container">
+                        <h5>Educational Attainment Distribution</h5>
+                        <div id="educationalAttainmentChart" style="width: 100%; height: 500px;"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
