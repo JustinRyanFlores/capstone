@@ -288,7 +288,19 @@ if (isset($_GET['search'])) {
                         </div>
                         <div class="mb-3">
                             <label for="placeIncident" class="form-label">Place of Incident</label>
-                            <input type="text" class="form-control" id="placeIncident" name="placeIncident" required>
+                            <select class="form-control" id="placeIncident" name="placeIncident" required>
+                                <option value="" disabled selected>Select a place</option>
+                                <option value="Purok-1">Purok-1</option>
+                                <option value="Purok-2">Purok-2</option>
+                                <option value="Purok-3">Purok-3</option>
+                                <option value="Purok-4">Purok-4</option>
+                                <option value="Calambeño ville 5">Calambeño Ville 5</option>
+                                <option value="Mother ignacia">Mother Ignacia</option>
+                                <option value="Villa Javier">Villa Javier</option>
+                                <option value="Villa Andrea">Villa Andrea</option>
+                                <option value="Valley Breeze">Valley Breeze</option>
+                                <option value="Southville 6">Southville 6</option>
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label for="nameComplainant" class="form-label">Name of Complainant</label>
