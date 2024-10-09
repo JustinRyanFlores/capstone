@@ -65,7 +65,6 @@ if ($result_total_blotter->num_rows > 0) {
     <style>
         #autoFocusBtn {
             z-index: 1000;
-            /* Ensure it's above the map */
             background-color: #1c2455;
             color: whitesmoke;
             border-color: whitesmoke;
@@ -138,6 +137,39 @@ if ($result_total_blotter->num_rows > 0) {
             padding: 1px 2px;
             border-radius: 3px;
         }
+
+        .filter-popup {
+            border: 5px solid #1c2455;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 300px;
+            background-color: white;
+        }
+
+        .btnfilter {
+            background-color: #1c2455;
+            border-color: #1c2455;
+            color: white;
+            border-radius: 0.3rem;
+
+        }
+
+        .btnfilter:hover {
+            background-color: #16203c;
+        }
+
+        .btnfilter2 {
+            background-color: darkgrey;
+            border-color: darkgrey;
+            color: white;
+            border-radius: 0.3rem;
+
+        }
+
+        .btnfilter2:hover {
+            background-color: grey;
+        }
     </style>
     <?php include '../src/components/header.php'; ?>
 </head>
@@ -177,7 +209,7 @@ if ($result_total_blotter->num_rows > 0) {
                     </div>
                 </a>
             </div>
-                <div class="col-sm-4 mb-3 d-flex justify-content-center">
+            <div class="col-sm-4 mb-3 d-flex justify-content-center">
                 <a href="report.php#characterSection" style="text-decoration: none;">
                     <div class="custom-container text-center">
                         <h5>Unsettled Cases</h5>
@@ -195,150 +227,7 @@ if ($result_total_blotter->num_rows > 0) {
             </div>
         </div>
 
-        <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm"> <!-- Change to modal-sm for a smaller modal -->
 
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="filterModalLabel">Filter Residents</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="filterForm" action="dashboard.php" method="GET">
-                            <!-- Demographic Filters -->
-                            <h6 class="mt-2">Demographic Details</h6>
-                            <div class="mb-2">
-                                <label for="age_range">Age Range</label>
-                                <input type="range" id="age_range" name="age_range" class="form-range" min="0" max="100" step="1" value="0" oninput="updateAgeRange(this.value)">
-                                <span id="ageRangeLabel">0-0</span>
-                            </div>
-                            <div class="mb-2">
-                                <label for="gender">Gender</label>
-                                <select name="gender" class="form-select">
-                                    <option value="">Any</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                            <div class="row mb-2">
-                                <div class="col-6">
-                                    <label for="dob_start">DOB From</label>
-                                    <input type="date" class="form-control" name="dob_start" id="dob_start">
-                                </div>
-                                <div class="col-6">
-                                    <label for="dob_end">DOB To</label>
-                                    <input type="date" class="form-control" name="dob_end" id="dob_end">
-                                </div>
-                            </div>
-                            <div class="mb-2">
-                                <label for="religion">Religion</label>
-                                <input type="text" class="form-control" name="religion" id="religion">
-                            </div>
-                            <div class="mb-2">
-                                <label for="voter_status">Voter Status</label>
-                                <select name="voter_status" class="form-select">
-                                    <option value="">Any</option>
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
-                                </select>
-                            </div>
-
-                            <!-- Socio-Economic and Educational Filters -->
-                            <h6 class="mt-2">Socio-Economic & Educational</h6>
-                            <div class="row mb-2">
-                                <div class="col-6">
-                                    <label for="osy_status">OSY Status</label>
-                                    <select name="osy_status" class="form-select">
-                                        <option value="">Any</option>
-                                        <option value="1">Yes</option>
-                                        <option value="0">No</option>
-                                    </select>
-                                </div>
-                                <div class="col-6">
-                                    <label for="als_status">ALS Status</label>
-                                    <select name="als_status" class="form-select">
-                                        <option value="">Any</option>
-                                        <option value="1">Yes</option>
-                                        <option value="0">No</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Health and Medical Filters -->
-                            <h6 class="mt-2">Health & Medical Data</h6>
-                            <div class="row mb-2">
-                                <div class="col-6">
-                                    <label for="immunization_status">Immunization</label>
-                                    <select name="immunization_status" class="form-select">
-                                        <option value="">Any</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
-                                    </select>
-                                </div>
-                                <div class="col-6">
-                                    <label for="pwd">PWD Status</label>
-                                    <select name="pwd" class="form-select">
-                                        <option value="">Any</option>
-                                        <option value="1">Yes</option>
-                                        <option value="0">No</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mb-2">
-                                <div class="col-6">
-                                    <label for="teen_pregnancy">Teen Pregnancy</label>
-                                    <select name="teen_pregnancy" class="form-select">
-                                        <option value="">Any</option>
-                                        <option value="1">Yes</option>
-                                        <option value="0">No</option>
-                                    </select>
-                                </div>
-                                <div class="col-6">
-                                    <label for="type_of_delivery">Type of Delivery</label>
-                                    <select name="type_of_delivery" class="form-select">
-                                        <option value="">Any</option>
-                                        <option value="Normal">Normal</option>
-                                        <option value="Cesarean">Cesarean</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="mb-2">
-                                <label for="assisted_by">Assisted By</label>
-                                <select name="assisted_by" class="form-select">
-                                    <option value="">Any</option>
-                                    <option value="Doctor">Doctor</option>
-                                    <option value="Midwife">Midwife</option>
-                                    <option value="Nurse">Nurse</option>
-                                </select>
-                            </div>
-
-                            <!-- Duration of Residency Filters -->
-                            <h6 class="mt-2">Duration of Residency</h6>
-                            <div class="mb-2">
-                                <label for="years_of_stay">Years of Stay</label>
-                                <input type="number" class="form-control" name="years_of_stay" id="years_of_stay" min="0">
-                            </div>
-
-                            <!-- Business and Organization Filters -->
-                            <h6 class="mt-2">Business & Organization</h6>
-                            <div class="mb-2">
-                                <label for="business_owner">Business Owner</label>
-                                <select name="business_owner" class="form-select">
-                                    <option value="">Any</option>
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" form="filterForm">Apply Filters</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="row m-3 bg-light text-white p-2 shadow rounded">
             <div class="col-4">
@@ -350,7 +239,7 @@ if ($result_total_blotter->num_rows > 0) {
 
             <!-- Filter button -->
             <div class="col-auto">
-                <button type="button" class="btn btn-outline-secondary me-2" data-bs-toggle="modal" data-bs-target="#filterModal">
+                <button type="button" class="btn btn-outline-secondary me-2" onclick="toggleFilterPopup()">
                     <i class="fas fa-filter"></i> Filter
                 </button>
             </div>
@@ -363,6 +252,161 @@ if ($result_total_blotter->num_rows > 0) {
 
             </div>
         </div>
+
+        <!-- Filter Panel (Hidden by Default) -->
+        <div id="filterPanel" class="filter-popup shadow rounded p-3 bg-white" style="display: none; position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 1050; max-width: 300px;">
+            <form id="filterForm" action="dashboard.php" method="GET">
+                <!-- Demographic Filters -->
+                <h6 class="mt-2">Demographic Details</h6>
+                <div class="mb-2">
+                    <label for="age_range">Age Range</label>
+                    <input type="range" id="age_range" name="age_range" class="form-range" min="0" max="100" step="1" value="0" oninput="updateAgeRange(this.value)">
+                    <span id="ageRangeLabel">0-0</span>
+                </div>
+                <div class="mb-2">
+                    <label for="gender">Gender</label>
+                    <select name="gender" class="form-select">
+                        <option value="">Any</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <label for="dob_start">DOB From</label>
+                        <input type="date" class="form-control" name="dob_start" id="dob_start">
+                    </div>
+                    <div class="col-6">
+                        <label for="dob_end">DOB To</label>
+                        <input type="date" class="form-control" name="dob_end" id="dob_end">
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <label for="religion">Religion</label>
+                    <input type="text" class="form-control" name="religion" id="religion">
+                </div>
+                <div class="mb-2">
+                    <label for="voter_status">Voter Status</label>
+                    <select name="voter_status" class="form-select">
+                        <option value="">Any</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+
+                <!-- Socio-Economic and Educational Filters -->
+                <h6 class="mt-2">Socio-Economic & Educational</h6>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <label for="osy_status">OSY Status</label>
+                        <select name="osy_status" class="form-select">
+                            <option value="">Any</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label for="als_status">ALS Status</label>
+                        <select name="als_status" class="form-select">
+                            <option value="">Any</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Health and Medical Filters -->
+                <h6 class="mt-2">Health & Medical Data</h6>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <label for="immunization_status">Immunization</label>
+                        <select name="immunization_status" class="form-select">
+                            <option value="">Any</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label for="pwd">PWD Status</label>
+                        <select name="pwd" class="form-select">
+                            <option value="">Any</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <label for="teen_pregnancy">Teen Pregnancy</label>
+                        <select name="teen_pregnancy" class="form-select">
+                            <option value="">Any</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label for="type_of_delivery">Type of Delivery</label>
+                        <select name="type_of_delivery" class="form-select">
+                            <option value="">Any</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Cesarean">Cesarean</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <label for="assisted_by">Assisted By</label>
+                    <select name="assisted_by" class="form-select">
+                        <option value="">Any</option>
+                        <option value="Doctor">Doctor</option>
+                        <option value="Midwife">Midwife</option>
+                        <option value="Nurse">Nurse</option>
+                    </select>
+                </div>
+
+                <!-- Duration of Residency Filters -->
+                <h6 class="mt-2">Duration of Residency</h6>
+                <div class="mb-2">
+                    <label for="years_of_stay">Years of Stay</label>
+                    <input type="number" class="form-control" name="years_of_stay" id="years_of_stay" min="0">
+                </div>
+
+                <!-- Business and Organization Filters -->
+                <h6 class="mt-2">Business & Organization</h6>
+                <div class="mb-2">
+                    <label for="business_owner">Business Owner</label>
+                    <select name="business_owner" class="form-select">
+                        <option value="">Any</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+
+                <!-- Button Group -->
+                <div class="d-flex flex-column mt-3">
+                    <button type="submit" class="btnfilter btn-primary w-100 mb-2">Apply Filters</button>
+                    <button type="button" class="btnfilter2 btn-secondary w-100" onclick="toggleFilterPopup()">Cancel</button>
+                </div>
+
+            </form>
+        </div>
+
+        <script>
+            function toggleFilterPopup() {
+                const filterPanel = document.getElementById('filterPanel');
+                if (filterPanel.style.display === 'none') {
+                    filterPanel.style.display = 'block';
+                } else {
+                    filterPanel.style.display = 'none';
+                }
+            }
+
+            function clearFilters() {
+                document.getElementById('filterForm').reset();
+                // Optionally, hide the filter panel after clearing
+                document.getElementById('filterPanel').style.display = 'none';
+            }
+        </script>
 
 
 
@@ -395,10 +439,10 @@ if ($result_total_blotter->num_rows > 0) {
 
                             // Base query
                             $query = "
-SELECT id, first_name, middle_name, last_name, dob, gender, contact_number, subdivision,
-FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) AS age
-FROM residents_records 
-WHERE 1 "; // Base condition to always be true for adding dynamic filters
+                            SELECT id, first_name, middle_name, last_name, dob, gender, contact_number, subdivision,
+                            FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) AS age
+                            FROM residents_records 
+                            WHERE 1 "; // Base condition to always be true for adding dynamic filters
 
                             // Apply filters from GET parameters (add conditions to the query)
                             if (!empty($_GET['first_name'])) {
@@ -566,13 +610,13 @@ WHERE 1 "; // Base condition to always be true for adding dynamic filters
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
                                     echo "<tr data-id='{$row['id']}' onclick='fetchResidentDetails({$row['id']})'>
-            <td>{$row['last_name']}, {$row['first_name']} {$row['middle_name']}</td>
-            <td>{$row['age']}</td>
-            <td>{$row['gender']}</td>
-            <td>{$row['dob']}</td>
-            <td>{$row['contact_number']}</td>
-            <td>{$row['subdivision']}</td>
-        </tr>";
+                                <td>{$row['last_name']}, {$row['first_name']} {$row['middle_name']}</td>
+                                    <td>{$row['age']}</td>
+                                    <td>{$row['gender']}</td>
+                                    <td>{$row['dob']}</td>
+                                    <td>{$row['contact_number']}</td>
+                                    <td>{$row['subdivision']}</td>
+                                    </tr>";
                                 }
                             } else {
                                 echo "<tr><td colspan='6'>No records found</td></tr>";
@@ -1043,6 +1087,7 @@ WHERE 1 "; // Base condition to always be true for adding dynamic filters
             // Add event listener to the button
             document.getElementById('autoFocusBtn').addEventListener('click', resetMapView);
         </script>
+    </div>
 
 </body>
 

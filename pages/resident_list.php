@@ -43,10 +43,6 @@ if (isset($_GET['search'])) {
                 <div class="h6" style="font-style: italic; color: grey">
                     Home / Resident List
                 </div>
-        <div class="row mb-4">
-            <div class="col-sm-6">
-                <h3 class="mb-0">Resident List</h3>
-                <div class="h6 text-muted" style="font-style: italic;">Home / Resident List</div>
             </div>
             <div class="col-sm-6 col-md-6 d-flex justify-content-sm-between justify-content-md-end">
                 <div>
