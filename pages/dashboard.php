@@ -70,6 +70,13 @@ if ($result_total_blotter->num_rows > 0) {
             border-color: whitesmoke;
         }
 
+        #autoFocusBtn:hover {
+            z-index: 1000;
+            background-color: whitesmoke;
+            color: #1c2455;
+            border-color: #1c2455;
+        }
+
         .map-container {
             display: flex;
             flex-direction: column;
@@ -170,6 +177,18 @@ if ($result_total_blotter->num_rows > 0) {
         .btnfilter2:hover {
             background-color: grey;
         }
+
+        .polygon-label {
+            font-size: 12px;
+            /* Base size */
+            transition: font-size 0.2s ease;
+            /* Smooth transition */
+        }
+
+        .enlarged {
+            font-size: 16px;
+            /* Increased size on hover */
+        }
     </style>
     <?php include '../src/components/header.php'; ?>
 </head>
@@ -221,7 +240,7 @@ if ($result_total_blotter->num_rows > 0) {
         <div class="container text-center mb-5">
             <div class="position-relative">
                 <div id="map" class="w-100" style="height: 600px;"></div> <!-- Adjust height as necessary -->
-                <button id="autoFocusBtn" class="btn btn-primary position-absolute" style="bottom: 20px; left: 50%; transform: translateX(-50%);">
+                <button id="autoFocusBtn" class="btn  position-absolute" style="bottom: 20px; left: 50%; transform: translateX(-50%);">
                     <i class="fas fa-crosshairs"></i>
                 </button>
             </div>
@@ -706,18 +725,11 @@ if ($result_total_blotter->num_rows > 0) {
                     </div>
                     <div class="modal-footer">
                         <div class="button-container">
-                            <button class="btn btn-primary" onclick="editResident(<?php echo $residentId; ?>)">Edit</button>
                             <button class="btn btn-danger" onclick="printResidentDetails()">Print</button>
-                            <button class="btn btn-danger" onclick="deleteResident()">Delete</button>
                             <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         </div>
 
                         <script>
-                            function editResident(residentId) {
-                                // Redirect to the add_records.php page with the resident ID in the query string
-                                window.location.href = "/capstone/pages/add_records.php?id=" + residentId;
-                            }
-
                             var selectedResidentId; // Declare a global variable
 
                             function fetchResidentDetails(residentId) {
@@ -919,8 +931,9 @@ if ($result_total_blotter->num_rows > 0) {
                 [14.153833822703815, 121.11239785663794],
                 [14.159241960976798, 121.12009221686279]
             ], {
-                color: 'green',
-                fillColor: '#198754', // Improved visibility (green)
+                color: '#77DD77',
+                fillColor: '#B2E2D4',
+
                 fillOpacity: 0.3
             }).addTo(map).bindTooltip("Purok-1", {
                 permanent: true,
@@ -987,8 +1000,10 @@ if ($result_total_blotter->num_rows > 0) {
                 [14.163587565619409, 121.12120181023332],
                 [14.163377924851897, 121.1206062753015]
             ], {
-                color: 'purple',
-                fillColor: '#6f42c1', // Improved visibility (purple)
+                color: '#D6C9E5', 
+                fillColor: '#6f42c1',
+
+
                 fillOpacity: 0.3
             }).addTo(map).bindTooltip("Calamba Ville 5", {
                 permanent: true,
@@ -1086,6 +1101,39 @@ if ($result_total_blotter->num_rows > 0) {
 
             // Add event listener to the button
             document.getElementById('autoFocusBtn').addEventListener('click', resetMapView);
+
+            function addHoverEffect(polygon) {
+                var tooltip = polygon.getTooltip();
+                polygon.on('mouseover', function() {
+                    tooltip._container.classList.add('enlarged');
+                });
+                polygon.on('mouseout', function() {
+                    tooltip._container.classList.remove('enlarged');
+                });
+
+                polygon.on('mouseover', function() {
+                    this.setStyle({
+                        weight: 4, // Change border thickness
+                        fillOpacity: 0.6 // Change fill opacity
+                    });
+                });
+                polygon.on('mouseout', function() {
+                    this.setStyle({
+                        weight: 3, // Reset border thickness
+                        fillOpacity: 0.3 // Reset fill opacity
+                    });
+                });
+            }
+
+            // Apply hover effect to each polygon
+            addHoverEffect(sv);
+            addHoverEffect(p1);
+            addHoverEffect(p4);
+            addHoverEffect(mvv);
+            addHoverEffect(cv5);
+            addHoverEffect(p2);
+            addHoverEffect(vb);
+            addHoverEffect(p3);
         </script>
     </div>
 
