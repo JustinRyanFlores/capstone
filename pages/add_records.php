@@ -633,10 +633,10 @@ $isEdit = isset($_GET['id']) ? true : false;
 
                         <div class="row">
                             <div class="col-md-12 text-right button-container">
-                                <button id="submitButton" type="submit" class="btn btn-custom btn-primary-custom">
+                                <button id="submitButton" type="submit" class="btn btn-custom">
                                     <?php echo $isEdit ? 'Update' : 'Add'; ?>
                                 </button>
-                                <button type="button" class="btn btn-custom btn-secondary-custom" onclick="window.location.href='resident_list.php'">Cancel</button>
+                                <button type="button" class="btn btn-secondary-custom" onclick="window.location.href='resident_list.php'">Cancel</button>
                             </div>
                             <script>
                                 if (window.location.search.includes('success=1')) {

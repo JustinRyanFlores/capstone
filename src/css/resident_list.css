@@ -57,7 +57,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
+
 }
 
 /* Style for the 'showing' label */
@@ -115,4 +115,15 @@
 
 .text-primary {
   color: #1c2455 !important;
+}
+
+.btn-custom {
+  background-color: #1c2455;
+  border-color: #1c2455;
+  color: #f1f1f1;
+}
+
+.btn-custom:hover {
+  background-color: #141a3f;
+  color: #f1f1f1;
 }

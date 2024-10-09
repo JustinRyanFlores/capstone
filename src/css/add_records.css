@@ -1,4 +1,3 @@
-
 .profile-picture-container {
     display: inline-block;
     width: 200px;
@@ -58,31 +57,29 @@
     /* Smooth transition for hover effects */
 }
 
-/* Primary button styling */
-.btn-primary-custom {
+.btn-custom {
     background-color: #1c2455;
-    /* Primary color */
-    color: #fff;
-    /* White text */
+    /* Primary button background */
+    border-color: #1c2455;
+    /* Primary button border */
+    color: #f1f1f1;
+    /* Primary button text color */
 }
 
-.btn-primary-custom:hover {
-    background-color: #fff;
-    /* White background on hover */
-    color: #1c2455;
-    /* Primary color text on hover */
-    border-color: #1c2455;
-    /* Border color on hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    /* Add shadow on hover */
+.btn-custom:hover {
+    background-color: #141a3f;
+    /* Darker background on hover */
+    color: #f1f1f1;
+    /* Text color on hover */
 }
 
 /* Secondary button styling */
 .btn-secondary-custom {
     background-color: #6c757d;
-    /* Secondary color */
+    /* Secondary button background */
     color: #fff;
     /* White text */
+    width: 10vh;
 }
 
 .btn-secondary-custom:hover {
@@ -97,7 +94,7 @@
 }
 
 /* Add space between buttons */
-.btn-custom+.btn-custom {
+.btn-custom+.btn-secondary-custom {
     margin-left: 10px;
     /* Space between buttons */
 }
