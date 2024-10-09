@@ -15,7 +15,7 @@ if (!isset($_SESSION['user_id'])) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>My Web Application</title>
+    <title>Kay-Anlog Sys Info | Resident List</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
@@ -32,7 +32,7 @@ if (!isset($_SESSION['user_id'])) {
         <div class="row mb-4">
             <div class="col-sm-6">
                 <h3 class="mb-0">Resident List</h3>
-                <div class="h6 text-muted" style="font-style: italic;">All Registered Residents</div>
+                <div class="h6 text-muted" style="font-style: italic;">Home / Resident List</div>
             </div>
             <div class="col-sm-6 text-right">
                 <?php displayDateTime(); ?>

@@ -17,7 +17,7 @@ include("../src/configs/connection.php"); // Include your database connection
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>User Records</title>
+    <title>Kay-Anlog Sys Info | Admin Panel</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/capstone/src/css/navbar.css" />

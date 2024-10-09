@@ -282,7 +282,7 @@ while ($row = $blotterResult->fetch_assoc()) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>My Web Application</title>
+    <title>Kay-Anlog Sys Info | Report</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
@@ -951,7 +951,7 @@ while ($row = $blotterResult->fetch_assoc()) {
             <div class="h3 col-sm-6 col-md-6 text-start h5-sm">
                 Report
                 <div class="h6" style="font-style: italic; color: grey">
-                    Home/Report
+                    Home / Report
                 </div>
             </div>
             <div class="col-sm-6 col-md-6 d-flex justify-content-sm-between justify-content-md-end">
