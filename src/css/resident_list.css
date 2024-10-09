@@ -1,81 +1,118 @@
-body,
-html {
-  height: 100%;
-}
-
-.main-content {
-  height: 2;
-  display: flex;
-  flex-direction: column;
-  background-color: #f8f9fa;
-}
-
-.content-row {
-  flex-grow: 1;
+/* Container for the whole table */
+.resident-table-container {
+  margin: 20px 0;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
   overflow: hidden;
 }
 
-.scrollable-container1 {
-  max-height: 87vh;
-  overflow-y: auto;
+/* Custom Table Styling */
+.table-custom {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.scrollable-container2 {
-  max-height: 80vh;
-  overflow-y: auto;
+.table-custom th,
+.table-custom td {
+  padding: 12px 15px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid #dee2e6;
+  /* Same color for all table data */
 }
 
-h5,
-h6 {
-  font-weight: 600;
-}
-
-.search-header {
-  font-size: 1.25rem;
+/* Table Header */
+.table-custom thead th {
+  background-color: #ced4da;
   font-weight: bold;
-  margin-bottom: 10px;
-  color: #495057;
+  color: #343a40;
 }
 
-.details-header {
-  font-size: 1.25rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #495057;
-}
 
-.search-bar {
-  border-radius: 25px;
-  padding: 10px 15px;
-}
 
-.list-group-item {
+/* Hover Effect for Rows */
+.table-custom tbody tr:hover {
+  background-color: #ced4da;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.list-group-item:hover {
-  background-color: #f1f3f5;
-  border-left: 4px solid #09090a;
+/* Highlight the selected resident */
+.table-custom tbody tr:active {
+  background-color: #b8daff;
 }
 
-.right-column {
-  max-height: 100vh;
-  /* Set a maximum height */
-  overflow-y: auto;
-  /* Enable vertical scrolling */
+/* Search Bar Styling */
+.search-bar-container input[type="text"] {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+  width: 100%;
+  max-width: 300px;
 }
 
-.resident-details-card {
-  border: 1px solid #ddd;
+/* Pagination styling */
+.pagination-container {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+}
+
+/* Style for the 'showing' label */
+.pagination-info {
+  color: #6c757d;
+  margin-left: 20px;
+  /* Added margin for spacing */
+}
+
+/* Pagination button styling */
+.pagination .page-item.active .page-link {
+  background-color: #1c2455;
+  border-color: #1c2455;
+  color: #f1f1f1;
+}
+
+.pagination .page-item .page-link {
+  color: #1c2455;
+  border: 1px solid #dee2e6;
+  margin: 0 6px;
+  /* Added margin between pagination buttons */
+  padding: 8px 12px;
+  /* Added padding to buttons */
+}
+
+.pagination .page-item .page-link:hover {
+  background-color: #f1f1f1;
+  color: #1c2455;
+}
+
+/* Modal Styles */
+.modal-content {
   border-radius: 8px;
-  background-color: #fff;
-  overflow-y: auto;
 }
 
+.modal-header {
+  background-color: #1c2455;
+  color: white;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+/* Button Container */
+.button-container button {
+  margin-right: 10px;
+}
+
+/* Loading Spinner Styling */
 .spinner-border {
   width: 3rem;
   height: 3rem;
 }
 
-
+.text-primary {
+  color: #1c2455 !important;
+}

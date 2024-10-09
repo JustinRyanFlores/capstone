@@ -155,5 +155,4 @@ if ($mysqlConn->query($sql) === TRUE) {
     exit();
 }
 
-// Close the connection
-$mysqlConn->close();
+

@@ -313,11 +313,11 @@ $isEdit = isset($_GET['id']) ? true : false;
                                     <option value="Purok-2" <?php echo ($subdivision === 'Purok-2') ? 'selected' : ''; ?>>Purok-2</option>
                                     <option value="Purok-3" <?php echo ($subdivision === 'Purok-3') ? 'selected' : ''; ?>>Purok-3</option>
                                     <option value="Purok-4" <?php echo ($subdivision === 'Purok-4') ? 'selected' : ''; ?>>Purok-4</option>
-                                    <option value="Calambeño ville5" <?php echo ($subdivision === 'Calambeño ville 5') ? 'selected' : ''; ?>>Calambeño ville 5</option>
-                                    <option value="Mother ignacia" <?php echo ($subdivision === 'Mother ignacia') ? 'selected' : ''; ?>>Mother ignacia</option>
-                                    <option value="Villa javier" <?php echo ($subdivision === 'Villa Javier') ? 'selected' : ''; ?>>Villa Javier</option>
-                                    <option value="Villa andrea" <?php echo ($subdivision === 'Villa Andrea') ? 'selected' : ''; ?>>Villa Andrea</option>
-                                    <option value="Valley breeze" <?php echo ($subdivision === 'Valley Breeze') ? 'selected' : ''; ?>>Valley Breeze</option>
+                                    <option value="Calambeño Ville 5" <?php echo ($subdivision === 'Calambeño Ville 5') ? 'selected' : ''; ?>>Calambeño Ville 5</option>
+                                    <option value="Mother Ignacia" <?php echo ($subdivision === 'Mother Ignacia') ? 'selected' : ''; ?>>Mother Ignacia</option>
+                                    <option value="Villa Javier" <?php echo ($subdivision === 'Villa Javier') ? 'selected' : ''; ?>>Villa Javier</option>
+                                    <option value="Villa Andrea" <?php echo ($subdivision === 'Villa Andrea') ? 'selected' : ''; ?>>Villa Andrea</option>
+                                    <option value="Valley Breeze" <?php echo ($subdivision === 'Valley Breeze') ? 'selected' : ''; ?>>Valley Breeze</option>
                                     <option value="Southville 6" <?php echo ($subdivision === 'Southville 6') ? 'selected' : ''; ?>>Southville 6</option>
                                 </select>
                             </div>

@@ -1,5 +1,6 @@
 .custom-container {
-    background-color: #1c2455; /* Adjusted to match the image */
+    background-color: #1c2455;
+    /* Adjusted to match the image */
     color: white;
     border-radius: 10px;
     text-align: center;
@@ -16,6 +17,126 @@
 .custom-container h1 {
     font-size: 36px;
     font-weight: bold;
+}
+
+
+/* Container for the whole table */
+.resident-table-container {
+    margin: 20px 0;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Custom Table Styling */
+.table-custom {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-custom th,
+.table-custom td {
+    padding: 12px 15px;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid #dee2e6;
+    /* Same color for all table data */
+}
+
+/* Table Header */
+.table-custom thead th {
+    background-color: #ced4da;
+    font-weight: bold;
+    color: #343a40;
+}
+
+
+
+/* Hover Effect for Rows */
+.table-custom tbody tr:hover {
+    background-color: #ced4da;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Highlight the selected resident */
+.table-custom tbody tr:active {
+    background-color: #b8daff;
+}
+
+/* Search Bar Styling */
+.search-bar-container input[type="text"] {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    width: 100%;
+    max-width: 300px;
+}
+
+/* Pagination styling */
+.pagination-container {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+/* Style for the 'showing' label */
+.pagination-info {
+    color: #6c757d;
+    margin-left: 20px;
+    /* Added margin for spacing */
+}
+
+/* Pagination button styling */
+.pagination .page-item.active .page-link {
+    background-color: #1c2455;
+    border-color: #1c2455;
+    color: #f1f1f1;
+}
+
+.pagination .page-item .page-link {
+    color: #1c2455;
+    border: 1px solid #dee2e6;
+    margin: 0 6px;
+    /* Added margin between pagination buttons */
+    padding: 8px 12px;
+    /* Added padding to buttons */
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #f1f1f1;
+    color: #1c2455;
+}
+
+/* Modal Styles */
+.modal-content {
+    border-radius: 8px;
+}
+
+.modal-header {
+    background-color: #1c2455;
+    color: white;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+/* Button Container */
+.button-container button {
+    margin-right: 10px;
+}
+
+/* Loading Spinner Styling */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+.text-primary {
+    color: #1c2455 !important;
 }
 
 /* Make it responsive */
