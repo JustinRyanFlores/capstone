@@ -65,6 +65,8 @@ $populationData = [];
 while ($row = $populationResult->fetch_assoc()) {
     $populationData[] = [$row['date'], (int)$row['count']];
 }
+
+
 ?>
 
 <!DOCTYPE html>

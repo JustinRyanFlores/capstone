@@ -25,7 +25,7 @@ if (isset($_GET['search'])) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>Blotter Records</title>
+    <title>Kay-Anlog Sys Info | Blotter Records</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
@@ -288,7 +288,19 @@ if (isset($_GET['search'])) {
                         </div>
                         <div class="mb-3">
                             <label for="placeIncident" class="form-label">Place of Incident</label>
-                            <input type="text" class="form-control" id="placeIncident" name="placeIncident" required>
+                            <select class="form-control" id="placeIncident" name="placeIncident" required>
+                                <option value="" disabled selected>Select a place</option>
+                                <option value="Purok-1">Purok-1</option>
+                                <option value="Purok-2">Purok-2</option>
+                                <option value="Purok-3">Purok-3</option>
+                                <option value="Purok-4">Purok-4</option>
+                                <option value="Calambeño ville 5">Calambeño Ville 5</option>
+                                <option value="Mother ignacia">Mother Ignacia</option>
+                                <option value="Villa Javier">Villa Javier</option>
+                                <option value="Villa Andrea">Villa Andrea</option>
+                                <option value="Valley Breeze">Valley Breeze</option>
+                                <option value="Southville 6">Southville 6</option>
+                            </select>
                         </div>
                         <div class="mb-3">
                             <label for="nameComplainant" class="form-label">Name of Complainant</label>

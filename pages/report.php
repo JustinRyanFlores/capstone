@@ -222,6 +222,56 @@ $row = mysqli_fetch_assoc($result);
 $businessOwnersCount = $row['business_owners'];
 $nonBusinessOwnersCount = $row['non_business_owners'];
 
+// Query to get number of business owners per subdivision
+$query = "SELECT subdivision, COUNT(*) as count FROM residents_records WHERE business_owner = '1' GROUP BY subdivision";
+$result = $mysqlConn->query($query);
+
+$businessData = [];
+while ($row = $result->fetch_assoc()) {
+    $businessData[] = [$row['subdivision'], (int)$row['count']];
+}
+
+// Query to get number of blotter incidents by type
+$query = "SELECT type_incident, COUNT(*) as count FROM blotter WHERE type_incident IS NOT NULL AND type_incident != 'N/A' AND type_incident != '' GROUP BY type_incident";
+$result = $mysqlConn2->query($query);
+
+$incidentData = [];
+while ($row = $result->fetch_assoc()) {
+    $incidentData[] = [$row['type_incident'], (int)$row['count']];
+}
+
+// Query to get the number of blotter records by status (Pending vs Done)
+$query = "SELECT blotter_status, COUNT(*) as count FROM blotter GROUP BY blotter_status";
+$result = $mysqlConn2->query($query);
+
+$statusData = [];
+while ($row = $result->fetch_assoc()) {
+    $statusData[] = [$row['blotter_status'], (int)$row['count']];
+}
+
+// Query to get the number of blotter records per place of incident
+$query = "SELECT place_incident, COUNT(*) as count FROM blotter GROUP BY place_incident";
+$result = $mysqlConn2->query($query);
+
+$placeData = [];
+while ($row = $result->fetch_assoc()) {
+    $placeData[] = [$row['place_incident'], (int)$row['count']];
+}
+
+// Query for blotter reports (grouping by the reported date)
+$blotterQuery = "
+    SELECT DATE(dt_reported) as date, COUNT(*) as count
+    FROM blotter
+    GROUP BY DATE(dt_reported)
+    ORDER BY date ASC
+";
+$blotterResult = $mysqlConn2->query($blotterQuery);
+
+$blotterData = [];
+while ($row = $blotterResult->fetch_assoc()) {
+    $blotterData[] = [$row['date'], (int)$row['count']];
+}
+
 ?>
 
 
@@ -232,7 +282,7 @@ $nonBusinessOwnersCount = $row['non_business_owners'];
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>My Web Application</title>
+    <title>Kay-Anlog Sys Info | Report</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
@@ -262,6 +312,11 @@ $nonBusinessOwnersCount = $row['non_business_owners'];
             drawAlsLineChart();
             drawOsyLineChart();
             drawBusinessOwnerPieChart();
+            drawBusinessOwnerBarChart();
+            drawBlotterIncidentChart();
+            drawStatusPieChart();
+            drawPlaceBarChart();
+            drawBlotterLineChart();
         }
 
         function drawGenderPieChart() {
@@ -735,6 +790,152 @@ $nonBusinessOwnersCount = $row['non_business_owners'];
         chart.draw(data, options);
     }
 
+    function drawBusinessOwnerBarChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Subdivision', 'Number of Business Owners'],
+                <?php
+                foreach ($businessData as $data) {
+                    echo "['" . $data[0] . "', " . $data[1] . "],";
+                }
+                ?>
+            ]);
+
+            var options = {
+                title: 'Number of Business Owners per Subdivision',
+                hAxis: { title: 'Subdivision' },
+                vAxis: { title: 'Number of Business Owners', format: '0'  },
+                chartArea: { width: '85%', height: '70%' },
+                bars: 'vertical',
+                legend: { position: 'none' }
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('businessOwnerBarChart'));
+            chart.draw(data, options);
+        }
+
+        function drawBlotterIncidentChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Incident Type', 'Number of Records'],
+                <?php
+                foreach ($incidentData as $data) {
+                    echo "['" . $data[0] . "', " . $data[1] . "],";
+                }
+                ?>
+            ]);
+
+            var options = {
+                title: 'Number of Records per Blotter Incident Type',
+                hAxis: { title: 'Incident Type' },
+                vAxis: { title: 'Number of Records', format: '0', },
+                chartArea: { width: '85%', height: '70%' },
+                bars: 'vertical',
+                legend: { position: 'none' }
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('blotterIncidentChart'));
+            chart.draw(data, options);
+        }
+
+        function drawStatusPieChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Status', 'Number of Records'],
+                <?php
+                foreach ($statusData as $data) {
+                    echo "['" . $data[0] . "', " . $data[1] . "],";
+                }
+                ?>
+            ]);
+
+            var options = {
+                title: 'Pending vs Done Blotter Records',
+                is3D: true,
+                chartArea: { width: '85%', height: '75%' },
+                legend: { position: 'bottom' }
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('statusPieChart'));
+            chart.draw(data, options);
+        }
+
+        function drawPlaceBarChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Place', 'Number of Records'],
+                <?php
+                foreach ($placeData as $data) {
+                    echo "['" . $data[0] . "', " . $data[1] . "],";
+                }
+                ?>
+            ]);
+
+            var options = {
+                title: 'Number of Blotter Records per Place',
+                chartArea: { width: '70%', height: '75%' },
+                hAxis: {
+                    title: 'Number of Records',
+                    minValue: 0,
+                    format: '0',
+                },
+                vAxis: {
+                    title: 'Place of Incident',
+                },
+                legend: { position: 'none' },
+                
+            };
+
+            var chart = new google.visualization.BarChart(document.getElementById('placeBarChart'));
+            chart.draw(data, options);
+        }
+
+        // Function to draw Blotter Reports Line Chart
+        function drawBlotterLineChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'Date'); // Use 'date' as the column type
+            data.addColumn('number', 'Number of Blotter Reports');
+            
+            data.addRows([
+                <?php
+                foreach ($blotterData as $data) {
+                    // Convert the PHP date string to a format that can be interpreted as a Date object
+                    $dateParts = explode('-', $data[0]); // Split the date into year, month, day
+                    echo "[new Date(" . $dateParts[0] . ", " . ($dateParts[1] - 1) . ", " . $dateParts[2] . "), " . $data[1] . "],";
+                }
+                ?>
+            ]);
+
+            var dashboard = new google.visualization.Dashboard(
+                document.getElementById('blotterDashboard') // Update container ID
+            );
+
+            var control = new google.visualization.ControlWrapper({
+                controlType: 'ChartRangeFilter',
+                containerId: 'blotter_filter_div', // Update filter container ID
+                options: {
+                    filterColumnLabel: 'Date',
+                    ui: { 
+                        chartType: 'LineChart', 
+                        chartOptions: { 
+                            chartArea: { width: '60%' }, 
+                            hAxis: { format: 'yyyy-MMM-dd' } 
+                        } 
+                    }
+                }
+            });
+
+            var chart = new google.visualization.ChartWrapper({
+                chartType: 'LineChart',
+                containerId: 'blotterLineChart', // Update chart container ID
+                options: {
+                    title: 'Blotter Reports Over Time',
+                    hAxis: { title: 'Date', format: 'yyyy-MMM-dd' },
+                    vAxis: { title: 'Number of Blotter Reports', format: '0' },
+                    chartArea: { width: '85%', height: '70%' },
+                }
+            });
+
+            dashboard.bind(control, chart);
+            dashboard.draw(data);
+        }
+
         window.addEventListener('resize', function () {
             drawCharts();
         });
@@ -750,7 +951,7 @@ $nonBusinessOwnersCount = $row['non_business_owners'];
             <div class="h3 col-sm-6 col-md-6 text-start h5-sm">
                 Report
                 <div class="h6" style="font-style: italic; color: grey">
-                    Home/Report
+                    Home / Report
                 </div>
             </div>
             <div class="col-sm-6 col-md-6 d-flex justify-content-sm-between justify-content-md-end">
@@ -840,6 +1041,7 @@ $nonBusinessOwnersCount = $row['non_business_owners'];
 
                     <!-- Teen Pregnancy Chart -->
                     <div id="teenPregnancyDashboard" class="chart-container">
+                        <h5>Teen Pregnancy Over Time</h5>
                         <div id="teenPregnancyFilter" style="width: 100%; height: 100px;"></div>
                         <div id="teenPregnancyLineChart" style="width: 100%; height: 400px;"></div>
                     </div>
@@ -867,8 +1069,33 @@ $nonBusinessOwnersCount = $row['non_business_owners'];
 
             <div class="collapse show" id="characterSection">
                 <div class="scrollable-graphs mt-3">
+                    
+                    <!-- Number of Blotter Incident -->
+                    <div class="chart-container">
+                        <h5>Blotter Incidents by Type</h5>
+                        <div id="blotterIncidentChart" style="width: 100%; height: 500px;"></div>
+                    </div>
 
+                    <!-- Pending vs Done -->
+                    <div class="chart-container">
+                        <h5>Blotter Status: Pending vs Done</h5>
+                        <div id="statusPieChart" style="width: 100%; height: 500px;"></div>
+                    </div>
 
+                    <!--Blotter Records by Place of Incident Bar Chart -->
+                    <div class="chart-container">
+                        <h5>Blotter Records by Place of Incident</h5>
+                        <div id="placeBarChart" style="width: 100%; height: 500px;"></div>
+                    </div>
+
+                    <!-- Blotter Reports Over Time -->
+                    <div class="chart-container">
+                        <h5>Blotter Reports Over Time</h5>
+                        <div id="blotterDashboard">
+                            <div id="blotter_filter_div" style="height: 100px;"></div> <!-- Filter for blotter reports -->
+                            <div id="blotterLineChart" style="height: 400px;"></div> <!-- Chart for blotter reports -->
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -890,8 +1117,14 @@ $nonBusinessOwnersCount = $row['non_business_owners'];
 
                     <!-- Business Owner Pie Chart -->
                     <div class="chart-container">
-                        <h4>Business Owners vs Non-Business Owners</h4>
+                        <h5>Business Owners vs Non-Business Owners</h5>
                         <div id="businessOwnerPieChart" style="height: 400px;"></div>
+                    </div>
+
+                    <!-- Business Owners Per Subdivision Bar Chart -->
+                    <div class="chart-container">
+                        <h5>Business Owners per Subdivision</h5>
+                        <div id="businessOwnerBarChart" style="width: 100%; height: 500px;"></div>
                     </div>
 
                 </div>

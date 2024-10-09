@@ -119,7 +119,7 @@ $isEdit = isset($_GET['id']) ? true : false;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <title>Residents Records</title>
+    <title>Kay-Anlog Sys Info | Residents Records</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -137,7 +137,7 @@ $isEdit = isset($_GET['id']) ? true : false;
             <div class="col-sm-6 col-md-6 text-start">
                 <h3>Residents Records</h3>
                 <div class="h6 text-muted" style="font-style: italic;">
-                    Add Records
+                    Home / Add Records
                 </div>
             </div>
             <div class="col-sm-6 col-md-6 d-flex justify-content-sm-between justify-content-md-end">
