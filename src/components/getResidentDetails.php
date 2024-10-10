@@ -78,7 +78,7 @@ function calculateAge($dob)
 if ($row = $result->fetch_assoc()) {
     ob_start();
     $update_image = htmlspecialchars($row['residents_img']);
-    $imagePath = $update_image ? "/capstone/src/assets/$update_image" : "/path/to/default-image.jpg";
+    $imagePath = $update_image ? "/capstone/src/assets/$update_image" : "/capstone/src/assets/kayanlog-logo.png";
 
     // Get the barangay, city, and province names using the codes from the database
     $barangayName = getBarangayName($row['barangay'], $barangayArray);

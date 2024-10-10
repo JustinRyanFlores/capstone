@@ -198,7 +198,7 @@ if (isset($_GET['search'])) {
                     </div>
                     <div class="modal-footer">
                         <div class="button-container">
-                            <button class="btn btn-custom" onclick="editResident(<?php echo $residentId; ?>)">Edit</button>
+                        <button class="btn btn-custom" onclick="editResident(<?php echo $residentId; ?>)">Edit</button>
                             <button class="btn btn-custom" onclick="printResidentDetails()">Print</button>
                             <button class="btn btn-danger" onclick="deleteResident()">Delete</button>
                             <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -230,7 +230,7 @@ if (isset($_GET['search'])) {
                                         $('#residentDetailsModal').modal('show'); // Show the modal
 
                                         // Ensure the Edit button has the correct ID for redirection
-                                        $('.btn-primary').attr('onclick', 'editResident(' + residentId + ')');
+                                        $('.btn-custom').attr('onclick', 'editResident(' + residentId + ')');
                                     },
                                     error: function() {
                                         $("#resident-details").html('<div class="text-danger">Unable to retrieve data.</div>');
