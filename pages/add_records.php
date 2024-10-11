@@ -636,21 +636,35 @@ $isEdit = isset($_GET['id']) ? true : false;
                                 <button id="submitButton" type="submit" class="btn btn-custom">
                                     <?php echo $isEdit ? 'Update' : 'Add'; ?>
                                 </button>
-                                <button type="button" class="btn btn-secondary-custom" onclick="window.location.href='resident_list.php'">Cancel</button>
+                                <button type="button" class="btn btn-secondary-custom" id="cancelButton">Cancel</button>
                             </div>
+
                             <script>
+                                // Check if a success message should be displayed
                                 if (window.location.search.includes('success=1')) {
                                     alert('Record added successfully!');
                                     window.scrollTo(0, 0);
                                 }
 
+                                // Set button text based on URL parameter
                                 const urlParams = new URLSearchParams(window.location.search);
                                 if (urlParams.has('id')) {
                                     document.getElementById('submitButton').textContent = 'Update';
                                 } else {
                                     document.getElementById('submitButton').textContent = 'Add';
                                 }
+
+                                // Modify the Cancel button to redirect based on the presence of the 'id' parameter
+                                document.getElementById('cancelButton').addEventListener('click', function() {
+                                    if (urlParams.has('id')) {
+                                        const residentId = urlParams.get('id');
+                                        window.location.href = `resident_list.php?id=${residentId}`;
+                                    } else {
+                                        window.location.href = 'resident_list.php';
+                                    }
+                                });
                             </script>
+
                         </div>
 
             </form>

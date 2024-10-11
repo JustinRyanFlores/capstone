@@ -77,6 +77,52 @@ if ($result_total_blotter->num_rows > 0) {
             border-color: #1c2455;
         }
 
+        #autoFocusBtn {
+            position: absolute;
+            /* Position the button absolutely */
+            top: 5%;
+            /* 5% from the top */
+            left: 95%;
+            /* 95% from the left */
+            transform: translate(-50%, 0);
+            /* Center horizontally */
+            padding: 10px 15px;
+            /* Padding for the button */
+            border: none;
+            /* No border */
+            border-radius: 5px;
+            /* Rounded corners */
+            cursor: pointer;
+            /* Pointer cursor on hover */
+            font-size: 16px;
+            /* Default font size */
+            z-index: 1000;
+            /* Ensure it appears above other elements */
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            #autoFocusBtn {
+                font-size: 14px;
+                /* Smaller font size on smaller screens */
+                padding: 8px 12px;
+                /* Smaller padding */
+                left: 90%;
+                /* Adjust left position */
+            }
+        }
+
+        @media (max-width: 480px) {
+            #autoFocusBtn {
+                font-size: 12px;
+                /* Even smaller font size */
+                padding: 6px 10px;
+                /* Smaller padding */
+                left: 85%;
+                /* Further adjust left position */
+            }
+        }
+
         .map-container {
             display: flex;
             flex-direction: column;
@@ -93,6 +139,10 @@ if ($result_total_blotter->num_rows > 0) {
             /* Border color */
             border-radius: 10px;
             /* Rounded corners */
+        }
+
+        .leaflet-control-attribution {
+            font-size: 10px;
         }
 
         .custom-container {
@@ -240,7 +290,7 @@ if ($result_total_blotter->num_rows > 0) {
         <div class="container text-center mb-5">
             <div class="position-relative">
                 <div id="map" class="w-100" style="height: 600px;"></div> <!-- Adjust height as necessary -->
-                <button id="autoFocusBtn" class="btn  position-absolute" style="bottom: 20px; left: 50%; transform: translateX(-50%);">
+                <button id="autoFocusBtn" class="btn">
                     <i class="fas fa-crosshairs"></i>
                 </button>
             </div>
@@ -272,16 +322,23 @@ if ($result_total_blotter->num_rows > 0) {
             </div>
         </div>
 
+
+
         <!-- Filter Panel (Hidden by Default) -->
-        <div id="filterPanel" class="filter-popup shadow rounded p-3 bg-white" style="display: none; position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 1050; max-width: 300px;">
+        <div id="filterPanel" class="filter-popup shadow rounded p-3 bg-white" style="display: none; position: absolute; max-width: 340px; max-height: 300px; overflow-y: auto; z-index: 1050;">
             <form id="filterForm" action="dashboard.php" method="GET">
                 <!-- Demographic Filters -->
                 <h6 class="mt-2">Demographic Details</h6>
                 <div class="mb-2">
                     <label for="age_range">Age Range</label>
-                    <input type="range" id="age_range" name="age_range" class="form-range" min="0" max="100" step="1" value="0" oninput="updateAgeRange(this.value)">
-                    <span id="ageRangeLabel">0-0</span>
+                    <div class="d-flex">
+                        <input type="number" id="age_min" name="age_min" class="form-control me-2" min="1" max="100" value="1" oninput="updateAgeRange()" required>
+                        <input type="number" id="age_max" name="age_max" class="form-control" min="1" max="100" value="100" oninput="updateAgeRange()" required>
+                    </div>
+                    <span id="ageRangeLabel">1-100</span> <!-- This span displays the selected age range -->
                 </div>
+
+
                 <div class="mb-2">
                     <label for="gender">Gender</label>
                     <select name="gender" class="form-select">
@@ -306,8 +363,8 @@ if ($result_total_blotter->num_rows > 0) {
                     <input type="text" class="form-control" name="religion" id="religion">
                 </div>
                 <div class="mb-2">
-                    <label for="voter_status">Voter Status</label>
-                    <select name="voter_status" class="form-select">
+                    <label for="voterstatus">Voter Status</label>
+                    <select name="voterstatus" class="form-select">
                         <option value="">Any</option>
                         <option value="1">Yes</option>
                         <option value="0">No</option>
@@ -318,16 +375,16 @@ if ($result_total_blotter->num_rows > 0) {
                 <h6 class="mt-2">Socio-Economic & Educational</h6>
                 <div class="row mb-2">
                     <div class="col-6">
-                        <label for="osy_status">OSY Status</label>
-                        <select name="osy_status" class="form-select">
+                        <label for="osy">OSY Status</label>
+                        <select name="osy" class="form-select">
                             <option value="">Any</option>
                             <option value="1">Yes</option>
                             <option value="0">No</option>
                         </select>
                     </div>
                     <div class="col-6">
-                        <label for="als_status">ALS Status</label>
-                        <select name="als_status" class="form-select">
+                        <label for="als">ALS Status</label>
+                        <select name="als" class="form-select">
                             <option value="">Any</option>
                             <option value="1">Yes</option>
                             <option value="0">No</option>
@@ -409,27 +466,65 @@ if ($result_total_blotter->num_rows > 0) {
 
             </form>
         </div>
-
         <script>
             function toggleFilterPopup() {
                 const filterPanel = document.getElementById('filterPanel');
-                if (filterPanel.style.display === 'none') {
+                const filterButton = document.querySelector('.btn-outline-secondary');
+
+                // Get the button's position and size
+                const rect = filterButton.getBoundingClientRect();
+
+                // Set the position of the filterPanel relative to the button
+                filterPanel.style.top = (window.scrollY + rect.bottom) + "px"; // Position below the button
+                filterPanel.style.left = (window.scrollX + rect.left) + "px"; // Align to the button's left
+
+                // Toggle visibility
+                if (filterPanel.style.display === 'none' || filterPanel.style.display === '') {
                     filterPanel.style.display = 'block';
                 } else {
                     filterPanel.style.display = 'none';
                 }
             }
 
+            function updateAgeRange() {
+                const minAgeInput = document.getElementById('age_min');
+                const maxAgeInput = document.getElementById('age_max');
+
+                let minAge = parseInt(minAgeInput.value, 10);
+                let maxAge = parseInt(maxAgeInput.value, 10);
+
+                // Ensure the min age is not greater than the max age
+                if (minAge > maxAge) {
+                    minAge = maxAge;
+                    minAgeInput.value = minAge;
+                }
+
+                // Ensure the max age is not less than the min age
+                if (maxAge < minAge) {
+                    maxAge = minAge;
+                    maxAgeInput.value = maxAge;
+                }
+
+                document.getElementById('ageRangeLabel').textContent = `${minAge}-${maxAge}`;
+            }
+
+
             function clearFilters() {
                 document.getElementById('filterForm').reset();
                 // Optionally, hide the filter panel after clearing
                 document.getElementById('filterPanel').style.display = 'none';
             }
+
+            document.addEventListener('click', function(event) {
+                const filterPanel = document.getElementById('filterPanel');
+                const filterButton = document.querySelector('.btn-outline-secondary');
+
+                // Check if the click was outside the filter panel and filter button
+                if (!filterPanel.contains(event.target) && !filterButton.contains(event.target)) {
+                    filterPanel.style.display = 'none';
+                }
+            });
         </script>
-
-
-
-
         <!-- Resident Table -->
         <div class="row mt-4">
             <div class="col-md-12">
@@ -479,11 +574,19 @@ if ($result_total_blotter->num_rows > 0) {
                                 $query .= " AND last_name LIKE '%$last_name%'";
                             }
 
-                            if (!empty($_GET['age_range'])) {
-                                $age_max = (int)$_GET['age_range'];
-                                $age_min = 0; // Since the range starts from 0
-                                $query .= " AND age BETWEEN $age_min AND $age_max";
+                            if (!empty($_GET['age_min']) && !empty($_GET['age_max'])) {
+                                $age_min = (int)$_GET['age_min'];
+                                $age_max = (int)$_GET['age_max'];
+
+                                // Ensure the age range is valid
+                                if ($age_min <= $age_max) {
+                                    $query .= " AND age BETWEEN $age_min AND $age_max";
+                                } else {
+                                    // Handle the case where the range is invalid (optional)
+                                    // Example: You can set an error message or log this issue
+                                }
                             }
+
 
                             if (!empty($_GET['gender'])) {
                                 $gender = $mysqlConn->real_escape_string($_GET['gender']);
@@ -501,9 +604,9 @@ if ($result_total_blotter->num_rows > 0) {
                                 $query .= " AND religion LIKE '%$religion%'";
                             }
 
-                            if (!empty($_GET['voter_status'])) {
-                                $voter_status = $mysqlConn->real_escape_string($_GET['voter_status']);
-                                $query .= " AND voter_status = '$voter_status'";
+                            if (!empty($_GET['voterstatus'])) {
+                                $voterstatus = $mysqlConn->real_escape_string($_GET['voterstatus']);
+                                $query .= " AND voterstatus = '$voterstatus'";
                             }
 
                             if (!empty($_GET['philhealth'])) {
@@ -516,14 +619,14 @@ if ($result_total_blotter->num_rows > 0) {
                                 $query .= " AND subdivision LIKE '%$subdivision%'";
                             }
 
-                            if (!empty($_GET['osy_status'])) {
-                                $osy_status = $mysqlConn->real_escape_string($_GET['osy_status']);
-                                $query .= " AND osy_status = '$osy_status'";
+                            if (!empty($_GET['osy'])) {
+                                $osy = $mysqlConn->real_escape_string($_GET['osy']);
+                                $query .= " AND osy = '$osy'";
                             }
 
-                            if (!empty($_GET['als_status'])) {
-                                $als_status = $mysqlConn->real_escape_string($_GET['als_status']);
-                                $query .= " AND als_status = '$als_status'";
+                            if (!empty($_GET['als'])) {
+                                $als = $mysqlConn->real_escape_string($_GET['als']);
+                                $query .= " AND als = '$als'";
                             }
 
                             if (!empty($_GET['immunization_status'])) {
@@ -554,10 +657,10 @@ if ($result_total_blotter->num_rows > 0) {
 
                                 if ($type_of_delivery === 'Normal') {
                                     // Filter for Vaginal Delivery (which corresponds to Normal)
-                                    $query .= " AND typeOfDelivery = 'Vaginal Delivery'";
+                                    $query .= " AND type_of_delivery = 'Vaginal Delivery'";
                                 } elseif ($type_of_delivery === 'Cesarean') {
                                     // Filter for Cesarean Section
-                                    $query .= " AND typeOfDelivery = 'Cesarean Section'";
+                                    $query .= " AND type_of_delivery = 'Cesarean Section'";
                                 }
                             }
 
@@ -624,6 +727,8 @@ if ($result_total_blotter->num_rows > 0) {
 
                             // Execute the query
                             $result = $mysqlConn->query($query);
+
+
 
                             // Loop through the records and display them
                             if ($result->num_rows > 0) {
@@ -890,7 +995,7 @@ if ($result_total_blotter->num_rows > 0) {
 
             // Esri Satellite Layer
             L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
                 maxZoom: 18
             }).addTo(map);
 
@@ -1000,7 +1105,7 @@ if ($result_total_blotter->num_rows > 0) {
                 [14.163587565619409, 121.12120181023332],
                 [14.163377924851897, 121.1206062753015]
             ], {
-                color: '#D6C9E5', 
+                color: '#D6C9E5',
                 fillColor: '#6f42c1',
 
 

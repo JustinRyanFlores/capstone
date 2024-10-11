@@ -34,6 +34,9 @@ if (isset($_POST['residentId'])) {
         $stmtMove->bind_param('i', $residentId);
 
         if ($stmtMove->execute()) {
+            // Log successful move
+            error_log("Resident record moved to archive successfully.");
+
             // Now delete the record from the residents table
             $deleteQuery = "DELETE FROM residents_db.residents_records WHERE id = ?";
             if ($stmtDelete = $mysqlConn->prepare($deleteQuery)) {

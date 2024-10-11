@@ -187,7 +187,7 @@ if (isset($_GET['search'])) {
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="residentDetailsModalLabel">Resident's Details</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="redirectToResidentList()"></button>
                     </div>
                     <div id="printable-details">
                         <div class="modal-body" id="resident-details">
@@ -198,158 +198,180 @@ if (isset($_GET['search'])) {
                     </div>
                     <div class="modal-footer">
                         <div class="button-container">
-                        <button class="btn btn-custom" onclick="editResident(<?php echo $residentId; ?>)">Edit</button>
+                            <button id="editButton" class="btn btn-custom" onclick="editResident(<?php echo $residentId; ?>)">Edit</button>
                             <button class="btn btn-custom" onclick="printResidentDetails()">Print</button>
                             <button class="btn btn-danger" onclick="deleteResident()">Delete</button>
-                            <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button class="btn btn-secondary" data-bs-dismiss="modal" onclick="cancelAction()">Cancel</button>
                         </div>
-
-                        <script>
-                            function editResident(residentId) {
-                                // Redirect to the add_records.php page with the resident ID in the query string
-                                window.location.href = "/capstone/pages/add_records.php?id=" + residentId;
-                            }
-
-                            var selectedResidentId; // Declare a global variable
-
-                            function fetchResidentDetails(residentId) {
-                                selectedResidentId = residentId; // Store the resident ID globally for other actions (e.g., edit/delete)
-
-                                // Show a loading spinner while fetching data
-                                $("#resident-details").html('<div class="d-flex justify-content-center align-items-center"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>');
-
-                                $.ajax({
-                                    url: "/capstone/src/components/getResidentDetails.php", // Backend script to fetch details
-                                    type: "POST",
-                                    data: {
-                                        id: residentId
-                                    },
-                                    success: function(data) {
-                                        // Populate the modal body with the fetched resident details
-                                        $("#resident-details").html(data);
-                                        $('#residentDetailsModal').modal('show'); // Show the modal
-
-                                        // Ensure the Edit button has the correct ID for redirection
-                                        $('.btn-custom').attr('onclick', 'editResident(' + residentId + ')');
-                                    },
-                                    error: function() {
-                                        $("#resident-details").html('<div class="text-danger">Unable to retrieve data.</div>');
-                                    }
-                                });
-                            }
-
-
-                            $(document).ready(function() {
-                                const urlParams = new URLSearchParams(window.location.search);
-                                const residentId = urlParams.get('residentId');
-
-                                if (residentId) {
-                                    fetchResidentDetails(residentId); // Automatically load details if residentId is in the URL
-                                }
-                            });
-
-                            if (window.location.search.includes('success=updated')) {
-                                alert('Record updated successfully!');
-                                window.scrollTo(0, 0); // Scroll to top
-                            }
-
-                            function printResidentDetails() {
-                                // Get the content of the modal that we want to print
-                                var printContent = document.getElementById('printable-details').innerHTML;
-
-                                // Open a new window for printing
-                                var printWindow = window.open('', '', 'height=600,width=800');
-
-                                // Write the modal content to the new window with print-specific styles
-                                printWindow.document.write('<html><head><title>Resident Details</title>');
-                                printWindow.document.write('<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />');
-                                printWindow.document.write('<style>');
-                                printWindow.document.write('body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }');
-                                printWindow.document.write('.modal-body { padding: 10px; }');
-                                printWindow.document.write('h5 { font-size: 1.5em; margin-bottom: 10px; }'); // Adjust heading size
-                                printWindow.document.write('p { font-size: 1em; margin: 0; }'); // Adjust paragraph size
-                                printWindow.document.write('.button-container { display: none; }'); // Hide buttons in print view
-                                printWindow.document.write('@media print {');
-                                printWindow.document.write('body { -webkit-print-color-adjust: exact; }'); // Print colors exactly
-                                printWindow.document.write('}');
-                                printWindow.document.write('</style>');
-                                printWindow.document.write('</head><body>');
-                                printWindow.document.write(printContent);
-                                printWindow.document.write('</body></html>');
-
-                                // Close the document to finish writing
-                                printWindow.document.close();
-
-                                // Wait for the new window to fully load before triggering print
-                                printWindow.onload = function() {
-                                    printWindow.focus(); // Ensure the print window has focus
-                                    printWindow.print(); // Trigger the print
-
-                                    // Use a delay before closing the window to ensure the print dialog fully processes
-                                    setTimeout(function() {
-                                        printWindow.close(); // Close the print window after a small delay
-                                    }, 500); // 500ms delay
-                                };
-                            }
-
-                            function deleteResident() {
-                                if (confirm("Are you sure you want to delete this resident?")) {
-                                    $.ajax({
-                                        url: '/capstone/src/components/delete_resident.php',
-                                        type: 'POST',
-                                        data: {
-                                            residentId: selectedResidentId
-                                        },
-                                        success: function(response) {
-                                            alert(response); // Show success or error message
-
-                                            console.log("Page will reload now");
-                                            $('#residentDetailsModal').modal('hide'); // Close the modal
-
-                                            // Refresh the page to reflect the changes
-                                            window.location.reload();
-                                        },
-                                        error: function() {
-                                            alert("An error occurred while deleting the resident.");
-                                        }
-                                    });
-                                }
-                            }
-
-                            $('input[name="search"]').on('keyup', function() {
-                                let searchValue = $(this).val();
-                                $.ajax({
-                                    url: 'resident_list.php',
-                                    method: 'GET',
-                                    data: {
-                                        search: searchValue
-                                    },
-                                    success: function(response) {
-                                        $('tbody').html($(response).find('tbody').html());
-
-                                        // Rebind click event to rows
-                                        $('table tbody tr').on('click', function() {
-                                            openModal($(this));
-                                        });
-                                    }
-                                });
-                            });
-
-                            function cancelAction() {
-                                // Logic to cancel the action or clear the form
-                                document.getElementById('resident-details').innerHTML = '<span class="text-muted">Select a resident to view details</span>';
-                                // Optionally hide buttons if needed
-                                $("#action-buttons").addClass('d-none');
-                            }
-                        </script>
                     </div>
                 </div>
             </div>
         </div>
 
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script>
+            function editResident(residentId) {
+                // Redirect to the add_records.php page with the resident ID in the query string
+                window.location.href = "/capstone/pages/add_records.php?id=" + residentId;
+            }
+
+            var selectedResidentId; // Declare a global variable
+
+            function fetchResidentDetails(residentId) {
+                selectedResidentId = residentId; // Store the resident ID globally for other actions (e.g., edit/delete)
+
+                // Show a loading spinner while fetching data
+                $("#resident-details").html('<div class="d-flex justify-content-center align-items-center"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>');
+
+                $.ajax({
+                    url: "/capstone/src/components/getResidentDetails.php", // Backend script to fetch details
+                    type: "POST",
+                    data: {
+                        id: residentId
+                    },
+                    success: function(data) {
+                        // Populate the modal body with the fetched resident details
+                        $("#resident-details").html(data);
+                        $('#residentDetailsModal').modal('show'); // Show the modal
+
+                        // Ensure the Edit button has the correct ID for redirection
+                        $('#editButton').attr('onclick', 'editResident(' + residentId + ')');
+                    },
+                    error: function() {
+                        $("#resident-details").html('<div class="text-danger">Unable to retrieve data.</div>');
+                    }
+                });
+            }
+
+
+            $(document).ready(function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const residentId = urlParams.get('residentId');
+
+                if (residentId) {
+                    fetchResidentDetails(residentId); // Automatically load details if residentId is in the URL
+                }
+            });
+
+            if (window.location.search.includes('success=updated')) {
+                alert('Record updated successfully!');
+                window.scrollTo(0, 0); // Scroll to top
+            }
+
+            function printResidentDetails() {
+                // Get the content of the modal that we want to print
+                var printContent = document.getElementById('printable-details').innerHTML;
+
+                // Open a new window for printing
+                var printWindow = window.open('', '', 'height=600,width=800');
+
+                // Write the modal content to the new window with print-specific styles
+                printWindow.document.write('<html><head><title>Resident Details</title>');
+                printWindow.document.write('<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />');
+                printWindow.document.write('<style>');
+                printWindow.document.write('body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }');
+                printWindow.document.write('.modal-body { padding: 10px; }');
+                printWindow.document.write('h5 { font-size: 1.5em; margin-bottom: 10px; }'); // Adjust heading size
+                printWindow.document.write('p { font-size: 1em; margin: 0; }'); // Adjust paragraph size
+                printWindow.document.write('.button-container { display: none; }'); // Hide buttons in print view
+                printWindow.document.write('@media print {');
+                printWindow.document.write('body { -webkit-print-color-adjust: exact; }'); // Print colors exactly
+                printWindow.document.write('}');
+                printWindow.document.write('</style>');
+                printWindow.document.write('</head><body>');
+                printWindow.document.write(printContent);
+                printWindow.document.write('</body></html>');
+
+                // Close the document to finish writing
+                printWindow.document.close();
+
+                // Wait for the new window to fully load before triggering print
+                printWindow.onload = function() {
+                    printWindow.focus(); // Ensure the print window has focus
+                    printWindow.print(); // Trigger the print
+
+                    // Use a delay before closing the window to ensure the print dialog fully processes
+                    setTimeout(function() {
+                        printWindow.close(); // Close the print window after a small delay
+                    }, 500); // 500ms delay
+                };
+            }
+
+            function deleteResident() {
+                if (confirm("Are you sure you want to delete this resident?")) {
+                    $.ajax({
+                        url: '/capstone/src/components/delete_resident.php',
+                        type: 'POST',
+                        data: {
+                            residentId: selectedResidentId
+                        },
+                        success: function(response) {
+                            alert(response); // Show success or error message
+
+                            console.log("Page will reload now");
+                            $('#residentDetailsModal').modal('hide'); // Close the modal
+
+                            // Refresh the page to reflect the changes
+                            window.location.reload();
+                        },
+                        error: function() {
+                            alert("An error occurred while deleting the resident.");
+                        }
+                    });
+                }
+            }
+
+            $('input[name="search"]').on('keyup', function() {
+                let searchValue = $(this).val();
+                $.ajax({
+                    url: 'resident_list.php',
+                    method: 'GET',
+                    data: {
+                        search: searchValue
+                    },
+                    success: function(response) {
+                        $('tbody').html($(response).find('tbody').html());
+
+                        // Rebind click event to rows
+                        $('table tbody tr').on('click', function() {
+                            openModal($(this));
+                        });
+                    }
+                });
+            });
+
+            // Cancel action logic
+            function cancelAction() {
+                // Logic to cancel the action or clear the form
+                document.getElementById('resident-details').innerHTML = '<span class="text-muted">Select a resident to view details</span>';
+
+                // Optionally hide buttons if needed
+                $("#action-buttons").addClass('d-none');
+
+                // Redirect to resident list page
+                window.location.href = 'resident_list.php'; // Change to your desired URL
+            }
+
+            $('#residentDetailsModal').on('hide.bs.modal', function() {
+                window.location.href = 'resident_list.php';
+            });
+
+            // Event listener for modal hidden
+            $('#residentDetailsModal').on('hidden.bs.modal', function() {
+                window.location.href = 'resident_list.php';
+            });
+
+            function redirectToResidentList() {
+                window.location.href = 'resident_list.php'; // Change to your desired URL
+            }
+        </script>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 
