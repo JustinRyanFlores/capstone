@@ -185,7 +185,8 @@ include("../src/configs/connection.php"); // Include your database connection
                             </div>
                             <div class="mb-3">
                                 <label for="newContactNumber" class="form-label">Contact Number</label>
-                                <input type="text" class="form-control" id="newContactNumber" name="contactNumber" required>
+                                <input type="text" class="form-control" id="newContactNumber" name="contactNumber" 
+                                    required pattern="^\d{11}$" title="Contact number must be 11 digits">
                             </div>
                             <div class="mb-3">
                                 <label for="newAddress" class="form-label">Address</label>
@@ -195,7 +196,11 @@ include("../src/configs/connection.php"); // Include your database connection
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="newRole" class="form-label">Role</label>
-                                <input type="text" class="form-control" id="newRole" name="role" required>
+                                <select class="form-control" id="newRole" name="role" required>
+                                    <option value="" disabled selected>Select a role</option>
+                                    <option value="Admin">Admin</option>
+                                    <option value="Employee">Employee</option>
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="newUsername" class="form-label">Username</label>
@@ -203,7 +208,9 @@ include("../src/configs/connection.php"); // Include your database connection
                             </div>
                             <div class="mb-3">
                                 <label for="newPassword" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="newPassword" name="password" required>
+                                <input type="password" class="form-control" id="newPassword" name="password" 
+                                    required minlength="8" pattern="(?=.*\d).{8,}" 
+                                    title="Password must be at least 8 characters long and contain at least one number">
                             </div>
                             <div class="mb-3">
                                 <label for="confirmPassword" class="form-label">Confirm Password</label>
@@ -274,7 +281,6 @@ include("../src/configs/connection.php"); // Include your database connection
                     </div>
                     <div class="mb-3 text-end">
                         <button type="button" class="btn btn-secondary" id="exitModalUser" data-bs-dismiss="modal">Exit</button>
-                        <button type="button" class="btn btn-primary" id="editModalUser">Edit</button>
                         <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
                     </div>
                 </form>
