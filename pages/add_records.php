@@ -643,7 +643,7 @@ $isEdit = isset($_GET['id']) ? true : false;
                                     <div class="col-md-6 mb-3">
                                         <label for="businessOwner">Business Owner:</label>
                                         <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" id="businessOwner" name="businessOwner" value="<?php echo $businessOwner; ?>">
+                                            <input type="checkbox" class="form-check-input" id="businessOwner" name="businessOwner" <?php echo ($businessOwner) ? 'checked' : ''; ?>>
                                             <label class="form-check-label" for="businessOwner">Yes</label>
                                         </div>
                                     </div>
