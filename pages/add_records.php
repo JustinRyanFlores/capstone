@@ -198,7 +198,7 @@ $isEdit = isset($_GET['id']) ? true : false;
                             <div class="col-md-4 mb-3">
                                 <label for="dob">Date of Birth:</label>
                                 <div class="input-group">
-                                    <select class="form-control" id="dobDay" name="dobDay">
+                                    <select class="form-control" id="dobDay" name="dobDay" onchange="calculateAge()">
                                         <option value="">Day</option>
                                         <?php for ($d = 1; $d <= 31; $d++): ?>
                                             <option value="<?php echo str_pad($d, 2, '0', STR_PAD_LEFT); ?>" <?php echo ($d == intval($day)) ? 'selected' : ''; ?>>
@@ -206,7 +206,7 @@ $isEdit = isset($_GET['id']) ? true : false;
                                             </option>
                                         <?php endfor; ?>
                                     </select>
-                                    <select class="form-control" id="dobMonth" name="dobMonth">
+                                    <select class="form-control" id="dobMonth" name="dobMonth" onchange="calculateAge()">
                                         <option value="">Month</option>
                                         <?php
                                         $months = [
@@ -229,7 +229,7 @@ $isEdit = isset($_GET['id']) ? true : false;
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
-                                    <select class="form-control" id="dobYear" name="dobYear">
+                                    <select class="form-control" id="dobYear" name="dobYear" onchange="calculateAge()">
                                         <option value="">Year</option>
                                         <?php
                                         $currentYear = date('Y');
@@ -245,6 +245,26 @@ $isEdit = isset($_GET['id']) ? true : false;
                                 <label for="age">Age:</label>
                                 <input type="text" class="form-control" id="age" name="age" value="<?php echo $age; ?>">
                             </div>
+
+                            <script>
+                                function calculateAge() {
+                                    var day = document.getElementById('dobDay').value;
+                                    var month = document.getElementById('dobMonth').value;
+                                    var year = document.getElementById('dobYear').value;
+
+                                    if (day && month && year) {
+                                        var birthdate = new Date(year + '-' + month + '-' + day);
+                                        var today = new Date();
+                                        var age = today.getFullYear() - birthdate.getFullYear();
+                                        var monthDifference = today.getMonth() - birthdate.getMonth();
+                                        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthdate.getDate())) {
+                                            age--;
+                                        }
+                                        document.getElementById('age').value = age;
+                                    }
+                                }
+                            </script>
+
                             <div class="col-md-2 mb-3">
                                 <label for="gender">Gender:</label>
                                 <select class="form-control" id="gender" name="gender">

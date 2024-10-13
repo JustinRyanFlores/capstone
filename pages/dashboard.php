@@ -604,9 +604,9 @@ if ($result_total_blotter->num_rows > 0) {
                                 $query .= " AND religion LIKE '%$religion%'";
                             }
 
-                            if (!empty($_GET['voterstatus'])) {
-                                $voterstatus = $mysqlConn->real_escape_string($_GET['voterstatus']);
-                                $query .= " AND voterstatus = '$voterstatus'";
+                            if (isset($_GET['voterstatus']) && $_GET['voterstatus'] !== '') {
+                                $voterstatus = (int)$_GET['voterstatus']; // Cast to integer
+                                $query .= " AND voterstatus = $voterstatus"; // No quotes for integers
                             }
 
                             if (!empty($_GET['philhealth'])) {
