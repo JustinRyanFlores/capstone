@@ -52,19 +52,22 @@ $ageGroups = array_merge([
     '100+' => 0,
 ], $ageGroups);
 
-// Query for population growth (grouping by date)
+// Query for population growth (grouping by date minus years of stay)
 $populationQuery = "
-    SELECT DATE(created_at) as date, COUNT(*) as count
+    SELECT 
+        DATE(DATE_SUB(created_at, INTERVAL years_of_stay YEAR)) as adjusted_date, 
+        COUNT(*) as count
     FROM residents_records
-    GROUP BY DATE(created_at)
-    ORDER BY date ASC
+    GROUP BY adjusted_date
+    ORDER BY adjusted_date ASC
 ";
 $populationResult = $mysqlConn->query($populationQuery);
 
 $populationData = [];
 while ($row = $populationResult->fetch_assoc()) {
-    $populationData[] = [$row['date'], (int)$row['count']];
+    $populationData[] = [$row['adjusted_date'], (int)$row['count']];
 }
+
 
 // Query for illness data
 $illnessQuery = "
@@ -390,7 +393,6 @@ while ($row = $blotterResult->fetch_assoc()) {
                 ?>
             ]);
 
-            
             var dashboard = new google.visualization.Dashboard(
                 document.getElementById('populationDashboard')
             );
@@ -418,6 +420,7 @@ while ($row = $blotterResult->fetch_assoc()) {
                     hAxis: { title: 'Date', format: 'yyyy-MMM-dd' }, // Format the x-axis as dates
                     vAxis: { title: 'Number of Residents', format: '0' },
                     chartArea: { width: '85%', height: '70%' },
+                    responsive: true
                 }
             });
 

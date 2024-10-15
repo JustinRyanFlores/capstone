@@ -267,10 +267,22 @@ if (isset($_GET['search'])) {
                 </div>
                 <div class="modal-body">
                     <form id="addBlotterForm">
-                        <div class="mb-3">
-                            <label for="typeIncident" class="form-label">Type of Incident</label>
-                            <input type="text" class="form-control" id="typeIncident" name="typeIncident" required>
-                        </div>
+                    <div class="mb-3">
+                        <label for="typeIncident" class="form-label">Type of Incident</label>
+                        <input list="incidentOptions" class="form-control" id="typeIncident" name="typeIncident" required>
+                    
+                        <datalist id="incidentOptions">
+                            <option value="Theft">
+                            <option value="Crime">
+                            <option value="Public Scandal">
+                            <option value="Abuse">
+                            <option value="Arson">
+                            <option value="Traffic Accidents">
+                            <option value="Road Crashes">
+                            <option value="Trespassing">
+                        </datalist>
+                        
+                    </div>
                         <div class="mb-3">
                             <label for="blotterStatus" class="form-label">Blotter Status</label>
                             <select class="form-control" id="blotterStatus" name="blotterStatus" required>
