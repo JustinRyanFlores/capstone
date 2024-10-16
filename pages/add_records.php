@@ -545,7 +545,16 @@ $isEdit = isset($_GET['id']) ? true : false;
                                     <!-- Educational Attainment and Name of School Currently Enrolled In -->
                                     <div class="col-md-6 mb-3">
                                         <label for="educationalAttainment">Educational Attainment:</label>
-                                        <input type="text" class="form-control" id="educationalAttainment" name="educationalAttainment" value="<?php echo $educationalAttainment; ?>">
+                                        <select class="form-control" id="educationalAttainment" name="educationalAttainment">
+                                            <option value="">--Select Educational Attainment--</option>
+                                            <option value="Elementary Undergraduate" <?php if ($educationalAttainment == "Elementary Undergraduate") echo "selected"; ?>>Elementary Undergraduate</option>
+                                            <option value="Elementary Graduate" <?php if ($educationalAttainment == "Elementary Graduate") echo "selected"; ?>>Elementary Graduate</option>
+                                            <option value="High School Undergraduate" <?php if ($educationalAttainment == "High School Undergraduate") echo "selected"; ?>>High School Undergraduate</option>
+                                            <option value="High School Graduate" <?php if ($educationalAttainment == "High School Graduate") echo "selected"; ?>>High School Graduate</option>
+                                            <option value="College Undergraduate" <?php if ($educationalAttainment == "College Undergraduate") echo "selected"; ?>>College Undergraduate</option>
+                                            <option value="College Graduate" <?php if ($educationalAttainment == "College Graduate") echo "selected"; ?>>College Graduate</option>
+                                            <option value="Vocational" <?php if ($educationalAttainment == "Vocational") echo "selected"; ?>>Vocational</option>
+                                        </select>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="currentSchool">Name of School Currently Enrolled In:</label>

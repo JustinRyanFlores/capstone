@@ -327,6 +327,11 @@ if ($result_total_blotter->num_rows > 0) {
         <!-- Filter Panel (Hidden by Default) -->
         <div id="filterPanel" class="filter-popup shadow rounded p-3 bg-white" style="display: none; position: absolute; max-width: 340px; max-height: 300px; overflow-y: auto; z-index: 1050;">
             <form id="filterForm" action="dashboard.php" method="GET">
+                <input type="hidden" id="subdivision" name="subdivision" value="">
+                <div id="selectedSubdivision" class="mb-2" style="display:none;">
+                    <strong>Area:</strong> <span id="subdivisionLabel"></span>
+                </div>
+
                 <!-- Demographic Filters -->
                 <h6 class="mt-2">Demographic Details</h6>
                 <div class="mb-2">
@@ -337,7 +342,6 @@ if ($result_total_blotter->num_rows > 0) {
                     </div>
                     <span id="ageRangeLabel">1-100</span> <!-- This span displays the selected age range -->
                 </div>
-
 
                 <div class="mb-2">
                     <label for="gender">Gender</label>
@@ -370,6 +374,7 @@ if ($result_total_blotter->num_rows > 0) {
                         <option value="0">No</option>
                     </select>
                 </div>
+
 
                 <!-- Socio-Economic and Educational Filters -->
                 <h6 class="mt-2">Socio-Economic & Educational</h6>
@@ -614,11 +619,6 @@ if ($result_total_blotter->num_rows > 0) {
                                 $query .= " AND philhealth = '$philhealth'";
                             }
 
-                            if (!empty($_GET['subdivision'])) {
-                                $subdivision = $mysqlConn->real_escape_string($_GET['subdivision']);
-                                $query .= " AND subdivision LIKE '%$subdivision%'";
-                            }
-
                             if (!empty($_GET['osy'])) {
                                 $osy = $mysqlConn->real_escape_string($_GET['osy']);
                                 $query .= " AND osy = '$osy'";
@@ -690,17 +690,11 @@ if ($result_total_blotter->num_rows > 0) {
                             }
 
                             if (!empty($_GET['subdivision'])) {
-                                $subdivision = $_GET['subdivision'];
-                                $query .= " AND subdivision = '$subdivision'";
-                            }
-
-                            if (isset($_GET['subdivision'])) {
-                                $subdivisions = explode(',', $_GET['subdivision']);
+                                $subdivisions = explode(',', $mysqlConn->real_escape_string($_GET['subdivision']));
                                 $subdivisionList = "'" . implode("','", $subdivisions) . "'";
-
-                                // Assuming you have a residents table with a 'subdivision' column
-                                $query = "SELECT * FROM residents_records WHERE subdivision IN ($subdivisionList)";
+                                $query .= " AND subdivision IN ($subdivisionList)";
                             }
+
 
 
 
@@ -991,6 +985,33 @@ if ($result_total_blotter->num_rows > 0) {
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
         <script>
+            function setSubdivision(subdivision) {
+                // Set the value in the hidden input
+                document.getElementById('subdivision').value = subdivision;
+
+                // Update the label to show the selected subdivision
+                document.getElementById('subdivisionLabel').textContent = subdivision;
+
+                // Show the div if it was hidden
+                document.getElementById('selectedSubdivision').style.display = 'block';
+            }
+
+
+            // Function to run when the page loads
+            window.onload = function() {
+                // Get the URL parameters
+                const params = new URLSearchParams(window.location.search);
+
+                // Retrieve the "subdivision" parameter from the URL
+                const subdivision = params.get('subdivision');
+
+                // If the "subdivision" parameter exists, set it in the hidden input and label
+                if (subdivision) {
+                    setSubdivision(subdivision);
+                }
+            };
+
+
             var map = L.map('map').setView([14.162525303855341, 121.11590938129102], 15);
 
             // Esri Satellite Layer
@@ -1025,9 +1046,9 @@ if ($result_total_blotter->num_rows > 0) {
 
             // Add click event to trigger the filter by redirecting
             sv.on('click', function() {
-                // Redirect to the URL with the selected subdivision as a query parameter
                 window.location.href = window.location.pathname + "?subdivision=Southville 6";
             });
+
 
             var p1 = L.polygon([
                 [14.163232083344555, 121.1151981878794],
@@ -1047,6 +1068,7 @@ if ($result_total_blotter->num_rows > 0) {
             }).openTooltip();
 
             p1.on('click', function() {
+                setSubdivision('Purok-1');
                 // Redirect to the URL with the selected subdivision as a query parameter
                 window.location.href = window.location.pathname + "?subdivision=Purok-1";
             });
