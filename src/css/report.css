@@ -56,3 +56,10 @@
     height: 400px; /* Default height */
 }
 
+.collapse {
+    display: none; /* Ensure sections don't interfere with layout when hidden */
+}
+
+.collapse.show {
+    display: block; /* Make sure sections are visible when expanded */
+}

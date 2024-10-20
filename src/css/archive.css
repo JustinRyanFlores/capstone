@@ -1,0 +1,51 @@
+
+/* Modern table design with subtle row separation */
+table.table {
+    border-collapse: collapse; /* Remove gaps between cells */
+    width: 100%;
+}
+
+table.table th, table.table td {
+    border: none !important;
+    padding: 10px 15px;
+    vertical-align: middle;
+}
+
+table.table tbody tr {
+    background-color: #f9f9f9;
+    border-bottom: 1px solid #dee2e6; /* Subtle line between rows */
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+table.table tbody tr:hover {
+    background-color: #e9ecef; /* Light gray background on hover */
+}
+
+table.table thead th {
+    border-bottom: 2px solid #dee2e6; /* Slightly thicker line for header */
+    background-color: #f1f3f5;
+    color: #333;
+}
+.btn-delete {
+    background-color: #610000;
+    border-color: #610000;
+    color: #ffffff; /* Optional: Change text color */
+}
+
+.btn-delete:hover {
+    background-color: white;
+    border-color: #610000;
+    color: #610000; /* Optional: Change hover text color */
+}
+.btn-restore {
+    background-color: #013220;
+    border-color: #013220;
+    color: white;
+}
+
+.btn-restore:hover {
+    background-color: white; /* Change hover color here */
+    border-color: #08522e;
+    color: #08522e;
+}

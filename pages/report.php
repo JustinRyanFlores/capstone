@@ -943,6 +943,8 @@ while ($row = $blotterResult->fetch_assoc()) {
             drawCharts();
         });
 
+        
+
     </script>
 </head>
 
@@ -975,7 +977,7 @@ while ($row = $blotterResult->fetch_assoc()) {
                 </div>
             </div>
 
-            <div class="collapse show" id="demographicsSection">
+            <div class="collapse" id="demographicsSection">
                 <div class="scrollable-graphs mt-3">
 
                     <!-- Population Growth Line Chart -->
@@ -1014,7 +1016,7 @@ while ($row = $blotterResult->fetch_assoc()) {
                 </div>
             </div>
 
-            <div class="collapse show" id="healthSection">
+            <div class="collapse" id="healthSection">
                 <div class="scrollable-graphs mt-3">
 
                     <!-- Illness Distribution Bar Chart -->
@@ -1070,7 +1072,7 @@ while ($row = $blotterResult->fetch_assoc()) {
                 </div>
             </div>
 
-            <div class="collapse show" id="characterSection">
+            <div class="collapse" id="characterSection">
                 <div class="scrollable-graphs mt-3">
                     
                     <!-- Number of Blotter Incident -->
@@ -1115,7 +1117,7 @@ while ($row = $blotterResult->fetch_assoc()) {
                 </div>
             </div>
 
-            <div class="collapse show" id="employmentSection">
+            <div class="collapse" id="employmentSection">
                 <div class="scrollable-graphs mt-3">
 
                     <!-- Business Owner Pie Chart -->
@@ -1145,7 +1147,7 @@ while ($row = $blotterResult->fetch_assoc()) {
                 </div>
             </div>
 
-            <div class="collapse show" id="educationSection">
+            <div class="collapse" id="educationSection">
                 <div class="scrollable-graphs mt-3">
 
                     <!-- ALS vs OSY Pie Chart -->
@@ -1177,8 +1179,50 @@ while ($row = $blotterResult->fetch_assoc()) {
                 </div>
             </div>
         </div>
-
+        
     </div>
+<script>
+    $(document).ready(function() {
+        // Demographics Section
+        $('#demographicsSection').on('shown.bs.collapse', function () {
+            drawPopulationLineChart();
+            drawGenderPieChart();
+            drawAgeHistogram();
+        });
+
+        // Health Section
+        $('#healthSection').on('shown.bs.collapse', function () {
+            drawIllnessBarChart();
+            drawMedicationBarChart();
+            drawPwdLineChart();
+            drawDisabilityBarChart();
+            drawTeenPregnancyLineChart();
+            drawDeliveryPieChart();
+        });
+
+        // Character Section
+        $('#characterSection').on('shown.bs.collapse', function () {
+            drawBlotterIncidentChart();
+            drawStatusPieChart();
+            drawPlaceBarChart();
+            drawBlotterLineChart();
+        });
+
+        // Employment Section
+        $('#employmentSection').on('shown.bs.collapse', function () {
+            drawBusinessOwnerPieChart();
+            drawBusinessOwnerBarChart();
+        });
+
+        // Education Section
+        $('#educationSection').on('shown.bs.collapse', function () {
+            drawAlSOYChart();
+            drawAlsLineChart();
+            drawOsyLineChart();
+            drawEducationalAttainmentChart();
+        });
+    });
+</script>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
