@@ -275,6 +275,39 @@ while ($row = $blotterResult->fetch_assoc()) {
     $blotterData[] = [$row['date'], (int)$row['count']];
 }
 
+// Query for OFW vs Local Employment data
+$ofwQuery = "SELECT COUNT(*) AS ofw_count FROM residents_records WHERE ofw = '1'";
+$ofwResult = $mysqlConn->query($ofwQuery);
+$ofwCount = ($ofwResult && $ofwResult->num_rows > 0) ? $ofwResult->fetch_assoc()['ofw_count'] : 0;
+
+$localQuery = "SELECT COUNT(*) AS local_count FROM residents_records WHERE ofw = '0' AND employment = 'Employed'";
+$localResult = $mysqlConn->query($localQuery);
+$localCount = ($localResult && $localResult->num_rows > 0) ? $localResult->fetch_assoc()['local_count'] : 0;
+
+// Query for Employed vs Unemployed data
+$employedQuery = "SELECT COUNT(*) AS employed_count FROM residents_records WHERE employment = 'Employed'";
+$employedResult = $mysqlConn->query($employedQuery);
+$employedCount = ($employedResult && $employedResult->num_rows > 0) ? $employedResult->fetch_assoc()['employed_count'] : 0;
+
+$unemployedQuery = "SELECT COUNT(*) AS unemployed_count FROM residents_records WHERE employment = 'Unemployed'";
+$unemployedResult = $mysqlConn->query($unemployedQuery);
+$unemployedCount = ($unemployedResult && $unemployedResult->num_rows > 0) ? $unemployedResult->fetch_assoc()['unemployed_count'] : 0;
+
+// Query to get employment count by date
+$employmentQuery = "SELECT DATE(created_at) AS date, COUNT(*) AS employment_count FROM residents_records WHERE employment = 'Employed' GROUP BY DATE(created_at)";
+$employmentResult = $mysqlConn->query($employmentQuery);
+
+// Prepare data array for JavaScript (Employement Over Time)
+$employmentData = [];
+if ($employmentResult && $employmentResult->num_rows > 0) {
+    while ($row = $employmentResult->fetch_assoc()) {
+        $employmentData[] = [$row['date'], (int)$row['employment_count']];
+    }
+}
+
+// Close the connection
+$mysqlConn->close();
+
 ?>
 
 
@@ -320,6 +353,9 @@ while ($row = $blotterResult->fetch_assoc()) {
             drawStatusPieChart();
             drawPlaceBarChart();
             drawBlotterLineChart();
+            drawOFWLocalPieChart();
+            drawEmployedUnemployedPieChart();
+            drawEmploymentLineChart();
         }
 
         function drawGenderPieChart() {
@@ -939,6 +975,97 @@ while ($row = $blotterResult->fetch_assoc()) {
             dashboard.draw(data);
         }
 
+        function drawOFWLocalPieChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Category', 'Count'],
+                <?php
+                    echo "['OFW', $ofwCount],";
+                    echo "['Local Employed', $localCount],";
+                ?>
+            ]);
+
+            var options = {
+                responsive: true,
+                title: 'OFW vs Local Employment Distribution',
+                is3D: true,
+                legend: { position: 'bottom' },
+                chartArea: { width: '85%', height: '75%' }
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('ofwLocalPieChart'));
+            chart.draw(data, options);
+        }
+
+        function drawEmployedUnemployedPieChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Employment Status', 'Count'],
+                <?php
+                    echo "['Employed', $employedCount],";
+                    echo "['Unemployed', $unemployedCount],";
+                ?>
+            ]);
+
+            var options = {
+                responsive: true,
+                title: 'Employed vs Unemployed Distribution',
+                is3D: true,
+                legend: { position: 'bottom' },
+                chartArea: { width: '85%', height: '75%' }
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('employedUnemployedPieChart'));
+            chart.draw(data, options);
+        }
+
+        function drawEmploymentLineChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'Date');
+            data.addColumn('number', 'Number of Employed Residents');
+
+            data.addRows([
+                <?php
+                foreach ($employmentData as $data) {
+                    $dateParts = explode('-', $data[0]); // Split the date into year, month, day
+                    echo "[new Date(" . $dateParts[0] . ", " . ($dateParts[1] - 1) . ", " . $dateParts[2] . "), " . $data[1] . "],";
+                }
+                ?>
+            ]);
+
+            var dashboard = new google.visualization.Dashboard(
+                document.getElementById('employmentDashboard')
+            );
+
+            var control = new google.visualization.ControlWrapper({
+                controlType: 'ChartRangeFilter',
+                containerId: 'employment_filter_div',
+                options: {
+                    filterColumnLabel: 'Date',
+                    ui: { 
+                        chartType: 'LineChart', 
+                        chartOptions: { 
+                            chartArea: { width: '60%' }, 
+                            hAxis: { format: 'yyyy-MMM-dd' } 
+                        } 
+                    }
+                }
+            });
+
+            var chart = new google.visualization.ChartWrapper({
+                chartType: 'LineChart',
+                containerId: 'employmentLineChart',
+                options: {
+                    title: 'Employment Over Time',
+                    hAxis: { title: 'Date', format: 'yyyy-MMM-dd' },
+                    vAxis: { title: 'Number of Employed Residents', format: '0' },
+                    chartArea: { width: '85%', height: '70%' },
+                }
+            });
+
+            dashboard.bind(control, chart);
+            dashboard.draw(data);
+        }
+
+
         window.addEventListener('resize', function () {
             drawCharts();
         });
@@ -1120,6 +1247,25 @@ while ($row = $blotterResult->fetch_assoc()) {
             <div class="collapse" id="employmentSection">
                 <div class="scrollable-graphs mt-3">
 
+                    <!-- Employed vs Unemployed Pie Chart -->
+                    <div class="chart-container">
+                        <h5>Employed vs Unemployed Distribution</h5>
+                        <div id="employedUnemployedPieChart" style="height: 400px;"></div>
+                    </div>
+
+                    <!-- Employment Over Time -->
+                    <div id="employmentDashboard" class="chart-container">
+                        <h5>Employment Over Time</h5>
+                        <div id="employment_filter_div" style="width: 100%; height: 100px;"></div>
+                        <div id="employmentLineChart" style="width: 100%; height: 400px;"></div>
+                    </div>
+                    
+                    <!-- OFW vs Local Pie Chart -->
+                    <div class="chart-container">
+                        <h5>Employment Distribution</h5>
+                        <div id="ofwLocalPieChart" style="width: 100%; height: 500px;"></div>
+                    </div>
+
                     <!-- Business Owner Pie Chart -->
                     <div class="chart-container">
                         <h5>Business Owners vs Non-Business Owners</h5>
@@ -1210,6 +1356,9 @@ while ($row = $blotterResult->fetch_assoc()) {
 
         // Employment Section
         $('#employmentSection').on('shown.bs.collapse', function () {
+            drawEmployedUnemployedPieChart();
+            drawEmploymentLineChart();
+            drawOFWLocalPieChart();
             drawBusinessOwnerPieChart();
             drawBusinessOwnerBarChart();
         });
