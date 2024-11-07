@@ -3,7 +3,7 @@ session_start();
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /capstone/website/login/login.php");
+    header("Location: /system/website/login/login.php");
     exit();
 }
 
@@ -58,9 +58,9 @@ if ($result_total_blotter->num_rows > 0) {
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
-    <link rel="stylesheet" href="/capstone/src/css/header.css" />
-    <link rel="stylesheet" href="/capstone/src/css/dashboard.css" />
+    <link rel="stylesheet" href="/system/src/css/navbar.css" />
+    <link rel="stylesheet" href="/system/src/css/header.css" />
+    <link rel="stylesheet" href="/system/src/css/dashboard.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
         #autoFocusBtn {
@@ -811,7 +811,7 @@ if ($result_total_blotter->num_rows > 0) {
                                 $("#resident-details").html('<div class="d-flex justify-content-center align-items-center"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>');
 
                                 $.ajax({
-                                    url: "/capstone/src/components/getResidentDetails.php", // Backend script to fetch details
+                                    url: "/system/src/components/getResidentDetails.php", // Backend script to fetch details
                                     type: "POST",
                                     data: {
                                         id: residentId
@@ -887,7 +887,7 @@ if ($result_total_blotter->num_rows > 0) {
                             function deleteResident() {
                                 if (confirm("Are you sure you want to delete this resident?")) {
                                     $.ajax({
-                                        url: '/capstone/src/components/delete_resident.php',
+                                        url: '/system/src/components/delete_resident.php',
                                         type: 'POST',
                                         data: {
                                             residentId: selectedResidentId

@@ -9,7 +9,7 @@ header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); // Set a past date to ensure t
 
 // If the user is already logged in, redirect to the dashboard
 if (isset($_SESSION['user_id'])) {
-    header("Location: /capstone/pages/dashboard.php");
+    header("Location: /system/pages/dashboard.php");
     exit();
 }
 ?>
@@ -19,13 +19,13 @@ if (isset($_SESSION['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kay-Anlog Sys Info | Login Page</title>
-    <link rel="stylesheet" href="/capstone/src/css/login.css">
+    <link rel="stylesheet" href="/system/src/css/login.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
     <div class="container">
         <div class="logo">
-            <img src="/capstone/src/assets/kayanlog-logo-removebg-preview.png" alt="Barangay Logo">
+            <img src="/system/src/assets/kayanlog-logo-removebg-preview.png" alt="Barangay Logo">
         </div>
         <div class="title-container">
             <h2>Barangay Kay-Anlog</h2>
@@ -44,7 +44,7 @@ if (isset($_SESSION['user_id'])) {
         }
         ?>
 
-        <form action="/capstone/src/components/fetch_login.php" method="POST">
+        <form action="/system/src/components/fetch_login.php" method="POST">
             <div class="input-group">
                 <input type="text" id="username" name="username" required placeholder="Username">
             </div>

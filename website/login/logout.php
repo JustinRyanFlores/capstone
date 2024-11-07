@@ -9,6 +9,6 @@ $_SESSION = array();
 session_destroy();
 
 // Redirect to the login page or any other page
-header("Location: /capstone/website/login/login.php");
+header("Location: /system/website/login/login.php");
 exit();
 ?>

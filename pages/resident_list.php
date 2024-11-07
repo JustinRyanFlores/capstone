@@ -3,7 +3,7 @@ session_start();
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /capstone/website/login/login.php");
+    header("Location: /system/website/login/login.php");
     exit();
 }
 
@@ -28,9 +28,9 @@ if (isset($_GET['search'])) {
     <title>Kay-Anlog Sys Info | Resident List</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
-    <link rel="stylesheet" href="/capstone/src/css/header.css" />
-    <link rel="stylesheet" href="/capstone/src/css/resident_list.css" />
+    <link rel="stylesheet" href="/system/src/css/navbar.css" />
+    <link rel="stylesheet" href="/system/src/css/header.css" />
+    <link rel="stylesheet" href="/system/src/css/resident_list.css" />
     <?php include '../src/components/header.php'; ?>
 </head>
 
@@ -226,7 +226,7 @@ if (isset($_GET['search'])) {
         <script>
             function editResident(residentId) {
                 // Redirect to the add_records.php page with the resident ID in the query string
-                window.location.href = "/capstone/pages/add_records.php?id=" + residentId;
+                window.location.href = "/system/pages/add_records.php?id=" + residentId;
             }
 
             var selectedResidentId; // Declare a global variable
@@ -238,7 +238,7 @@ if (isset($_GET['search'])) {
                 $("#resident-details").html('<div class="d-flex justify-content-center align-items-center"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>');
 
                 $.ajax({
-                    url: "/capstone/src/components/getResidentDetails.php", // Backend script to fetch details
+                    url: "/system/src/components/getResidentDetails.php", // Backend script to fetch details
                     type: "POST",
                     data: {
                         id: residentId
@@ -314,7 +314,7 @@ if (isset($_GET['search'])) {
             function deleteResident() {
                 if (confirm("Are you sure you want to delete this resident?")) {
                     $.ajax({
-                        url: '/capstone/src/components/delete_resident.php',
+                        url: '/system/src/components/delete_resident.php',
                         type: 'POST',
                         data: {
                             residentId: selectedResidentId

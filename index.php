@@ -1,5 +1,5 @@
 <?php
 
-header("Location: /capstone/website/login/login.php");
+header("Location: /system/website/login/login.php");
 exit();
 ?>

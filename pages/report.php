@@ -3,7 +3,7 @@ session_start();
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /capstone/website/login/login.php");
+    header("Location: /system/website/login/login.php");
     exit();
 }
 
@@ -321,10 +321,10 @@ $mysqlConn->close();
     <title>Kay-Anlog Sys Info | Report</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="/capstone/src/css/navbar.css" />
-    <link rel="stylesheet" href="/capstone/src/css/header.css" />
-    <link rel="stylesheet" href="/capstone/src/css/dashboard.css" />
-    <link rel="stylesheet" href="/capstone/src/css/report.css" />
+    <link rel="stylesheet" href="/system/src/css/navbar.css" />
+    <link rel="stylesheet" href="/system/src/css/header.css" />
+    <link rel="stylesheet" href="/system/src/css/dashboard.css" />
+    <link rel="stylesheet" href="/system/src/css/report.css" />
     <?php include '../src/components/header.php'; ?>
 
     <!-- Google Charts API -->

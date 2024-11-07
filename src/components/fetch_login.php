@@ -27,18 +27,18 @@ if ($result->num_rows > 0) {
         $_SESSION['role'] = $row['role']; // Store the user's role
 
         // Redirect to the dashboard or a secure page
-        header("Location: /capstone/pages/dashboard.php");
+        header("Location: /system/pages/dashboard.php");
         exit();
     } else {
         // Invalid password: Set error message and redirect back to login
         $_SESSION['error_message'] = "Invalid username or password!";
-        header("Location: /capstone/website/login/login.php");
+        header("Location: /system/website/login/login.php");
         exit();
     }
 } else {
     // No user found: Set error message and redirect back to login
     $_SESSION['error_message'] = "Invalid username or password!";
-    header("Location: /capstone/website/login/login.php");
+    header("Location: /system/website/login/login.php");
     exit();
 }
 ?>
