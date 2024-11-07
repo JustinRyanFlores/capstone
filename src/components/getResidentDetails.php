@@ -246,6 +246,14 @@ if ($row = $result->fetch_assoc()) {
                                     <th>Business Owner</th>
                                     <td><?php echo $row['business_owner'] ? 'Yes' : 'No'; ?></td>
                                 </tr>
+                                <tr>
+                                    <th>OFW</th>
+                                    <td><?php echo $row['ofw'] ? 'Yes' : 'No'; ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Employment Status</th>
+                                    <td><?php echo htmlspecialchars($row['employment']); ?></td>
+                                </tr>
                             </table>
                         </div>
                     </div>

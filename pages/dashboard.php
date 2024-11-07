@@ -530,6 +530,7 @@ if ($result_total_blotter->num_rows > 0) {
                 }
             });
         </script>
+
         <!-- Resident Table -->
         <div class="row mt-4">
             <div class="col-md-12">
@@ -558,10 +559,10 @@ if ($result_total_blotter->num_rows > 0) {
 
                             // Base query
                             $query = "
-                            SELECT id, first_name, middle_name, last_name, dob, gender, contact_number, subdivision,
-                            FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) AS age
-                            FROM residents_records 
-                            WHERE 1 "; // Base condition to always be true for adding dynamic filters
+                    SELECT id, first_name, middle_name, last_name, dob, gender, contact_number, subdivision,
+                    FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) AS age
+                    FROM residents_records 
+                    WHERE 1 "; // Base condition to always be true for adding dynamic filters
 
                             // Apply filters from GET parameters (add conditions to the query)
                             if (!empty($_GET['first_name'])) {
@@ -583,15 +584,10 @@ if ($result_total_blotter->num_rows > 0) {
                                 $age_min = (int)$_GET['age_min'];
                                 $age_max = (int)$_GET['age_max'];
 
-                                // Ensure the age range is valid
                                 if ($age_min <= $age_max) {
                                     $query .= " AND age BETWEEN $age_min AND $age_max";
-                                } else {
-                                    // Handle the case where the range is invalid (optional)
-                                    // Example: You can set an error message or log this issue
                                 }
                             }
-
 
                             if (!empty($_GET['gender'])) {
                                 $gender = $mysqlConn->real_escape_string($_GET['gender']);
@@ -610,8 +606,8 @@ if ($result_total_blotter->num_rows > 0) {
                             }
 
                             if (isset($_GET['voterstatus']) && $_GET['voterstatus'] !== '') {
-                                $voterstatus = (int)$_GET['voterstatus']; // Cast to integer
-                                $query .= " AND voterstatus = $voterstatus"; // No quotes for integers
+                                $voterstatus = (int)$_GET['voterstatus'];
+                                $query .= " AND voterstatus = $voterstatus";
                             }
 
                             if (!empty($_GET['philhealth'])) {
@@ -631,16 +627,12 @@ if ($result_total_blotter->num_rows > 0) {
 
                             if (!empty($_GET['immunization_status'])) {
                                 $immunization_status = $_GET['immunization_status'];
-
                                 if ($immunization_status === 'Yes') {
-                                    // Check if the immunization field is not empty
                                     $query .= " AND immunization != ''";
                                 } elseif ($immunization_status === 'No') {
-                                    // Check if the immunization field is empty
                                     $query .= " AND immunization = ''";
                                 }
                             }
-
 
                             if (!empty($_GET['pwd'])) {
                                 $pwd = $mysqlConn->real_escape_string($_GET['pwd']);
@@ -654,21 +646,15 @@ if ($result_total_blotter->num_rows > 0) {
 
                             if (!empty($_GET['type_of_delivery'])) {
                                 $type_of_delivery = $_GET['type_of_delivery'];
-
                                 if ($type_of_delivery === 'Normal') {
-                                    // Filter for Vaginal Delivery (which corresponds to Normal)
                                     $query .= " AND type_of_delivery = 'Vaginal Delivery'";
                                 } elseif ($type_of_delivery === 'Cesarean') {
-                                    // Filter for Cesarean Section
                                     $query .= " AND type_of_delivery = 'Cesarean Section'";
                                 }
                             }
 
-
                             if (!empty($_GET['assisted_by'])) {
                                 $assisted_by = $_GET['assisted_by'];
-
-                                // Add the condition to filter based on the selected value
                                 if ($assisted_by === 'Doctor') {
                                     $query .= " AND assisted_by = 'Doctor'";
                                 } elseif ($assisted_by === 'Midwife') {
@@ -677,7 +663,6 @@ if ($result_total_blotter->num_rows > 0) {
                                     $query .= " AND assisted_by = 'Nurse'";
                                 }
                             }
-
 
                             if (!empty($_GET['years_of_stay'])) {
                                 $years_of_stay = (int)$_GET['years_of_stay'];
@@ -695,26 +680,34 @@ if ($result_total_blotter->num_rows > 0) {
                                 $query .= " AND subdivision IN ($subdivisionList)";
                             }
 
-
-
-
-                            // If a search query exists, include it in the filter
+                            // If a search query exists, split it into individual words
                             if (!empty($search_query)) {
-                                $query .= " AND (first_name LIKE '%$search_query%' 
-                OR middle_name LIKE '%$search_query%' 
-                OR last_name LIKE '%$search_query%' 
-                OR gender LIKE '%$search_query%' 
-                OR dob LIKE '%$search_query%' 
-                OR contact_number LIKE '%$search_query%' 
-                OR subdivision LIKE '%$search_query%') ";
+                                $search_terms = explode(" ", $search_query);
+
+                                // Build the search condition with each term matching any of the name fields
+                                $query .= " AND (";
+                                $first_term = true;
+                                foreach ($search_terms as $term) {
+                                    $term = $mysqlConn->real_escape_string($term);
+                                    if (!$first_term) {
+                                        $query .= " AND ";
+                                    }
+                                    $query .= "(first_name LIKE '%$term%' OR middle_name LIKE '%$term%' OR last_name LIKE '%$term%')";
+                                    $first_term = false;
+                                }
+                                $query .= " OR gender LIKE '%$search_query%' 
+                                    OR dob LIKE '%$search_query%' 
+                                    OR contact_number LIKE '%$search_query%' 
+                                    OR subdivision LIKE '%$search_query%') ";
                             }
 
                             // If the search query is numeric, include it in the age filter
                             if ($is_numeric_search) {
                                 $query .= " OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
                             }
+
                             // Add the ORDER BY clause to sort by name
-                            $query .= " ORDER BY last_name, first_name, middle_name"; // Alphabetical order
+                            $query .= " ORDER BY last_name, first_name, middle_name";
 
                             // Add the pagination limit
                             $query .= " LIMIT $start_from, $limit";
@@ -722,26 +715,22 @@ if ($result_total_blotter->num_rows > 0) {
                             // Execute the query
                             $result = $mysqlConn->query($query);
 
-
-
                             // Loop through the records and display them
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
                                     echo "<tr data-id='{$row['id']}' onclick='fetchResidentDetails({$row['id']})'>
-                                <td>{$row['last_name']}, {$row['first_name']} {$row['middle_name']}</td>
-                                    <td>{$row['age']}</td>
-                                    <td>{$row['gender']}</td>
-                                    <td>{$row['dob']}</td>
-                                    <td>{$row['contact_number']}</td>
-                                    <td>{$row['subdivision']}</td>
-                                    </tr>";
+                        <td>{$row['last_name']}, {$row['first_name']} {$row['middle_name']}</td>
+                            <td>{$row['age']}</td>
+                            <td>{$row['gender']}</td>
+                            <td>{$row['dob']}</td>
+                            <td>{$row['contact_number']}</td>
+                            <td>{$row['subdivision']}</td>
+                            </tr>";
                                 }
                             } else {
                                 echo "<tr><td colspan='6'>No records found</td></tr>";
                             }
-
                             ?>
-
                         </tbody>
                     </table>
 
@@ -751,56 +740,40 @@ if ($result_total_blotter->num_rows > 0) {
                             <?php
                             // Fetch total records for "Showing X to Y of Z entries"
                             $query_total = "SELECT COUNT(*) FROM residents_records 
-                            WHERE first_name LIKE '%$search_query%' 
-                            OR middle_name LIKE '%$search_query%' 
-                            OR last_name LIKE '%$search_query%' 
-                            OR dob LIKE '%$search_query%' 
-                            OR contact_number LIKE '%$search_query%' 
-                            OR subdivision LIKE '%$search_query%'";
+                    WHERE first_name LIKE '%$search_query%' 
+                    OR middle_name LIKE '%$search_query%' 
+                    OR last_name LIKE '%$search_query%' 
+                    OR dob LIKE '%$search_query%' 
+                    OR contact_number LIKE '%$search_query%' 
+                    OR subdivision LIKE '%$search_query%'";
 
                             // If the search query is numeric, include it in the total count query
                             if ($is_numeric_search) {
-                                $query_total .= "OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
+                                $query_total .= " OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
                             }
 
-                            $result_total = $mysqlConn->query($query_total);
-                            $row_total = $result_total->fetch_row();
-                            $total_records = $row_total[0];
-                            $start_entry = ($page - 1) * $limit + 1;
-                            $end_entry = min($start_entry + $limit - 1, $total_records);
-
-                            echo "Showing $start_entry to $end_entry of $total_records entries";
+                            $total_result = $mysqlConn->query($query_total);
+                            $total_records = $total_result->fetch_row()[0];
+                            $total_pages = ceil($total_records / $limit);
+                            $end = min($page * $limit, $total_records);
+                            $start = ($page - 1) * $limit + 1;
+                            echo "Showing $start to $end of $total_records entries";
                             ?>
                         </div>
-
-                        <ul class="pagination">
+                        <div class="pagination-controls">
                             <?php
-                            $total_pages = ceil($total_records / $limit);
-
-                            $url_filters = $_SERVER['QUERY_STRING'];
-                            parse_str($url_filters, $query_params);
-                            unset($query_params['page']); // Remove the current page from the query params
-
-                            $base_url = '?' . http_build_query($query_params);
-
+                            // Display pagination links
                             if ($page > 1) {
-                                echo "<li class='page-item'><a class='page-link' href='$base_url&page=" . ($page - 1) . "'>Previous</a></li>";
+                                echo "<a href='?page=" . ($page - 1) . "&search=$search_query'>Previous</a>";
                             }
-
                             for ($i = 1; $i <= $total_pages; $i++) {
-                                if ($i == $page) {
-                                    echo "<li class='page-item active'><a class='page-link' href='$base_url&page=$i'>$i</a></li>";
-                                } else {
-                                    echo "<li class='page-item'><a class='page-link' href='$base_url&page=$i'>$i</a></li>";
-                                }
+                                echo "<a href='?page=$i&search=$search_query'" . ($i == $page ? " class='active'" : "") . ">$i</a>";
                             }
-
                             if ($page < $total_pages) {
-                                echo "<li class='page-item'><a class='page-link' href='$base_url&page=" . ($page + 1) . "'>Next</a></li>";
+                                echo "<a href='?page=" . ($page + 1) . "&search=$search_query'>Next</a>";
                             }
                             ?>
-                        </ul>
-
+                        </div>
                     </div>
                 </div>
             </div>

@@ -30,7 +30,7 @@ $residentImage = $firstName = $middleName = $lastName = $dob = $year = $month = 
     $motherFirstName = $motherMiddleName =  $motherLastName = $fatherFirstName = $fatherMiddleName = $fatherLastName =
     $outOfSchoolYouth = $alternativeLearningSystem = $educationalAttainment = $currentSchool = $illness =
     $illness = $medication = $disability = $immunization = $pwd =  $teenAgePregnancy = $typeOfDelivery = $assisted_by =
-    $organization = $casesViolated = $yearsOfStay = $businessOwner = "";
+    $organization = $casesViolated = $yearsOfStay = $businessOwner = $ofw = $employment = "";
 
 
 // Function to calculate age from date of birth
@@ -97,6 +97,8 @@ if (isset($_GET['id'])) {
         $casesViolated = htmlspecialchars($row['cases_violated']);
         $yearsOfStay = htmlspecialchars($row['years_of_stay']);
         $businessOwner = htmlspecialchars($row['business_owner']);
+        $ofw = htmlspecialchars($row['ofw']);
+        $employment = htmlspecialchars($row['employment']);
     }
 
 
@@ -655,6 +657,21 @@ $isEdit = isset($_GET['id']) ? true : false;
                                             <input type="checkbox" class="form-check-input" id="businessOwner" name="businessOwner" <?php echo ($businessOwner) ? 'checked' : ''; ?>>
                                             <label class="form-check-label" for="businessOwner">Yes</label>
                                         </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="ofw">OFW:</label>
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="ofw" name="ofw" <?php echo ($ofw) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label" for="ofw">Yes</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="employment">Employment Status:</label>
+                                        <select class="form-control" id="employment" name="employment">
+                                            <option value="" <?php echo (empty($employment)) ? 'selected' : ''; ?>>-- Select Status --</option>
+                                            <option value="Employed" <?php echo ($employment == 'Employed') ? 'selected' : ''; ?>>Employed</option>
+                                            <option value="Unemployed" <?php echo ($employment == 'Unemployed') ? 'selected' : ''; ?>>Unemployed</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>

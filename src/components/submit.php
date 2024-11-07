@@ -56,6 +56,8 @@ $organization = htmlspecialchars($_POST['organization'] ?? '', ENT_QUOTES);
 $casesViolated = htmlspecialchars($_POST['casesViolated'] ?? '', ENT_QUOTES);
 $yearsOfStay = htmlspecialchars($_POST['yearsOfStay'] ?? '', ENT_QUOTES);
 $businessOwner = isset($_POST['businessOwner']) ? 1 : 0;
+$ofw = isset($_POST['ofw']) ? 1 : 0;
+$employment = htmlspecialchars($_POST['employment'] ?? '', ENT_QUOTES);
 
 // Handle file upload
 $imagePath = '';
@@ -94,13 +96,13 @@ $sql = "INSERT INTO residents_records
         street_address, house_number, subdivision, barangay, city, province, region, zip_code, 
         mother_first_name, mother_middle_name, mother_last_name, father_first_name, father_middle_name, father_last_name, 
         osy, als, educational_attainment, current_school, illness, medication, disability, immunization, pwd, 
-        teen_pregnancy, type_of_delivery, assisted_by, organization, cases_violated, years_of_stay, business_owner, residents_img) 
+        teen_pregnancy, type_of_delivery, assisted_by, organization, cases_violated, years_of_stay, business_owner, ofw, employment, residents_img) 
         VALUES 
         ('$firstName', '$middleName', '$lastName', '$dob', '$age', '$gender', '$contactNumber', '$religion', '$philhealth', '$voterstatus',
         '$streetAddress', '$houseNumber', '$subdivision', '$barangay', '$city', '$province', '$region', '$zipCode', 
         '$motherFirstName', '$motherMiddleName', '$motherLastName', '$fatherFirstName', '$fatherMiddleName', '$fatherLastName', 
         '$osy', '$als', '$educationalAttainment', '$currentSchool', '$illness', '$medication', '$disability', '$immunization', '$pwd',  
-        '$teenPregnancy', '$typeOfDelivery', '$assisted_by', '$organization', '$casesViolated', '$yearsOfStay', '$businessOwner', '$imagePath')";
+        '$teenPregnancy', '$typeOfDelivery', '$assisted_by', '$organization', '$casesViolated', '$yearsOfStay', '$businessOwner', '$ofw', '$employment', '$imagePath')";
 
 // Execute the statement and handle potential errors
 if ($mysqlConn->query($sql) === TRUE) {

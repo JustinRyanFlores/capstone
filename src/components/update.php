@@ -62,7 +62,8 @@ $organization = htmlspecialchars($_POST['organization'] ?? '', ENT_QUOTES);
 $casesViolated = htmlspecialchars($_POST['casesViolated'] ?? '', ENT_QUOTES);
 $yearsOfStay = htmlspecialchars($_POST['yearsOfStay'] ?? '', ENT_QUOTES);
 $businessOwner = isset($_POST['businessOwner']) ? 1 : 0;
-
+$ofw = isset($_POST['ofw']) ? 1 : 0;
+$employment = htmlspecialchars($_POST['employment'] ?? '', ENT_QUOTES);
 
 
 // Handle file upload
@@ -138,7 +139,9 @@ $sql = "UPDATE residents_records
             organization = '$organization',
             cases_violated = '$casesViolated',
             years_of_stay = '$yearsOfStay',
-            business_owner = '$businessOwner'
+            business_owner = '$businessOwner',
+            ofw = '$ofw',
+            employment = '$employment'
             $imageSql
         WHERE id = $residentId";
 

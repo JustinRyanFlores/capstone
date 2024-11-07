@@ -86,42 +86,52 @@ if (isset($_GET['search'])) {
                             // Check if the search query is numeric (for age search)
                             $is_numeric_search = is_numeric($search_query);
 
-                            // Fetch data from the database with age calculation
+                            // Split the search query into individual terms
+                            $search_terms = explode(' ', $search_query);
+
+                            // Build the SQL query for fetching data
                             $query = "
-                    SELECT id, first_name, middle_name, last_name, dob, gender, contact_number, subdivision,
-                    FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) AS age
-                    FROM residents_records 
-                    WHERE first_name LIKE '%$search_query%' 
-                    OR middle_name LIKE '%$search_query%' 
-                    OR last_name LIKE '%$search_query%' 
-                    OR gender LIKE '%$search_query%'
-                    OR dob LIKE '%$search_query%' 
-                    OR contact_number LIKE '%$search_query%' 
-                    OR subdivision LIKE '%$search_query%' ";
+                        SELECT id, first_name, middle_name, last_name, dob, gender, contact_number, subdivision,
+                        FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) AS age
+                        FROM residents_records 
+                        WHERE (";
+
+                            // Add each search term to the query
+                            foreach ($search_terms as $index => $term) {
+                                if ($index > 0) {
+                                    $query .= " AND ";
+                                }
+                                // Check if the concatenated full name contains the term
+                                $query .= "CONCAT_WS(' ', first_name, middle_name, last_name) LIKE '%$term%'";
+                            }
+
+                            $query .= " OR dob LIKE '%$search_query%' 
+                                OR contact_number LIKE '%$search_query%' 
+                                OR subdivision LIKE '%$search_query%' ";
 
                             // If the search query is numeric, include it in the age filter
                             if ($is_numeric_search) {
-                                $query .= "OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query ";
+                                $query .= " OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
                             }
 
-                            $query .= "LIMIT $start_from, $limit";
+                            $query .= ") LIMIT $start_from, $limit";
                             $result = $mysqlConn->query($query);
+
                             // Loop through the records
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
                                     echo "<tr data-id='{$row['id']}' onclick='fetchResidentDetails({$row['id']})'>
-                <td>{$row['first_name']} {$row['middle_name']} {$row['last_name']}</td>
-                <td>{$row['age']}</td>
-                <td>{$row['gender']}</td>
-                <td>{$row['dob']}</td>
-                <td>{$row['contact_number']}</td>
-                <td>{$row['subdivision']}</td>
-              </tr>";
+                                <td>{$row['first_name']} {$row['middle_name']} {$row['last_name']}</td>
+                                <td>{$row['age']}</td>
+                                <td>{$row['gender']}</td>
+                                <td>{$row['dob']}</td>
+                                <td>{$row['contact_number']}</td>
+                                <td>{$row['subdivision']}</td>
+                            </tr>";
                                 }
                             } else {
                                 echo "<tr><td colspan='6'>No records found</td></tr>";
                             }
-
                             ?>
                         </tbody>
                     </table>
@@ -130,20 +140,24 @@ if (isset($_GET['search'])) {
                     <div class="pagination-container">
                         <div class="pagination-info">
                             <?php
-                            // Fetch total records for "Showing X to Y of Z entries"
-                            $query_total = "SELECT COUNT(*) FROM residents_records 
-                            WHERE first_name LIKE '%$search_query%' 
-                            OR middle_name LIKE '%$search_query%' 
-                            OR last_name LIKE '%$search_query%' 
-                            OR dob LIKE '%$search_query%' 
-                            OR contact_number LIKE '%$search_query%' 
-                            OR subdivision LIKE '%$search_query%'";
+                            // Build the total count query for pagination info
+                            $query_total = "SELECT COUNT(*) FROM residents_records WHERE (";
+                            foreach ($search_terms as $index => $term) {
+                                if ($index > 0) {
+                                    $query_total .= " AND ";
+                                }
+                                $query_total .= "CONCAT_WS(' ', first_name, middle_name, last_name) LIKE '%$term%'";
+                            }
+                            $query_total .= " OR dob LIKE '%$search_query%' 
+                                      OR contact_number LIKE '%$search_query%' 
+                                      OR subdivision LIKE '%$search_query%' ";
 
                             // If the search query is numeric, include it in the total count query
                             if ($is_numeric_search) {
-                                $query_total .= "OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
+                                $query_total .= " OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
                             }
 
+                            $query_total .= ")";
                             $result_total = $mysqlConn->query($query_total);
                             $row_total = $result_total->fetch_row();
                             $total_records = $row_total[0];
@@ -179,6 +193,7 @@ if (isset($_GET['search'])) {
                 </div>
             </div>
         </div>
+
 
 
         <!-- Resident Details Modal -->
