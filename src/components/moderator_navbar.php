@@ -89,7 +89,7 @@
                 <a class="nav-link" href="faqs.php" style="padding-left: 15px;"><i class="fas fa-question-circle me-2"></i> F.A.Qs</a>
             </li>
             <li class="nav-item">
-                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Admin'): ?>
+                <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Admin'): ?>
                     <a class="nav-link" href="admin_panel.php"><i class="fas fa-user-cog me-2"></i> Admin Panel</a>
                 <?php endif; ?>
             </li>

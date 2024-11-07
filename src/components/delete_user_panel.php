@@ -8,7 +8,7 @@ if (isset($_POST['userId'])) {
     error_log("User ID received: $userId");
 
     // Check if the user exists before proceeding
-    $checkQuery = "SELECT * FROM user.user WHERE user_id = ?";
+    $checkQuery = "SELECT * FROM user_accounts.user WHERE user_id = ?";
     $stmtCheck = $mysqlConn3->prepare($checkQuery);
     if (!$stmtCheck) {
         error_log("Failed to prepare check query: " . $mysqlConn3->error);
@@ -24,7 +24,7 @@ if (isset($_POST['userId'])) {
     // Move record to the archive database
     $moveToArchiveQuery = "INSERT INTO archive.archive_user (user_id, fname, lname, contact_no, address, role, username, password)
                            SELECT user_id, fname, lname, contact_no, address, role, username, password
-                           FROM user.user WHERE user_id = ?";
+                           FROM user_accounts.user WHERE user_id = ?";
     
     $stmtMove = $mysqlConn4->prepare($moveToArchiveQuery);
     
@@ -43,7 +43,7 @@ if (isset($_POST['userId'])) {
     }
 
     // Delete the record from the User table
-    $deleteQuery = "DELETE FROM user.user WHERE user_id = ?";
+    $deleteQuery = "DELETE FROM user_accounts.user WHERE user_id = ?";
     $stmtDelete = $mysqlConn3->prepare($deleteQuery);
     
     if (!$stmtDelete) {

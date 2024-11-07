@@ -17,7 +17,7 @@
     $mysqlServername2 = "localhost";
     $mysqlUsername2 = "root";
     $mysqlPassword2 = "";
-    $mysqlDbname2 = "blotter_records";
+    $mysqlDbname2 = "blotter_record";
 
     // Create second MySQL connection
     $mysqlConn2 = new mysqli($mysqlServername2, $mysqlUsername2, $mysqlPassword2, $mysqlDbname2);
@@ -29,7 +29,7 @@
     $mysqlServername3 = "localhost";
     $mysqlUsername3 = "root";
     $mysqlPassword3 = "";
-    $mysqlDbname3 = "user";
+    $mysqlDbname3 = "user_accounts";
 
     // Create third MySQL connection
     $mysqlConn3 = new mysqli($mysqlServername3, $mysqlUsername3, $mysqlPassword3, $mysqlDbname3);

@@ -10,7 +10,7 @@ if (isset($_POST['blotterId'])) {
     // Move record to the archive database
     $moveToArchiveQuery = "INSERT INTO archive.archive_blotter (blotter_id, type_incident, blotter_status, dt_reported, dt_incident, place_incident, name_complainant, name_accused,user_in_charge, narrative)
                            SELECT blotter_id, type_incident, blotter_status, dt_reported, dt_incident, place_incident, name_complainant, name_accused,user_in_charge, narrative
-                           FROM blotter_records.blotter WHERE blotter_id = ?";
+                           FROM blotter_record.blotter WHERE blotter_id = ?";
     
     $stmtMove = $mysqlConn4->prepare($moveToArchiveQuery);
     
@@ -33,7 +33,7 @@ if (isset($_POST['blotterId'])) {
     }
 
     // Delete the record from the blotter table
-    $deleteQuery = "DELETE FROM blotter_records.blotter WHERE blotter_id = ?";
+    $deleteQuery = "DELETE FROM blotter_record.blotter WHERE blotter_id = ?";
     $stmtDelete = $mysqlConn2->prepare($deleteQuery);
     
     if (!$stmtDelete) {
