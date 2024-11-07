@@ -25,7 +25,6 @@ include("../src/configs/connection.php"); // Include your database connection
     <link rel="stylesheet" href="/system/src/css/dashboard.css" />
     <link rel="stylesheet" href="/system/src/css/report.css" />
     <?php include '../src/components/header.php'; ?>
-
 </head>
 
 <body>
@@ -58,7 +57,7 @@ include("../src/configs/connection.php"); // Include your database connection
                 </div>
                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#faqAccordion">
                     <div class="card-body">
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/rbIcJPyioN4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe id="video1" width="560" height="315" src="https://www.youtube.com/embed/rbIcJPyioN4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -74,7 +73,7 @@ include("../src/configs/connection.php"); // Include your database connection
                 </div>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#faqAccordion">
                     <div class="card-body">
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID_2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe id="video2" width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID_2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -90,7 +89,7 @@ include("../src/configs/connection.php"); // Include your database connection
                 </div>
                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#faqAccordion">
                     <div class="card-body">
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID_3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe id="video3" width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID_3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -106,7 +105,7 @@ include("../src/configs/connection.php"); // Include your database connection
                 </div>
                 <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#faqAccordion">
                     <div class="card-body">
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID_4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe id="video4" width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID_4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -122,18 +121,27 @@ include("../src/configs/connection.php"); // Include your database connection
                 </div>
                 <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#faqAccordion">
                     <div class="card-body">
-                        <iframe width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID_5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe id="video5" width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID_5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
         </div>
-
 
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Function to stop videos on collapse
+        $('#faqAccordion').on('hidden.bs.collapse', function (e) {
+            const videoId = $(e.target).find('iframe').attr('id'); // Get the iframe's id
+            const video = document.getElementById(videoId);
+            if (video) {
+                video.src = video.src; // Reset the video src to stop it
+            }
+        });
+    </script>
 </body>
 
 </html>
