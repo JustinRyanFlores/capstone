@@ -1257,6 +1257,19 @@ if ($result_total_blotter->num_rows > 0) {
             });
 
             addHoverTooltip(p3, "Purok-3");
+
+
+
+            var initialCoordinates = [14.162525303855341, 121.11590938129102];
+            var initialZoom = 15;
+
+            // Function to reset the map view
+            function resetMapView() {
+                map.setView(initialCoordinates, initialZoom);
+            }
+
+            // Add event listener to the button
+            document.getElementById('autoFocusBtn').addEventListener('click', resetMapView);
         </script>
 
     </div>
