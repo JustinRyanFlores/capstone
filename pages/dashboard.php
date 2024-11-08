@@ -760,20 +760,28 @@ if ($result_total_blotter->num_rows > 0) {
                             echo "Showing $start to $end of $total_records entries";
                             ?>
                         </div>
-                        <div class="pagination-controls">
+                        <ul class="pagination">
                             <?php
-                            // Display pagination links
+                            // Generate pagination links with search query
+                            $total_pages = ceil($total_records / $limit);
+
                             if ($page > 1) {
-                                echo "<a href='?page=" . ($page - 1) . "&search=$search_query'>Previous</a>";
+                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . "&search=$search_query'>Previous</a></li>";
                             }
+
                             for ($i = 1; $i <= $total_pages; $i++) {
-                                echo "<a href='?page=$i&search=$search_query'" . ($i == $page ? " class='active'" : "") . ">$i</a>";
+                                if ($i == $page) {
+                                    echo "<li class='page-item active'><a class='page-link' href='?page=$i&search=$search_query'>$i</a></li>";
+                                } else {
+                                    echo "<li class='page-item'><a class='page-link' href='?page=$i&search=$search_query'>$i</a></li>";
+                                }
                             }
+
                             if ($page < $total_pages) {
-                                echo "<a href='?page=" . ($page + 1) . "&search=$search_query'>Next</a>";
+                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . "&search=$search_query'>Next</a></li>";
                             }
                             ?>
-                        </div>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -958,48 +966,97 @@ if ($result_total_blotter->num_rows > 0) {
         <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
         <script>
+            let subdivisionStats = {}; // Global variable to store fetched data
+
+            window.onload = function() {
+                fetch('../src/components/getSubdivisionStats.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        subdivisionStats = data; // Store the fetched data globally
+                        console.log(subdivisionStats); // For debugging, remove this in production
+                    })
+                    .catch(error => {
+                        console.error('Error fetching subdivision stats:', error);
+                    });
+            };
+
             function setSubdivision(subdivision) {
-                // Set the value in the hidden input
                 document.getElementById('subdivision').value = subdivision;
-
-                // Update the label to show the selected subdivision
                 document.getElementById('subdivisionLabel').textContent = subdivision;
-
-                // Show the div if it was hidden
                 document.getElementById('selectedSubdivision').style.display = 'block';
             }
 
-
-            // Function to run when the page loads
-            window.onload = function() {
-                // Get the URL parameters
-                const params = new URLSearchParams(window.location.search);
-
-                // Retrieve the "subdivision" parameter from the URL
-                const subdivision = params.get('subdivision');
-
-                // If the "subdivision" parameter exists, set it in the hidden input and label
-                if (subdivision) {
-                    setSubdivision(subdivision);
-                }
-            };
-
-
             var map = L.map('map').setView([14.162525303855341, 121.11590938129102], 15);
 
-            // Esri Satellite Layer
             L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                attribution: 'Tiles &copy; Esri &mdash; Source: Esri, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+                attribution: 'Tiles &copy; Esri',
                 maxZoom: 18
             }).addTo(map);
 
-            // Esri Labels Layer
             L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
                 attribution: 'Labels &copy; Esri',
                 maxZoom: 18
             }).addTo(map);
 
-            // Sectors
+            // Add polygons with hover tooltips
+            function addHoverTooltip(polygon, subdivisionName) {
+                polygon.on('mouseover', function() {
+                    this.setStyle({
+                        weight: 4,
+                        fillOpacity: 0.6
+                    });
+
+                    // Use stats data if available, otherwise display 'N/A'
+                    const stats = subdivisionStats[subdivisionName] || {
+                        totalResidents: 'N/A',
+                        avgAge: 'N/A',
+                        genderRatio: 'N/A',
+                        philhealthPercentage: 'N/A',
+                        totalVoters: 'N/A',
+                        disabilityCount: 'N/A',
+                        osyCount: 'N/A',
+                        pwdCount: 'N/A',
+                        employmentPercentage: 'N/A',
+                        ofwCount: 'N/A',
+                        avgYearsOfStay: 'N/A'
+                    };
+
+                    // Format and display the tooltip with updated stats
+                    polygon.bindTooltip(
+                        `<b>${subdivisionName}</b><br>
+            Total Residents: ${stats.totalResidents}<br>
+            Average Age: ${stats.avgAge}<br>
+            Gender Ratio (Males): ${stats.genderRatio}<br>
+            Philhealth Percentage: ${stats.philhealthPercentage}<br>
+            Registered Voters: ${stats.totalVoters}<br>
+            Disability Count: ${stats.disabilityCount}<br>
+            Out-of-School Youth (OSY): ${stats.osyCount}<br>
+            PWD Count: ${stats.pwdCount}<br>
+            Employment Percentage: ${stats.employmentPercentage}<br>
+            OFW Count: ${stats.ofwCount}<br>
+            Average Years of Stay: ${stats.avgYearsOfStay}`, {
+                            direction: 'top',
+                            permanent: false
+                        }
+                    ).openTooltip();
+                });
+
+                polygon.on('mouseout', function() {
+                    this.setStyle({
+                        weight: 3,
+                        fillOpacity: 0.3
+                    });
+
+                    polygon.bindTooltip(`${subdivisionName}`, {
+                        permanent: true,
+                        direction: "center",
+                        className: "polygon-label"
+                    }).openTooltip();
+                });
+            }
+
+
+            // Example polygons with hover effects
             var sv = L.polygon([
                 [14.16281008863725, 121.10695135075427],
                 [14.158996892409405, 121.10317297117919],
@@ -1009,7 +1066,7 @@ if ($result_total_blotter->num_rows > 0) {
                 [14.159287195375994, 121.10948691956729]
             ], {
                 color: 'blue',
-                fillColor: '#0d6efd', // Improved visibility (light blue)
+                fillColor: '#0d6efd',
                 fillOpacity: 0.3
             }).addTo(map).bindTooltip("South Ville", {
                 permanent: true,
@@ -1017,11 +1074,11 @@ if ($result_total_blotter->num_rows > 0) {
                 className: "polygon-label"
             }).openTooltip();
 
-            // Add click event to trigger the filter by redirecting
             sv.on('click', function() {
                 window.location.href = window.location.pathname + "?subdivision=Southville 6";
             });
 
+            addHoverTooltip(sv, "Southville 6");
 
             var p1 = L.polygon([
                 [14.163232083344555, 121.1151981878794],
@@ -1032,7 +1089,6 @@ if ($result_total_blotter->num_rows > 0) {
             ], {
                 color: '#77DD77',
                 fillColor: '#B2E2D4',
-
                 fillOpacity: 0.3
             }).addTo(map).bindTooltip("Purok-1", {
                 permanent: true,
@@ -1042,9 +1098,10 @@ if ($result_total_blotter->num_rows > 0) {
 
             p1.on('click', function() {
                 setSubdivision('Purok-1');
-                // Redirect to the URL with the selected subdivision as a query parameter
                 window.location.href = window.location.pathname + "?subdivision=Purok-1";
             });
+
+            addHoverTooltip(p1, "Purok-1");
 
             var p4 = L.polygon([
                 [14.162601006954068, 121.10725697964726],
@@ -1056,7 +1113,7 @@ if ($result_total_blotter->num_rows > 0) {
                 [14.159609300060731, 121.10981015992907]
             ], {
                 color: 'orange',
-                fillColor: '#fd7e14', // Improved visibility (orange)
+                fillColor: '#fd7e14',
                 fillOpacity: 0.3
             }).addTo(map).bindTooltip("Purok-4", {
                 permanent: true,
@@ -1065,10 +1122,12 @@ if ($result_total_blotter->num_rows > 0) {
             }).openTooltip();
 
             p4.on('click', function() {
-                // Redirect to the URL with the selected subdivision as a query parameter
                 window.location.href = window.location.pathname + "?subdivision=Purok-4";
             });
 
+            addHoverTooltip(p4, "Purok-4");
+
+            // Polygon for Mother Ignacia, Villa Javier, Villa Andrea
             var mvv = L.polygon([
                 [14.163272568088269, 121.12055037931074],
                 [14.163523080107609, 121.12120107848669],
@@ -1087,10 +1146,10 @@ if ($result_total_blotter->num_rows > 0) {
             }).openTooltip();
 
             mvv.on('click', function() {
-                // Redirect with a filter for all three subdivisions
                 window.location.href = window.location.pathname + "?subdivision=Mother Ignacia,Villa Javier,Villa Andrea";
             });
 
+            addHoverTooltip(mvv, "Mother Ignacia, Villa Javier, Villa Andrea");
 
             var cv5 = L.polygon([
                 [14.164407737288329, 121.12010936398895],
@@ -1116,6 +1175,8 @@ if ($result_total_blotter->num_rows > 0) {
                 window.location.href = window.location.pathname + "?subdivision=Calambeño Ville 5";
             });
 
+            addHoverTooltip(cv5, "Calambeño Ville 5");
+
             var p2 = L.polygon([
                 [14.165724130696342, 121.11822029916682],
                 [14.163797706074321, 121.11549928167246],
@@ -1136,7 +1197,10 @@ if ($result_total_blotter->num_rows > 0) {
             p2.on('click', function() {
                 // Redirect to the URL with the selected subdivision as a query parameter
                 window.location.href = window.location.pathname + "?subdivision=Purok-2";
+
             });
+
+            addHoverTooltip(p2, "Purok-2");
 
             var vb = L.polygon([
                 [14.165467752056568, 121.12207596942218],
@@ -1164,6 +1228,8 @@ if ($result_total_blotter->num_rows > 0) {
                 window.location.href = window.location.pathname + "?subdivision=Valley Breeze";
             });
 
+            addHoverTooltip(vb, "Valley Breeze");
+
             var p3 = L.polygon([
                 [14.171859915492952, 121.124809289957],
                 [14.168638163949483, 121.11922567581915],
@@ -1190,51 +1256,9 @@ if ($result_total_blotter->num_rows > 0) {
                 window.location.href = window.location.pathname + "?subdivision=Purok-3";
             });
 
-
-            var initialCoordinates = [14.162525303855341, 121.11590938129102];
-            var initialZoom = 15;
-
-            // Function to reset the map view
-            function resetMapView() {
-                map.setView(initialCoordinates, initialZoom);
-            }
-
-            // Add event listener to the button
-            document.getElementById('autoFocusBtn').addEventListener('click', resetMapView);
-
-            function addHoverEffect(polygon) {
-                var tooltip = polygon.getTooltip();
-                polygon.on('mouseover', function() {
-                    tooltip._container.classList.add('enlarged');
-                });
-                polygon.on('mouseout', function() {
-                    tooltip._container.classList.remove('enlarged');
-                });
-
-                polygon.on('mouseover', function() {
-                    this.setStyle({
-                        weight: 4, // Change border thickness
-                        fillOpacity: 0.6 // Change fill opacity
-                    });
-                });
-                polygon.on('mouseout', function() {
-                    this.setStyle({
-                        weight: 3, // Reset border thickness
-                        fillOpacity: 0.3 // Reset fill opacity
-                    });
-                });
-            }
-
-            // Apply hover effect to each polygon
-            addHoverEffect(sv);
-            addHoverEffect(p1);
-            addHoverEffect(p4);
-            addHoverEffect(mvv);
-            addHoverEffect(cv5);
-            addHoverEffect(p2);
-            addHoverEffect(vb);
-            addHoverEffect(p3);
+            addHoverTooltip(p3, "Purok-3");
         </script>
+
     </div>
 
 </body>
