@@ -809,25 +809,22 @@ $mysqlConn->close();
         }
 
         function drawBusinessOwnerPieChart() {
-        // Prepare the data for the pie chart
-        var data = google.visualization.arrayToDataTable([
-            ['Type', 'Count'],
-            ['Business Owners', <?php echo $businessOwnersCount; ?>],
-            ['Non-Business Owners', <?php echo $nonBusinessOwnersCount; ?>]
-        ]);
+            var data = google.visualization.arrayToDataTable([
+                ['Type', 'Count'],
+                ['Business Owners', <?php echo $businessOwnersCount; ?>],
+                ['Non-Business Owners', <?php echo $nonBusinessOwnersCount; ?>]
+            ]);
 
-        // Set the options for the pie chart
-        var options = {
-            title: 'Business Owners vs Non-Business Owners',
-            is3D: true,
-            legend: { position: 'bottom' },
-            chartArea: { width: '85%', height: '75%' },
-        };
+            var options = {
+                title: 'Business Owners vs Non-Business Owners',
+                is3D: true,
+                legend: { position: 'bottom' },
+                chartArea: { width: '85%', height: '75%' },
+            };
 
-        // Create and draw the pie chart
-        var chart = new google.visualization.PieChart(document.getElementById('businessOwnerPieChart'));
-        chart.draw(data, options);
-    }
+            var chart = new google.visualization.PieChart(document.getElementById('businessOwnerPieChart'));
+            chart.draw(data, options);
+        }
 
     function drawBusinessOwnerBarChart() {
             var data = google.visualization.arrayToDataTable([

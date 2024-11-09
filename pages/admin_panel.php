@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-include("../src/configs/connection.php"); // Include your database connection
+include("../src/configs/connection.php");
 ?>
 
 <!DOCTYPE html>
@@ -385,7 +385,7 @@ $('#deleteBtn').on('click', function() {
             method: 'POST',
             data: $(this).serialize(),
             success: function(response) {
-                alert(response); // Show success message
+                alert(response.trim()); // Show success message
                 $('#addUserModal').modal('hide'); // Hide the modal
                 location.reload(); // Optionally, refresh the page or update the user table
             },

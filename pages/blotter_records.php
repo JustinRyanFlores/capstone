@@ -467,7 +467,7 @@ if (isset($_GET['search'])) {
                     method: 'POST',
                     data: $(this).serialize(),
                     success: function(response) {
-                        alert(response); // Show success message
+                        alert(response.trim()); // Show success message
                         $('#addBlotterModal').modal('hide'); // Hide the modal
                         // Optionally, you can refresh the table or page here
                     },
