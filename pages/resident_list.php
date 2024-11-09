@@ -32,7 +32,32 @@ if (isset($_GET['search'])) {
     <link rel="stylesheet" href="/system/src/css/header.css" />
     <link rel="stylesheet" href="/system/src/css/resident_list.css" />
     <?php include '../src/components/header.php'; ?>
+    <style>
+        .btn-delete {
+            background-color: #610000;
+            border-color: #610000;
+            color: #ffffff;
+        }
+
+        .btn-delete:hover {
+            background-color: white;
+            border-color: #610000;
+            color: #610000;
+        }
+
+    .btn-custom {
+        background-color: #1c2455;
+        border-color: #1c2455;
+        color: #f1f1f1;
+    }
+
+    .btn-custom:hover {
+        background-color: #f1f1f1;
+        color: #141a3f;
+    }
+    </style>
 </head>
+
 
 <body>
     <?php include '../src/components/moderator_navbar.php'; ?>
@@ -215,7 +240,7 @@ if (isset($_GET['search'])) {
                         <div class="button-container">
                             <button id="editButton" class="btn btn-custom" onclick="editResident(<?php echo $residentId; ?>)">Edit</button>
                             <button class="btn btn-custom" onclick="printResidentDetails()">Print</button>
-                            <button class="btn btn-danger" onclick="deleteResident()">Delete</button>
+                            <button class="btn btn-delete" onclick="deleteResident()">Delete</button>
                             <button class="btn btn-secondary" data-bs-dismiss="modal" onclick="cancelAction()">Cancel</button>
                         </div>
                     </div>

@@ -239,6 +239,18 @@ if ($result_total_blotter->num_rows > 0) {
             font-size: 16px;
             /* Increased size on hover */
         }
+
+        .btn-delete {
+            background-color: #610000;
+            border-color: #610000;
+            color: #ffffff;
+        }
+
+        .btn-delete:hover {
+            background-color: white;
+            border-color: #610000;
+            color: #610000;
+        }
     </style>
     <?php include '../src/components/header.php'; ?>
 </head>
@@ -315,7 +327,7 @@ if ($result_total_blotter->num_rows > 0) {
 
             <!-- Clear Filters button (icon button) -->
             <div class="col-auto">
-                <button type="button" class="btn btn-danger" onclick="clearFilters()" title="Clear Filters">
+                <button type="button" class="btn btn-delete" onclick="clearFilters()" title="Clear Filters">
                     <i class="bi bi-x-circle"></i>
                 </button>
 
@@ -805,7 +817,7 @@ if ($result_total_blotter->num_rows > 0) {
                     </div>
                     <div class="modal-footer">
                         <div class="button-container">
-                            <button class="btn btn-danger" onclick="printResidentDetails()">Print</button>
+                            <button class="btn btn-delete" onclick="printResidentDetails()">Print</button>
                             <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         </div>
 
