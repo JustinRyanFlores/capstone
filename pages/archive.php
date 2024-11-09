@@ -10,19 +10,22 @@ if (!isset($_SESSION['user_id'])) {
 include('../src/configs/connection.php');
 
 // Fetch records from the archive tables
-function fetchResidentsRecords($conn) {
+function fetchResidentsRecords($conn)
+{
     $sql = "SELECT * FROM residents_records";
     $result = $conn->query($sql);
     return $result;
 }
 
-function fetchBlotterRecords($conn) {
+function fetchBlotterRecords($conn)
+{
     $sql = "SELECT * FROM archive_blotter";
     $result = $conn->query($sql);
     return $result;
 }
 
-function fetchUserRecords($conn) {
+function fetchUserRecords($conn)
+{
     $sql = "SELECT * FROM archive_user";
     $result = $conn->query($sql);
     return $result;
@@ -45,30 +48,34 @@ function fetchUserRecords($conn) {
     <link rel="stylesheet" href="/system/src/css/dashboard.css" />
     <link rel="stylesheet" href="/system/src/css/archive.css" />
     <?php include '../src/components/header.php'; ?>
-        <style>
+    <style>
         .nav-tabs .nav-link {
             color: #1c2455;
         }
-        
+
         .nav-tabs .nav-link.active {
             color: white;
             background-color: #1c2455;
         }
-        
+
         .nav-tabs .nav-link:hover {
             color: #1c2455;
         }
+
         .btn-delete {
             background-color: #610000;
             border-color: #610000;
-            color: #ffffff; /* Optional: Change text color */
+            color: #ffffff;
+            /* Optional: Change text color */
         }
 
         .btn-delete:hover {
             background-color: white;
             border-color: #610000;
-            color: #610000; /* Optional: Change hover text color */
+            color: #610000;
+            /* Optional: Change hover text color */
         }
+
         .btn-restore {
             background-color: #013220;
             border-color: #013220;
@@ -76,7 +83,8 @@ function fetchUserRecords($conn) {
         }
 
         .btn-restore:hover {
-            background-color: white; /* Change hover color here */
+            background-color: white;
+            /* Change hover color here */
             border-color: #08522e;
             color: #08522e;
         }
@@ -136,17 +144,29 @@ function fetchUserRecords($conn) {
                             $residentsResult = fetchResidentsRecords($mysqlConn4); // Using the archive connection
                             if ($residentsResult && $residentsResult->num_rows > 0) {
                                 while ($row = $residentsResult->fetch_assoc()) {
-                                    echo "<tr><td>{$row['first_name']} {$row['middle_name']} {$row['last_name']}</td><td>{$row['age']}</td><td>{$row['gender']}</td>
-                                    <td>{$row['dob']}</td><td>{$row['contact_number']}</td><td>{$row['subdivision']}</td></tr>";
+                                    $residentID = $row['id']; // Assuming you have an 'id' column as the primary key
+                                    $firstName = addslashes($row['first_name']);
+                                    $middleName = addslashes($row['middle_name']);
+                                    $lastName = addslashes($row['last_name']);
+                                    // Now pass the resident ID to the JavaScript function
+                                    echo "<tr onclick='loadResidentDetails($residentID)' style='cursor:pointer'>
+                            <td>{$row['first_name']} {$row['middle_name']} {$row['last_name']}</td>
+                            <td>{$row['age']}</td>
+                            <td>{$row['gender']}</td>
+                            <td>{$row['dob']}</td>
+                            <td>{$row['contact_number']}</td>
+                            <td>{$row['subdivision']}</td>
+                        </tr>";
                                 }
                             } else {
-                                echo "<tr><td colspan='3'>No records found</td></tr>";
+                                echo "<tr><td colspan='6'>No records found</td></tr>";
                             }
                             ?>
                         </tbody>
                     </table>
                 </div>
             </div>
+
 
             <!-- Blotter Tab -->
             <div class="tab-pane fade" id="blotter" role="tabpanel" aria-labelledby="blotter-tab">
@@ -190,7 +210,7 @@ function fetchUserRecords($conn) {
                             </tr>
                         </thead>
                         <tbody>
-                        <?php
+                            <?php
                             $userResult = fetchUserRecords($mysqlConn4); // Archive connection
                             if ($userResult && $userResult->num_rows > 0) {
                                 while ($row = $userResult->fetch_assoc()) {
@@ -208,66 +228,130 @@ function fetchUserRecords($conn) {
         </div>
 
     </div>
-
-<!-- Blotter Details Modal -->
-<div class="modal fade" id="blotterModal" tabindex="-1" role="dialog" aria-labelledby="blotterModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="blotterModalLabel">Blotter Record Details</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="blotterDetailsBody">
-                <!-- Blotter details will be loaded here dynamically -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-restore" id="restoreBlotterBtn" data-id="">Restore</button>
-                <button type="button" class="btn btn-delete" id="deleteBlotterBtn" data-id="">Delete</button>
+    <!-- Resident Details Modal -->
+    <div class="modal fade" id="residentModal" tabindex="-1" aria-labelledby="residentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="residentModalLabel">Resident Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="residentDetailsBody">
+                    <!-- Resident details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="deleteResidentBtn" data-id="">Delete</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- User Details Modal -->
-<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel">User Record Details</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="userDetailsBody">
-                <!-- User details will be loaded here dynamically -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-restore" id="restoreUserBtn" data-id="">Restore</button>
-                <button type="button" class="btn btn-delete" id="deleteUserBtn" data-id="">Delete</button>
+
+    <!-- Blotter Details Modal -->
+    <div class="modal fade" id="blotterModal" tabindex="-1" role="dialog" aria-labelledby="blotterModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="blotterModalLabel">Blotter Record Details</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="blotterDetailsBody">
+                    <!-- Blotter details will be loaded here dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-restore" id="restoreBlotterBtn" data-id="">Restore</button>
+                    <button type="button" class="btn btn-delete" id="deleteBlotterBtn" data-id="">Delete</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <!-- User Details Modal -->
+    <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalLabel">User Record Details</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="userDetailsBody">
+                    <!-- User details will be loaded here dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-restore" id="restoreUserBtn" data-id="">Restore</button>
+                    <button type="button" class="btn btn-delete" id="deleteUserBtn" data-id="">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
+        function loadResidentDetails(residentID) {
+            $.ajax({
+                url: '../src/components/getArchiveResidentDetails.php',
+                type: 'POST',
+                data: {
+                    id: residentID // Send the resident ID to the PHP script
+                },
+                success: function(response) {
+                    $('#residentDetailsBody').html(response); // Populate the modal body with the response
+                    $('#residentModal').modal('show'); // Show the modal
+                    $('#deleteResidentBtn').attr('data-id', residentID); // Set the resident ID on the delete button
+                },
+                error: function() {
+                    $('#residentDetailsBody').html('<p>Error loading details.</p>'); // Error message
+                }
+            });
+        }
+
+        $(document).on('click', '#deleteResidentBtn', function() {
+            const residentID = $(this).data('id'); // Get the resident ID from the data-id attribute
+
+            // Confirm the deletion
+            if (confirm('Are you sure you want to permanently delete this resident?')) {
+                // Send the delete request via AJAX
+                $.ajax({
+                    url: '../src/components/deleteArchiveResident.php', // The PHP file that will handle the deletion
+                    type: 'POST',
+                    data: {
+                        id: residentID // Send the resident ID to the PHP script
+                    },
+                    success: function(response) {
+                        alert(response); // Show success message
+                        $('#residentModal').modal('hide'); // Close the modal after deletion
+                        location.reload(); // Reload the page to reflect the changes
+                    },
+                    error: function() {
+                        alert('Error deleting resident. Please try again.'); // Handle error
+                    }
+                });
+            }
+        });
+
+
         function loadBlotterDetails(blotterID) {
             $.ajax({
                 url: '../src/components/getArchiveBlotterDetails.php',
                 type: 'POST',
-                data: { id: blotterID },
+                data: {
+                    id: blotterID
+                },
                 success: function(response) {
                     $('#blotterDetailsBody').html(response);
                     $('#blotterModal').modal('show');
                     $('#deleteBlotterBtn').attr('data-id', blotterID); // Set the blotter ID on the delete button
-                     $('#restoreBlotterBtn').data('id', blotterID); // Set data-id for restore button
+                    $('#restoreBlotterBtn').data('id', blotterID); // Set data-id for restore button
                 },
                 error: function() {
                     $('#blotterDetailsBody').html('<p>Error loading details.</p>');
@@ -278,14 +362,17 @@ function fetchUserRecords($conn) {
         // Delete button click event
         $(document).on('click', '#deleteBlotterBtn', function() {
             const blotterID = $(this).data('id');
-            if (confirm('Are you sure you want to delete this blotter record?')) {
+            if (confirm('Are you sure you want to permanently delete this blotter record?')) {
                 $.ajax({
-                    url: '../src/components/deleteArchiveBlotter.php', 
+                    url: '../src/components/deleteArchiveBlotter.php', // File for deleting the blotter record
                     type: 'POST',
-                    data: { id: blotterID },
+                    data: {
+                        id: blotterID
+                    },
                     success: function(response) {
                         alert(response); // Show success message
                         $('#blotterModal').modal('hide'); // Hide modal
+                        // After reload, activate the Blotter tab explicitly
                         location.reload(); // Reload page to see changes
                     },
                     error: function() {
@@ -309,7 +396,9 @@ function fetchUserRecords($conn) {
                 $.ajax({
                     url: '../src/components/restoreBlotterRecord.php', // Your PHP script for restoring
                     type: 'POST',
-                    data: { id: blotterID },
+                    data: {
+                        id: blotterID
+                    },
                     success: function(response) {
                         alert(response); // Show success or error message
                         // Optionally, refresh the table or close the modal
@@ -322,11 +411,14 @@ function fetchUserRecords($conn) {
                 });
             });
         });
+
         function loadUserDetails(userID) {
             $.ajax({
                 url: '../src/components/getArchiveUserDetails.php', // Path to the new PHP script
                 type: 'POST',
-                data: { id: userID },
+                data: {
+                    id: userID
+                },
                 success: function(response) {
                     $('#userDetailsBody').html(response);
                     $('#userModal').modal('show'); // Show user details modal
@@ -342,14 +434,18 @@ function fetchUserRecords($conn) {
         // Delete button click event
         $(document).on('click', '#deleteUserBtn', function() {
             const userID = $(this).data('id');
-            if (confirm('Are you sure you want to delete this user record?')) {
+            if (confirm('Are you sure you want to permanently delete this user record?')) {
                 $.ajax({
                     url: '../src/components/deleteArchiveUser.php', // Create this PHP file for deleting user
                     type: 'POST',
-                    data: { id: userID },
+                    data: {
+                        id: userID
+                    },
                     success: function(response) {
                         alert(response); // Show success message
                         $('#userModal').modal('hide'); // Hide modal
+                        // Navigate to the user tab after reload
+                        window.location.hash = '#user-tab'; // This ensures the user tab is selected
                         location.reload(); // Reload page to see changes
                     },
                     error: function() {
@@ -359,18 +455,21 @@ function fetchUserRecords($conn) {
             }
         });
 
+
         // Restore user record
         $('#restoreUserBtn').click(function() {
-            var userID = $(this).data('id');  // Get the user ID from the button's data-id attribute
-            
+            var userID = $(this).data('id'); // Get the user ID from the button's data-id attribute
+
             $.ajax({
-                url: '../src/components/restoreUserRecord.php',  // The correct PHP script location
+                url: '../src/components/restoreUserRecord.php', // The correct PHP script location
                 type: 'POST',
-                data: { id: userID },  // Send the user ID in the 'id' key
+                data: {
+                    id: userID
+                }, // Send the user ID in the 'id' key
                 success: function(response) {
-                    alert(response);  // Display the success or error message
-                    $('#userModal').modal('hide');  // Hide the modal after restoration
-                    location.reload();  // Reload the page to reflect changes
+                    alert(response); // Display the success or error message
+                    $('#userModal').modal('hide'); // Hide the modal after restoration
+                    location.reload(); // Reload the page to reflect changes
                 },
                 error: function() {
                     alert('Error restoring user.');
@@ -383,6 +482,15 @@ function fetchUserRecords($conn) {
             const userID = $(this).data('id'); // Assuming you set data-id on the row
             loadUserDetails(userID);
 
+        });
+
+        $(document).ready(function() {
+            // Check if the URL hash is set to either the Blotter or User tab
+            if (window.location.hash === '#blotter-tab') {
+                $('#blotter-tab').tab('show'); // Show Blotter tab
+            } else if (window.location.hash === '#user-tab') {
+                $('#user-tab').tab('show'); // Show User tab
+            }
         });
     </script>
 
