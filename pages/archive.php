@@ -58,10 +58,6 @@ function fetchUserRecords($conn)
             background-color: #1c2455;
         }
 
-        .nav-tabs .nav-link:hover {
-            color: #1c2455;
-        }
-
         .btn-delete {
             background-color: #610000;
             border-color: #610000;
