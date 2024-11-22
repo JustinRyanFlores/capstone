@@ -58,10 +58,6 @@ function fetchUserRecords($conn)
             background-color: #1c2455;
         }
 
-        .nav-tabs .nav-link:hover {
-            color: #1c2455;
-        }
-
         .btn-delete {
             background-color: #610000;
             border-color: #610000;
@@ -328,7 +324,7 @@ function fetchUserRecords($conn)
                         id: residentID // Send the resident ID to the PHP script
                     },
                     success: function(response) {
-                        alert(response); // Show success message
+                        alert(response.trim());; // Show success message
                         $('#residentModal').modal('hide'); // Close the modal after deletion
                         location.reload(); // Reload the page to reflect the changes
                     },
@@ -370,7 +366,7 @@ function fetchUserRecords($conn)
                         id: blotterID
                     },
                     success: function(response) {
-                        alert(response); // Show success message
+                        alert(response.trim());; // Show success message
                         $('#blotterModal').modal('hide'); // Hide modal
                         // After reload, activate the Blotter tab explicitly
                         location.reload(); // Reload page to see changes
@@ -400,7 +396,7 @@ function fetchUserRecords($conn)
                         id: blotterID
                     },
                     success: function(response) {
-                        alert(response); // Show success or error message
+                        alert(response.trim());; // Show success or error message
                         // Optionally, refresh the table or close the modal
                         $('#blotterModal').modal('hide'); // Close the modal
                         location.reload(); // Reload the page or refresh the table
@@ -442,7 +438,7 @@ function fetchUserRecords($conn)
                         id: userID
                     },
                     success: function(response) {
-                        alert(response); // Show success message
+                        alert(response.trim());; // Show success message
                         $('#userModal').modal('hide'); // Hide modal
                         // Navigate to the user tab after reload
                         window.location.hash = '#user-tab'; // This ensures the user tab is selected
@@ -467,7 +463,7 @@ function fetchUserRecords($conn)
                     id: userID
                 }, // Send the user ID in the 'id' key
                 success: function(response) {
-                    alert(response); // Display the success or error message
+                    alert(response.trim());; // Display the success or error message
                     $('#userModal').modal('hide'); // Hide the modal after restoration
                     location.reload(); // Reload the page to reflect changes
                 },

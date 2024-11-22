@@ -1070,6 +1070,23 @@ $mysqlConn->close();
         
 
     </script>
+    <style>
+        .collapse-button {
+            display: inline-block;
+            cursor: pointer;
+            background-color: #1c2455;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 50%;
+            border: none;
+            outline: none;
+        }
+
+        .collapse-button:hover {
+            background-color: #ffffff;
+            color: #1c2455;
+        }
+    </style>
 </head>
 
 <body>
