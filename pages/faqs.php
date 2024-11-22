@@ -57,7 +57,7 @@ include("../src/configs/connection.php"); // Include your database connection
                 </div>
                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#faqAccordion">
                     <div class="card-body">
-                        <iframe id="video1" width="560" height="315" src="https://www.youtube.com/embed/rbIcJPyioN4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe id="video1" width="560" height="315" src="https://www.youtube.com/embed/oLBl_Ljnpok" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@ include("../src/configs/connection.php"); // Include your database connection
                 </div>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#faqAccordion">
                     <div class="card-body">
-                        <iframe id="video2" width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID_2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe id="video2" width="560" height="315" src="https://www.youtube.com/embed/nTRF1_lzOyg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -89,7 +89,7 @@ include("../src/configs/connection.php"); // Include your database connection
                 </div>
                 <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#faqAccordion">
                     <div class="card-body">
-                        <iframe id="video3" width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID_3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe id="video3" width="560" height="315" src="https://www.youtube.com/embed/aQG0gaglCv0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -105,7 +105,7 @@ include("../src/configs/connection.php"); // Include your database connection
                 </div>
                 <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#faqAccordion">
                     <div class="card-body">
-                        <iframe id="video4" width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID_4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe id="video4" width="560" height="315" src="https://www.youtube.com/embed/_FDLTQHDuss" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
@@ -114,17 +114,18 @@ include("../src/configs/connection.php"); // Include your database connection
             <div class="card">
                 <div class="card-header" id="headingFive">
                     <h5 class="mb-0">
-                        <button class="btn btn-link text-dark" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                            How to use the filter and search feature?
+                        <button class="btn btn-link text-dark" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFour">
+                            Intermission
                         </button>
                     </h5>
                 </div>
                 <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#faqAccordion">
                     <div class="card-body">
-                        <iframe id="video5" width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID_5" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe id="video5" width="560" height="315" src="https://www.youtube.com/embed/ur9pqPLoDKU" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>
             </div>
+
         </div>
 
     </div>

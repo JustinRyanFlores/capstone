@@ -17,8 +17,8 @@
 .collapse-button {
     display: inline-block;
     cursor: pointer;
-    background-color: #007bff;
-    color: white;
+    background-color: #ffffff;
+    color: #1c2455;
     padding: 8px 12px;
     border-radius: 50%;
     border: none;
@@ -26,7 +26,8 @@
 }
 
 .collapse-button:hover {
-    background-color: #0056b3;
+    background-color: #1c2455;
+    color: white;
 }
 
 .demographics-header {
