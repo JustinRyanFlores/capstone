@@ -22,7 +22,6 @@
 
 /* Container for the whole table */
 .resident-table-container {
-    margin: 20px 0;
     border: 1px solid #dee2e6;
     border-radius: 8px;
     overflow: hidden;
