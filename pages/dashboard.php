@@ -299,501 +299,519 @@ if ($result_total_blotter->num_rows > 0) {
                 </a>
             </div>
         </div>
-        <div class="container text-center mb-5">
-            <div class="position-relative">
-                <div id="map" class="w-100" style="height: 600px;"></div> <!-- Adjust height as necessary -->
-                <button id="autoFocusBtn" class="btn">
-                    <i class="fas fa-crosshairs"></i>
-                </button>
-            </div>
-        </div>
-
-
-
-        <div class="row m-3 bg-light text-white p-2 shadow rounded">
-            <div class="col-4">
-                <!-- Search form -->
-                <form method="GET" action="dashboard.php">
-                    <input type="text" name="search" class="form-control" placeholder="Type Here to Search..." style="max-width: 500px;" value="<?php echo htmlspecialchars($search_query); ?>" />
-                </form>
+        <div class="row">
+            <!-- GIS Map (Left Column) -->
+            <div class="col-lg-7 col-md-7 col-sm-12">
+                <div class="position-relative shadow rounded">
+                    <div id="map" class="w-100" style="height: 600px; background-color: #eef;"></div>
+                    <button id="autoFocusBtn" class="btn btn-dark position-absolute bottom-0 end-0 m-3">
+                        <i class="fas fa-crosshairs"></i>
+                    </button>
+                </div>
             </div>
 
-            <!-- Filter button -->
-            <div class="col-auto">
-                <button type="button" class="btn btn-outline-secondary me-2" onclick="toggleFilterPopup()">
-                    <i class="fas fa-filter"></i> Filter
-                </button>
-            </div>
 
-            <!-- Clear Filters button (icon button) -->
-            <div class="col-auto">
-                <button type="button" class="btn btn-delete" onclick="clearFilters()" title="Clear Filters">
-                    <i class="bi bi-x-circle"></i>
-                </button>
-
-            </div>
-        </div>
-
-
-
-        <!-- Filter Panel (Hidden by Default) -->
-        <div id="filterPanel" class="filter-popup shadow rounded p-3 bg-white" style="display: none; position: absolute; max-width: 340px; max-height: 300px; overflow-y: auto; z-index: 1050;">
-            <form id="filterForm" action="dashboard.php" method="GET">
-                <input type="hidden" id="subdivision" name="subdivision" value="">
-                <div id="selectedSubdivision" class="mb-2" style="display:none;">
-                    <strong>Area:</strong> <span id="subdivisionLabel"></span>
-                </div>
-
-                <!-- Demographic Filters -->
-                <h6 class="mt-2">Demographic Details</h6>
-                <div class="mb-2">
-                    <label for="age_range">Age Range</label>
-                    <div class="d-flex">
-                        <input type="number" id="age_min" name="age_min" class="form-control me-2" min="1" max="100" value="1" oninput="updateAgeRange()" required>
-                        <input type="number" id="age_max" name="age_max" class="form-control" min="1" max="100" value="100" oninput="updateAgeRange()" required>
-                    </div>
-                    <span id="ageRangeLabel">1-100</span> <!-- This span displays the selected age range -->
-                </div>
-
-                <div class="mb-2">
-                    <label for="gender">Gender</label>
-                    <select name="gender" class="form-select">
-                        <option value="">Any</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-6">
-                        <label for="dob_start">DOB From</label>
-                        <input type="date" class="form-control" name="dob_start" id="dob_start">
-                    </div>
-                    <div class="col-6">
-                        <label for="dob_end">DOB To</label>
-                        <input type="date" class="form-control" name="dob_end" id="dob_end">
-                    </div>
-                </div>
-                <div class="mb-2">
-                    <label for="religion">Religion</label>
-                    <input type="text" class="form-control" name="religion" id="religion">
-                </div>
-                <div class="mb-2">
-                    <label for="voterstatus">Voter Status</label>
-                    <select name="voterstatus" class="form-select">
-                        <option value="">Any</option>
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
-                    </select>
-                </div>
-
-
-                <!-- Socio-Economic and Educational Filters -->
-                <h6 class="mt-2">Socio-Economic & Educational</h6>
-                <div class="row mb-2">
-                    <div class="col-6">
-                        <label for="osy">OSY Status</label>
-                        <select name="osy" class="form-select">
-                            <option value="">Any</option>
-                            <option value="1">Yes</option>
-                            <option value="0">No</option>
-                        </select>
-                    </div>
-                    <div class="col-6">
-                        <label for="als">ALS Status</label>
-                        <select name="als" class="form-select">
-                            <option value="">Any</option>
-                            <option value="1">Yes</option>
-                            <option value="0">No</option>
-                        </select>
+            <div class="col-lg-5 col-md-5 col-sm-12" style="margin-top: -25px;">
+                <div class="row mt-4 d-flex justify-content-center">
+                    <div class="col-12 col-md-11 m-3 bg-light text-white p-2 shadow rounded">
+                        <!-- Search Form -->
+                        <div class="col-12 mb-2">
+                            <form method="GET" action="dashboard.php">
+                                <input
+                                    type="text"
+                                    name="search"
+                                    class="form-control"
+                                    placeholder="Type Here to Search..."
+                                    value="<?php echo htmlspecialchars($search_query); ?>" />
+                            </form>
+                        </div>
+                        <!-- Filter and Clear Buttons -->
+                        <div class="row">
+                            <div class="col-6 mb-2">
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-secondary w-100"
+                                    id="filterButton"
+                                    onclick="toggleFilterPopup()">
+                                    <i class="fas fa-filter"></i> Filter
+                                </button>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <button
+                                    type="button"
+                                    class="btn btn-danger w-100"
+                                    onclick="clearFilters()">
+                                    <i class="bi bi-x-circle"></i> Clear Filters
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Health and Medical Filters -->
-                <h6 class="mt-2">Health & Medical Data</h6>
-                <div class="row mb-2">
-                    <div class="col-6">
-                        <label for="immunization_status">Immunization</label>
-                        <select name="immunization_status" class="form-select">
-                            <option value="">Any</option>
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </div>
-                    <div class="col-6">
-                        <label for="pwd">PWD Status</label>
-                        <select name="pwd" class="form-select">
-                            <option value="">Any</option>
-                            <option value="1">Yes</option>
-                            <option value="0">No</option>
-                        </select>
-                    </div>
+
+
+                <!-- Filter Panel (Hidden by Default) -->
+                <div id="filterPanel" class="filter-popup shadow rounded p-3 bg-white" style="display: none; position: absolute; max-width: 340px; max-height: 300px; overflow-y: auto; z-index: 1050;">
+                    <form id="filterForm" action="dashboard.php" method="GET">
+                        <input type="hidden" id="subdivision" name="subdivision" value="">
+                        <div id="selectedSubdivision" class="mb-2" style="display:none;">
+                            <strong>Area:</strong> <span id="subdivisionLabel"></span>
+                        </div>
+
+                        <!-- Demographic Filters -->
+                        <h6 class="mt-2">Demographic Details</h6>
+                        <div class="mb-2">
+                            <label for="age_range">Age Range</label>
+                            <div class="d-flex">
+                                <input type="number" id="age_min" name="age_min" class="form-control me-2" min="1" max="100" value="1" oninput="updateAgeRange()" required>
+                                <input type="number" id="age_max" name="age_max" class="form-control" min="1" max="100" value="100" oninput="updateAgeRange()" required>
+                            </div>
+                            <span id="ageRangeLabel">1-100</span> <!-- This span displays the selected age range -->
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="gender">Gender</label>
+                            <select name="gender" class="form-select">
+                                <option value="">Any</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <label for="dob_start">DOB From</label>
+                                <input type="date" class="form-control" name="dob_start" id="dob_start">
+                            </div>
+                            <div class="col-6">
+                                <label for="dob_end">DOB To</label>
+                                <input type="date" class="form-control" name="dob_end" id="dob_end">
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label for="religion">Religion</label>
+                            <input type="text" class="form-control" name="religion" id="religion">
+                        </div>
+                        <div class="mb-2">
+                            <label for="voterstatus">Voter Status</label>
+                            <select name="voterstatus" class="form-select">
+                                <option value="">Any</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+
+
+                        <!-- Socio-Economic and Educational Filters -->
+                        <h6 class="mt-2">Socio-Economic & Educational</h6>
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <label for="osy">OSY Status</label>
+                                <select name="osy" class="form-select">
+                                    <option value="">Any</option>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="als">ALS Status</label>
+                                <select name="als" class="form-select">
+                                    <option value="">Any</option>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Health and Medical Filters -->
+                        <h6 class="mt-2">Health & Medical Data</h6>
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <label for="immunization_status">Immunization</label>
+                                <select name="immunization_status" class="form-select">
+                                    <option value="">Any</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="pwd">PWD Status</label>
+                                <select name="pwd" class="form-select">
+                                    <option value="">Any</option>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <label for="teen_pregnancy">Teen Pregnancy</label>
+                                <select name="teen_pregnancy" class="form-select">
+                                    <option value="">Any</option>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label for="type_of_delivery">Type of Delivery</label>
+                                <select name="type_of_delivery" class="form-select">
+                                    <option value="">Any</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Cesarean">Cesarean</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label for="assisted_by">Assisted By</label>
+                            <select name="assisted_by" class="form-select">
+                                <option value="">Any</option>
+                                <option value="Doctor">Doctor</option>
+                                <option value="Midwife">Midwife</option>
+                                <option value="Nurse">Nurse</option>
+                            </select>
+                        </div>
+
+                        <!-- Duration of Residency Filters -->
+                        <h6 class="mt-2">Duration of Residency</h6>
+                        <div class="mb-2">
+                            <label for="years_of_stay">Years of Stay</label>
+                            <input type="number" class="form-control" name="years_of_stay" id="years_of_stay" min="0">
+                        </div>
+
+                        <!-- Business and Organization Filters -->
+                        <h6 class="mt-2">Business & Organization</h6>
+                        <div class="mb-2">
+                            <label for="business_owner">Business Owner</label>
+                            <select name="business_owner" class="form-select">
+                                <option value="">Any</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+
+                        <!-- Button Group -->
+                        <div class="d-flex flex-column mt-3">
+                            <button type="submit" class="btnfilter btn-primary w-100 mb-2">Apply Filters</button>
+                            <button type="button" class="btnfilter2 btn-secondary w-100" onclick="toggleFilterPopup()">Cancel</button>
+                        </div>
+
+                    </form>
                 </div>
-                <div class="row mb-2">
-                    <div class="col-6">
-                        <label for="teen_pregnancy">Teen Pregnancy</label>
-                        <select name="teen_pregnancy" class="form-select">
-                            <option value="">Any</option>
-                            <option value="1">Yes</option>
-                            <option value="0">No</option>
-                        </select>
-                    </div>
-                    <div class="col-6">
-                        <label for="type_of_delivery">Type of Delivery</label>
-                        <select name="type_of_delivery" class="form-select">
-                            <option value="">Any</option>
-                            <option value="Normal">Normal</option>
-                            <option value="Cesarean">Cesarean</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="mb-2">
-                    <label for="assisted_by">Assisted By</label>
-                    <select name="assisted_by" class="form-select">
-                        <option value="">Any</option>
-                        <option value="Doctor">Doctor</option>
-                        <option value="Midwife">Midwife</option>
-                        <option value="Nurse">Nurse</option>
-                    </select>
-                </div>
+                <script>
+                    function toggleFilterPopup() {
+                        const filterPanel = document.getElementById('filterPanel');
+                        const filterButton = document.getElementById('filterButton');
 
-                <!-- Duration of Residency Filters -->
-                <h6 class="mt-2">Duration of Residency</h6>
-                <div class="mb-2">
-                    <label for="years_of_stay">Years of Stay</label>
-                    <input type="number" class="form-control" name="years_of_stay" id="years_of_stay" min="0">
-                </div>
+                        if (!filterPanel || !filterButton) {
+                            console.error('Filter panel or button not found');
+                            return;
+                        }
 
-                <!-- Business and Organization Filters -->
-                <h6 class="mt-2">Business & Organization</h6>
-                <div class="mb-2">
-                    <label for="business_owner">Business Owner</label>
-                    <select name="business_owner" class="form-select">
-                        <option value="">Any</option>
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
-                    </select>
-                </div>
+                        // Get the button's position
+                        const rect = filterButton.getBoundingClientRect();
 
-                <!-- Button Group -->
-                <div class="d-flex flex-column mt-3">
-                    <button type="submit" class="btnfilter btn-primary w-100 mb-2">Apply Filters</button>
-                    <button type="button" class="btnfilter2 btn-secondary w-100" onclick="toggleFilterPopup()">Cancel</button>
-                </div>
-
-            </form>
-        </div>
-        <script>
-            function toggleFilterPopup() {
-                const filterPanel = document.getElementById('filterPanel');
-                const filterButton = document.querySelector('.btn-outline-secondary');
-
-                // Get the button's position and size
-                const rect = filterButton.getBoundingClientRect();
-
-                // Set the position of the filterPanel relative to the button
-                filterPanel.style.top = (window.scrollY + rect.bottom) + "px"; // Position below the button
-                filterPanel.style.left = (window.scrollX + rect.left) + "px"; // Align to the button's left
-
-                // Toggle visibility
-                if (filterPanel.style.display === 'none' || filterPanel.style.display === '') {
-                    filterPanel.style.display = 'block';
-                } else {
-                    filterPanel.style.display = 'none';
-                }
-            }
-
-            function updateAgeRange() {
-                const minAgeInput = document.getElementById('age_min');
-                const maxAgeInput = document.getElementById('age_max');
-
-                let minAge = parseInt(minAgeInput.value, 10);
-                let maxAge = parseInt(maxAgeInput.value, 10);
-
-                // Ensure the min age is not greater than the max age
-                if (minAge > maxAge) {
-                    minAge = maxAge;
-                    minAgeInput.value = minAge;
-                }
-
-                // Ensure the max age is not less than the min age
-                if (maxAge < minAge) {
-                    maxAge = minAge;
-                    maxAgeInput.value = maxAge;
-                }
-
-                document.getElementById('ageRangeLabel').textContent = `${minAge}-${maxAge}`;
-            }
+                        // Toggle visibility
+                        if (filterPanel.style.display === 'none' || filterPanel.style.display === '') {
+                            filterPanel.style.display = 'block';
+                        } else {
+                            filterPanel.style.display = 'none';
+                        }
+                    }
 
 
-            function clearFilters() {
-                document.getElementById('filterForm').reset();
-                // Optionally, hide the filter panel after clearing
-                document.getElementById('filterPanel').style.display = 'none';
-            }
+                    // Ensure age range validation
+                    function updateAgeRange() {
+                        const minAgeInput = document.getElementById('age_min');
+                        const maxAgeInput = document.getElementById('age_max');
 
-            document.addEventListener('click', function(event) {
-                const filterPanel = document.getElementById('filterPanel');
-                const filterButton = document.querySelector('.btn-outline-secondary');
+                        let minAge = parseInt(minAgeInput.value, 10);
+                        let maxAge = parseInt(maxAgeInput.value, 10);
 
-                // Check if the click was outside the filter panel and filter button
-                if (!filterPanel.contains(event.target) && !filterButton.contains(event.target)) {
-                    filterPanel.style.display = 'none';
-                }
-            });
-        </script>
+                        if (minAge > maxAge) {
+                            minAgeInput.value = maxAge;
+                        }
 
-        <!-- Resident Table -->
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="resident-table-container" tabindex="-1" id="residentTableContainer">
-                    <table class="table table-custom">
-                        <thead>
-                            <tr>
-                                <th>Name of Resident</th>
-                                <th>Age</th>
-                                <th>Gender</th>
-                                <th>Birthdate</th>
-                                <th>Contact Number</th>
-                                <th>Subdivision</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            // Pagination settings
-                            $limit = 10; // Number of records per page
-                            $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-                            $search_query = isset($_GET['search']) ? trim($_GET['search']) : '';
-                            $start_from = ($page - 1) * $limit;
+                        if (maxAge < minAge) {
+                            maxAgeInput.value = minAge;
+                        }
 
-                            // Check if the search query is numeric (for age search)
-                            $is_numeric_search = is_numeric($search_query);
+                        document.getElementById('ageRangeLabel').textContent = `${minAgeInput.value}-${maxAgeInput.value}`;
+                    }
 
-                            // Base query
-                            $query = "
-                    SELECT id, first_name, middle_name, last_name, dob, gender, contact_number, subdivision,
-                    FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) AS age
-                    FROM residents_records 
-                    WHERE 1 "; // Base condition to always be true for adding dynamic filters
+                    // Clear filters and reset the form
+                    function clearFilters() {
+                        document.getElementById('filterForm').reset();
+                        document.getElementById('filterPanel').style.display = 'none';
+                    }
 
-                            // Apply filters from GET parameters (add conditions to the query)
-                            if (!empty($_GET['first_name'])) {
-                                $first_name = $mysqlConn->real_escape_string($_GET['first_name']);
-                                $query .= " AND first_name LIKE '%$first_name%'";
-                            }
+                    // Close filter panel on outside click
+                    document.addEventListener('click', function(event) {
+                        const filterPanel = document.getElementById('filterPanel');
+                        const filterButton = document.getElementById('filterButton');
 
-                            if (!empty($_GET['middle_name'])) {
-                                $middle_name = $mysqlConn->real_escape_string($_GET['middle_name']);
-                                $query .= " AND middle_name LIKE '%$middle_name%'";
-                            }
+                        if (!filterPanel.contains(event.target) && event.target !== filterButton) {
+                            filterPanel.style.display = 'none';
+                        }
+                    });
+                </script>
 
-                            if (!empty($_GET['last_name'])) {
-                                $last_name = $mysqlConn->real_escape_string($_GET['last_name']);
-                                $query .= " AND last_name LIKE '%$last_name%'";
-                            }
+                <!-- Resident Table -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="resident-table-container" tabindex="-1" id="residentTableContainer">
+                            <table class="table table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>Name of Resident</th>
+                                        <th>Age</th>
+                                        <th>Gender</th>
+                                        <th>Birthdate</th>
+                                        <th>Contact Number</th>
+                                        <th>Subdivision</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                            <div class="table-body-scroll">
+                                <table class="table table-custom">
+                                    <tbody>
+                                        <?php
+                                        // Pagination settings
+                                        $limit = 10; // Number of records per page
+                                        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                                        $search_query = isset($_GET['search']) ? trim($_GET['search']) : '';
+                                        $start_from = ($page - 1) * $limit;
 
-                            if (!empty($_GET['age_min']) && !empty($_GET['age_max'])) {
-                                $age_min = (int)$_GET['age_min'];
-                                $age_max = (int)$_GET['age_max'];
+                                        // Check if the search query is numeric (for age search)
+                                        $is_numeric_search = is_numeric($search_query);
 
-                                if ($age_min <= $age_max) {
-                                    $query .= " AND age BETWEEN $age_min AND $age_max";
-                                }
-                            }
+                                        // Base query
+                                        $query = "
+                                    SELECT id, first_name, middle_name, last_name, dob, gender, contact_number, subdivision,
+                                    FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) AS age
+                                    FROM residents_records 
+                                    WHERE 1 "; // Base condition to always be true for adding dynamic filters
 
-                            if (!empty($_GET['gender'])) {
-                                $gender = $mysqlConn->real_escape_string($_GET['gender']);
-                                $query .= " AND gender = '$gender'";
-                            }
+                                        // Apply filters from GET parameters (add conditions to the query)
+                                        if (!empty($_GET['first_name'])) {
+                                            $first_name = $mysqlConn->real_escape_string($_GET['first_name']);
+                                            $query .= " AND first_name LIKE '%$first_name%'";
+                                        }
 
-                            if (!empty($_GET['dob_start']) && !empty($_GET['dob_end'])) {
-                                $dob_start = $mysqlConn->real_escape_string($_GET['dob_start']);
-                                $dob_end = $mysqlConn->real_escape_string($_GET['dob_end']);
-                                $query .= " AND dob BETWEEN '$dob_start' AND '$dob_end'";
-                            }
+                                        if (!empty($_GET['middle_name'])) {
+                                            $middle_name = $mysqlConn->real_escape_string($_GET['middle_name']);
+                                            $query .= " AND middle_name LIKE '%$middle_name%'";
+                                        }
 
-                            if (!empty($_GET['religion'])) {
-                                $religion = $mysqlConn->real_escape_string($_GET['religion']);
-                                $query .= " AND religion LIKE '%$religion%'";
-                            }
+                                        if (!empty($_GET['last_name'])) {
+                                            $last_name = $mysqlConn->real_escape_string($_GET['last_name']);
+                                            $query .= " AND last_name LIKE '%$last_name%'";
+                                        }
 
-                            if (isset($_GET['voterstatus']) && $_GET['voterstatus'] !== '') {
-                                $voterstatus = (int)$_GET['voterstatus'];
-                                $query .= " AND voterstatus = $voterstatus";
-                            }
+                                        if (!empty($_GET['age_min']) && !empty($_GET['age_max'])) {
+                                            $age_min = (int)$_GET['age_min'];
+                                            $age_max = (int)$_GET['age_max'];
 
-                            if (!empty($_GET['philhealth'])) {
-                                $philhealth = $mysqlConn->real_escape_string($_GET['philhealth']);
-                                $query .= " AND philhealth = '$philhealth'";
-                            }
+                                            if ($age_min <= $age_max) {
+                                                $query .= " AND age BETWEEN $age_min AND $age_max";
+                                            }
+                                        }
 
-                            if (!empty($_GET['osy'])) {
-                                $osy = $mysqlConn->real_escape_string($_GET['osy']);
-                                $query .= " AND osy = '$osy'";
-                            }
+                                        if (!empty($_GET['gender'])) {
+                                            $gender = $mysqlConn->real_escape_string($_GET['gender']);
+                                            $query .= " AND gender = '$gender'";
+                                        }
 
-                            if (!empty($_GET['als'])) {
-                                $als = $mysqlConn->real_escape_string($_GET['als']);
-                                $query .= " AND als = '$als'";
-                            }
+                                        if (!empty($_GET['dob_start']) && !empty($_GET['dob_end'])) {
+                                            $dob_start = $mysqlConn->real_escape_string($_GET['dob_start']);
+                                            $dob_end = $mysqlConn->real_escape_string($_GET['dob_end']);
+                                            $query .= " AND dob BETWEEN '$dob_start' AND '$dob_end'";
+                                        }
 
-                            if (!empty($_GET['immunization_status'])) {
-                                $immunization_status = $_GET['immunization_status'];
-                                if ($immunization_status === 'Yes') {
-                                    $query .= " AND immunization != ''";
-                                } elseif ($immunization_status === 'No') {
-                                    $query .= " AND immunization = ''";
-                                }
-                            }
+                                        if (!empty($_GET['religion'])) {
+                                            $religion = $mysqlConn->real_escape_string($_GET['religion']);
+                                            $query .= " AND religion LIKE '%$religion%'";
+                                        }
 
-                            if (!empty($_GET['pwd'])) {
-                                $pwd = $mysqlConn->real_escape_string($_GET['pwd']);
-                                $query .= " AND pwd = '$pwd'";
-                            }
+                                        if (isset($_GET['voterstatus']) && $_GET['voterstatus'] !== '') {
+                                            $voterstatus = (int)$_GET['voterstatus'];
+                                            $query .= " AND voterstatus = $voterstatus";
+                                        }
 
-                            if (!empty($_GET['teen_pregnancy'])) {
-                                $teen_pregnancy = $mysqlConn->real_escape_string($_GET['teen_pregnancy']);
-                                $query .= " AND teen_pregnancy = '$teen_pregnancy'";
-                            }
+                                        if (!empty($_GET['philhealth'])) {
+                                            $philhealth = $mysqlConn->real_escape_string($_GET['philhealth']);
+                                            $query .= " AND philhealth = '$philhealth'";
+                                        }
 
-                            if (!empty($_GET['type_of_delivery'])) {
-                                $type_of_delivery = $_GET['type_of_delivery'];
-                                if ($type_of_delivery === 'Normal') {
-                                    $query .= " AND type_of_delivery = 'Vaginal Delivery'";
-                                } elseif ($type_of_delivery === 'Cesarean') {
-                                    $query .= " AND type_of_delivery = 'Cesarean Section'";
-                                }
-                            }
+                                        if (!empty($_GET['osy'])) {
+                                            $osy = $mysqlConn->real_escape_string($_GET['osy']);
+                                            $query .= " AND osy = '$osy'";
+                                        }
 
-                            if (!empty($_GET['assisted_by'])) {
-                                $assisted_by = $_GET['assisted_by'];
-                                if ($assisted_by === 'Doctor') {
-                                    $query .= " AND assisted_by = 'Doctor'";
-                                } elseif ($assisted_by === 'Midwife') {
-                                    $query .= " AND assisted_by = 'Midwife'";
-                                } elseif ($assisted_by === 'Nurse') {
-                                    $query .= " AND assisted_by = 'Nurse'";
-                                }
-                            }
+                                        if (!empty($_GET['als'])) {
+                                            $als = $mysqlConn->real_escape_string($_GET['als']);
+                                            $query .= " AND als = '$als'";
+                                        }
 
-                            if (!empty($_GET['years_of_stay'])) {
-                                $years_of_stay = (int)$_GET['years_of_stay'];
-                                $query .= " AND years_of_stay >= $years_of_stay";
-                            }
+                                        if (!empty($_GET['immunization_status'])) {
+                                            $immunization_status = $_GET['immunization_status'];
+                                            if ($immunization_status === 'Yes') {
+                                                $query .= " AND immunization != ''";
+                                            } elseif ($immunization_status === 'No') {
+                                                $query .= " AND immunization = ''";
+                                            }
+                                        }
 
-                            if (!empty($_GET['business_owner'])) {
-                                $business_owner = $mysqlConn->real_escape_string($_GET['business_owner']);
-                                $query .= " AND business_owner = '$business_owner'";
-                            }
+                                        if (!empty($_GET['pwd'])) {
+                                            $pwd = $mysqlConn->real_escape_string($_GET['pwd']);
+                                            $query .= " AND pwd = '$pwd'";
+                                        }
 
-                            if (!empty($_GET['subdivision'])) {
-                                $subdivisions = explode(',', $mysqlConn->real_escape_string($_GET['subdivision']));
-                                $subdivisionList = "'" . implode("','", $subdivisions) . "'";
-                                $query .= " AND subdivision IN ($subdivisionList)";
-                            }
+                                        if (!empty($_GET['teen_pregnancy'])) {
+                                            $teen_pregnancy = $mysqlConn->real_escape_string($_GET['teen_pregnancy']);
+                                            $query .= " AND teen_pregnancy = '$teen_pregnancy'";
+                                        }
 
-                            // If a search query exists, split it into individual words
-                            if (!empty($search_query)) {
-                                $search_terms = explode(" ", $search_query);
+                                        if (!empty($_GET['type_of_delivery'])) {
+                                            $type_of_delivery = $_GET['type_of_delivery'];
+                                            if ($type_of_delivery === 'Normal') {
+                                                $query .= " AND type_of_delivery = 'Vaginal Delivery'";
+                                            } elseif ($type_of_delivery === 'Cesarean') {
+                                                $query .= " AND type_of_delivery = 'Cesarean Section'";
+                                            }
+                                        }
 
-                                // Build the search condition with each term matching any of the name fields
-                                $query .= " AND (";
-                                $first_term = true;
-                                foreach ($search_terms as $term) {
-                                    $term = $mysqlConn->real_escape_string($term);
-                                    if (!$first_term) {
-                                        $query .= " AND ";
-                                    }
-                                    $query .= "(first_name LIKE '%$term%' OR middle_name LIKE '%$term%' OR last_name LIKE '%$term%')";
-                                    $first_term = false;
-                                }
-                                $query .= " OR gender LIKE '%$search_query%' 
+                                        if (!empty($_GET['assisted_by'])) {
+                                            $assisted_by = $_GET['assisted_by'];
+                                            if ($assisted_by === 'Doctor') {
+                                                $query .= " AND assisted_by = 'Doctor'";
+                                            } elseif ($assisted_by === 'Midwife') {
+                                                $query .= " AND assisted_by = 'Midwife'";
+                                            } elseif ($assisted_by === 'Nurse') {
+                                                $query .= " AND assisted_by = 'Nurse'";
+                                            }
+                                        }
+
+                                        if (!empty($_GET['years_of_stay'])) {
+                                            $years_of_stay = (int)$_GET['years_of_stay'];
+                                            $query .= " AND years_of_stay >= $years_of_stay";
+                                        }
+
+                                        if (!empty($_GET['business_owner'])) {
+                                            $business_owner = $mysqlConn->real_escape_string($_GET['business_owner']);
+                                            $query .= " AND business_owner = '$business_owner'";
+                                        }
+
+                                        if (!empty($_GET['subdivision'])) {
+                                            $subdivisions = explode(',', $mysqlConn->real_escape_string($_GET['subdivision']));
+                                            $subdivisionList = "'" . implode("','", $subdivisions) . "'";
+                                            $query .= " AND subdivision IN ($subdivisionList)";
+                                        }
+
+                                        // If a search query exists, split it into individual words
+                                        if (!empty($search_query)) {
+                                            $search_terms = explode(" ", $search_query);
+
+                                            // Build the search condition with each term matching any of the name fields
+                                            $query .= " AND (";
+                                            $first_term = true;
+                                            foreach ($search_terms as $term) {
+                                                $term = $mysqlConn->real_escape_string($term);
+                                                if (!$first_term) {
+                                                    $query .= " AND ";
+                                                }
+                                                $query .= "(first_name LIKE '%$term%' OR middle_name LIKE '%$term%' OR last_name LIKE '%$term%')";
+                                                $first_term = false;
+                                            }
+                                            $query .= " OR gender LIKE '%$search_query%' 
                                     OR dob LIKE '%$search_query%' 
                                     OR contact_number LIKE '%$search_query%' 
                                     OR subdivision LIKE '%$search_query%') ";
-                            }
+                                        }
 
-                            // If the search query is numeric, include it in the age filter
-                            if ($is_numeric_search) {
-                                $query .= " OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
-                            }
+                                        // If the search query is numeric, include it in the age filter
+                                        if ($is_numeric_search) {
+                                            $query .= " OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
+                                        }
 
-                            // Add the ORDER BY clause to sort by name
-                            $query .= " ORDER BY last_name, first_name, middle_name";
+                                        // Add the ORDER BY clause to sort by name
+                                        $query .= " ORDER BY last_name, first_name, middle_name";
 
-                            // Add the pagination limit
-                            $query .= " LIMIT $start_from, $limit";
+                                        // Add the pagination limit
+                                        $query .= " LIMIT $start_from, $limit";
 
-                            // Execute the query
-                            $result = $mysqlConn->query($query);
+                                        // Execute the query
+                                        $result = $mysqlConn->query($query);
 
-                            // Loop through the records and display them
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    echo "<tr data-id='{$row['id']}' onclick='fetchResidentDetails({$row['id']})'>
-                        <td>{$row['last_name']}, {$row['first_name']} {$row['middle_name']}</td>
-                            <td>{$row['age']}</td>
-                            <td>{$row['gender']}</td>
-                            <td>{$row['dob']}</td>
-                            <td>{$row['contact_number']}</td>
-                            <td>{$row['subdivision']}</td>
-                            </tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='6'>No records found</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-
-                    <!-- Pagination and Info -->
-                    <div class="pagination-container">
-                        <div class="pagination-info">
-                            <?php
-                            // Fetch total records for "Showing X to Y of Z entries"
-                            $query_total = "SELECT COUNT(*) FROM residents_records 
-                    WHERE first_name LIKE '%$search_query%' 
-                    OR middle_name LIKE '%$search_query%' 
-                    OR last_name LIKE '%$search_query%' 
-                    OR dob LIKE '%$search_query%' 
-                    OR contact_number LIKE '%$search_query%' 
-                    OR subdivision LIKE '%$search_query%'";
-
-                            // If the search query is numeric, include it in the total count query
-                            if ($is_numeric_search) {
-                                $query_total .= " OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
-                            }
-
-                            $total_result = $mysqlConn->query($query_total);
-                            $total_records = $total_result->fetch_row()[0];
-                            $total_pages = ceil($total_records / $limit);
-                            $end = min($page * $limit, $total_records);
-                            $start = ($page - 1) * $limit + 1;
-                            echo "Showing $start to $end of $total_records entries";
-                            ?>
+                                        // Loop through the records and display them
+                                        if ($result->num_rows > 0) {
+                                            while ($row = $result->fetch_assoc()) {
+                                                echo "<tr data-id='{$row['id']}' onclick='fetchResidentDetails({$row['id']})'>
+                                            <td>{$row['last_name']}, {$row['first_name']} {$row['middle_name']}</td>
+                                            <td>{$row['age']}</td>
+                                            <td>{$row['gender']}</td>
+                                            <td>{$row['dob']}</td>
+                                            <td>{$row['contact_number']}</td>
+                                            <td>{$row['subdivision']}</td>
+                                            </tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='6'>No records found</td></tr>";
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <ul class="pagination">
-                            <?php
-                            // Generate pagination links with search query
-                            $total_pages = ceil($total_records / $limit);
 
-                            if ($page > 1) {
-                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . "&search=$search_query'>Previous</a></li>";
-                            }
+                        <!-- Pagination and Info -->
+                        <div class="pagination-container">
+                            <div class="pagination-info">
+                                <?php
+                                // Fetch total records for "Showing X to Y of Z entries"
+                                $query_total = "SELECT COUNT(*) FROM residents_records 
+                                    WHERE first_name LIKE '%$search_query%' 
+                                    OR middle_name LIKE '%$search_query%' 
+                                    OR last_name LIKE '%$search_query%' 
+                                    OR dob LIKE '%$search_query%' 
+                                    OR contact_number LIKE '%$search_query%' 
+                                    OR subdivision LIKE '%$search_query%'";
 
-                            for ($i = 1; $i <= $total_pages; $i++) {
-                                if ($i == $page) {
-                                    echo "<li class='page-item active'><a class='page-link' href='?page=$i&search=$search_query'>$i</a></li>";
-                                } else {
-                                    echo "<li class='page-item'><a class='page-link' href='?page=$i&search=$search_query'>$i</a></li>";
+                                // If the search query is numeric, include it in the total count query
+                                if ($is_numeric_search) {
+                                    $query_total .= " OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
                                 }
-                            }
 
-                            if ($page < $total_pages) {
-                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . "&search=$search_query'>Next</a></li>";
-                            }
-                            ?>
-                        </ul>
+                                $total_result = $mysqlConn->query($query_total);
+                                $total_records = $total_result->fetch_row()[0];
+                                $total_pages = ceil($total_records / $limit);
+                                $end = min($page * $limit, $total_records);
+                                $start = ($page - 1) * $limit + 1;
+                                echo "Showing $start to $end of $total_records entries";
+                                ?>
+                            </div>
+                            <ul class="pagination">
+                                <?php
+                                // Generate pagination links with search query
+                                $total_pages = ceil($total_records / $limit);
+
+                                if ($page > 1) {
+                                    echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . "&search=$search_query'>Previous</a></li>";
+                                }
+
+                                for ($i = 1; $i <= $total_pages; $i++) {
+                                    if ($i == $page) {
+                                        echo "<li class='page-item active'><a class='page-link' href='?page=$i&search=$search_query'>$i</a></li>";
+                                    } else {
+                                        echo "<li class='page-item'><a class='page-link' href='?page=$i&search=$search_query'>$i</a></li>";
+                                    }
+                                }
+
+                                if ($page < $total_pages) {
+                                    echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . "&search=$search_query'>Next</a></li>";
+                                }
+                                ?>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1284,8 +1302,10 @@ if ($result_total_blotter->num_rows > 0) {
             document.getElementById('autoFocusBtn').addEventListener('click', resetMapView);
         </script>
 
-    </div>
 
+    </div>
+    </div>
+    </div>
 </body>
 
 </html>
