@@ -105,126 +105,265 @@ function fetchUserRecords($conn)
             </div>
         </div>
 
-        <!-- Tabs Navigation -->
-        <ul class="nav nav-tabs" id="archiveTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="residents-tab" data-toggle="tab" href="#residents" role="tab" aria-controls="residents" aria-selected="true">Residents Records</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="blotter-tab" data-toggle="tab" href="#blotter" role="tab" aria-controls="blotter" aria-selected="false">Blotter Records</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="user-tab" data-toggle="tab" href="#user" role="tab" aria-controls="user" aria-selected="false">User Records</a>
-            </li>
-        </ul>
+        
+<!-- Tabs Navigation -->
+<ul class="nav nav-tabs" id="archiveTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="residents-tab" data-bs-toggle="tab" href="#residents" role="tab" aria-controls="residents" aria-selected="true">Residents Records</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="blotter-tab" data-bs-toggle="tab" href="#blotter" role="tab" aria-controls="blotter" aria-selected="false">Blotter Records</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="user-tab" data-bs-toggle="tab" href="#user" role="tab" aria-controls="user" aria-selected="false">User Records</a>
+    </li>
+</ul>
 
-        <!-- Tabs Content -->
-        <div class="tab-content" id="archiveTabContent">
-            <!-- Residents Tab -->
-            <div class="tab-pane fade show active" id="residents" role="tabpanel" aria-labelledby="residents-tab">
-                <div class="table-responsive">
-                    <table class="table table-bordered mt-3">
-                        <thead>
-                            <tr>
-                                <th>Name of Resident</th>
-                                <th>Age</th>
-                                <th>Gender</th>
-                                <th>Birthdate</th>
-                                <th>Contact Number</th>
-                                <th>Subdivision</th>
-                                <!-- Add other fields you want to display -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $residentsResult = fetchResidentsRecords($mysqlConn4); // Using the archive connection
-                            if ($residentsResult && $residentsResult->num_rows > 0) {
-                                while ($row = $residentsResult->fetch_assoc()) {
-                                    $residentID = $row['id']; // Assuming you have an 'id' column as the primary key
-                                    $firstName = addslashes($row['first_name']);
-                                    $middleName = addslashes($row['middle_name']);
-                                    $lastName = addslashes($row['last_name']);
-                                    // Now pass the resident ID to the JavaScript function
-                                    echo "<tr onclick='loadResidentDetails($residentID)' style='cursor:pointer'>
-                            <td>{$row['first_name']} {$row['middle_name']} {$row['last_name']}</td>
-                            <td>{$row['age']}</td>
-                            <td>{$row['gender']}</td>
-                            <td>{$row['dob']}</td>
-                            <td>{$row['contact_number']}</td>
-                            <td>{$row['subdivision']}</td>
-                        </tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='6'>No records found</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-
-            <!-- Blotter Tab -->
-            <div class="tab-pane fade" id="blotter" role="tabpanel" aria-labelledby="blotter-tab">
-                <div class="table-responsive">
-                    <table class="table table-bordered mt-3">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Incident</th>
-                                <th>Status</th>
-                                <!-- Add other fields you want to display -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $blotterResult = fetchBlotterRecords($mysqlConn4); // Archive connection
-                            if ($blotterResult && $blotterResult->num_rows > 0) {
-                                while ($row = $blotterResult->fetch_assoc()) {
-                                    echo "<tr onclick='loadBlotterDetails({$row['blotter_id']})' style='cursor:pointer'>
-                                        <td>{$row['blotter_id']}</td><td>{$row['type_incident']}</td><td>{$row['blotter_status']}</td></tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='3'>No records found</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- User Tab -->
-            <div class="tab-pane fade" id="user" role="tabpanel" aria-labelledby="user-tab">
-                <div class="table-responsive">
-                    <table class="table table-bordered mt-3">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>First Name</th>
-                                <th>Role</th>
-                                <!-- Add other fields you want to display -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $userResult = fetchUserRecords($mysqlConn4); // Archive connection
-                            if ($userResult && $userResult->num_rows > 0) {
-                                while ($row = $userResult->fetch_assoc()) {
-                                    echo "<tr class='user-row' data-id='{$row['user_id']}' style='cursor:pointer'>
-                                        <td>{$row['user_id']}</td><td>{$row['fname']}</td><td>{$row['role']}</td></tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='3'>No records found</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+<!-- Tabs Content -->
+<div class="tab-content" id="archiveTabContent">
+    <!-- Residents Tab -->
+    <div class="tab-pane fade show active" id="residents" role="tabpanel" aria-labelledby="residents-tab">
+        <!-- Search Bar -->
+        <div class="mt-3">
+            <input type="text" id="searchResidents" class="form-control" placeholder="Search Residents..." onkeyup="filterTable('residentsTable', this.value)">
         </div>
-
+        <div class="table-responsive">
+            <table class="table table-bordered mt-3" id="residentsTable">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAllResidents" class="select-all"></th>  <!-- Select All checkbox -->
+                        <th>Name of Resident</th>
+                        <th>Age</th>
+                        <th>Gender</th>
+                        <th>Birthdate</th>
+                        <th>Contact Number</th>
+                        <th>Subdivision</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $residentsResult = fetchResidentsRecords($mysqlConn4); // Using the archive connection
+                    if ($residentsResult && $residentsResult->num_rows > 0) {
+                        while ($row = $residentsResult->fetch_assoc()) {
+                            $residentID = $row['id'];
+                            echo "<tr>
+                                <td><input type='checkbox' class='selectRow' data-id='{$residentID}'></td> <!-- Row selection checkbox -->
+                                <td onclick='loadResidentDetails($residentID)' style='cursor:pointer'>{$row['first_name']} {$row['middle_name']} {$row['last_name']}</td>
+                                <td>{$row['age']}</td>
+                                <td>{$row['gender']}</td>
+                                <td>{$row['dob']}</td>
+                                <td>{$row['contact_number']}</td>
+                                <td>{$row['subdivision']}</td>
+                            </tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='7'>No records found</td></tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+        <button id="deleteSelectedResidentsBtn" class="btn btn-delete">Delete Selected</button>
     </div>
-    <!-- Resident Details Modal -->
+
+    <!-- Blotter Tab -->
+    <div class="tab-pane fade" id="blotter" role="tabpanel" aria-labelledby="blotter-tab">
+        <!-- Search Bar -->
+        <div class="mt-3">
+            <input type="text" id="searchBlotter" class="form-control" placeholder="Search Blotter..." onkeyup="filterTable('blotterTable', this.value)">
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered mt-3" id="blotterTable">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAllBlotter" class="select-all"></th> <!-- Select All checkbox -->
+                        <th>ID</th>
+                        <th>Incident</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $blotterResult = fetchBlotterRecords($mysqlConn4); // Archive connection
+                    if ($blotterResult && $blotterResult->num_rows > 0) {
+                        while ($row = $blotterResult->fetch_assoc()) {
+                            echo "<tr>
+                                <td><input type='checkbox' class='selectRow' data-id='{$row['blotter_id']}'></td> <!-- Row selection checkbox -->
+                                <td onclick='loadBlotterDetails({$row['blotter_id']})' style='cursor:pointer'>{$row['blotter_id']}</td>
+                                <td>{$row['type_incident']}</td>
+                                <td>{$row['blotter_status']}</td>
+                            </tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='4'>No records found</td></tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+        <button id="deleteSelectedBlotterBtn" class="btn btn-delete">Delete Selected</button>
+    </div>
+
+    <!-- User Tab -->
+    <div class="tab-pane fade" id="user" role="tabpanel" aria-labelledby="user-tab">
+        <!-- Search Bar -->
+        <div class="mt-3">
+            <input type="text" id="searchUser" class="form-control" placeholder="Search Users..." onkeyup="filterTable('userTable', this.value)">
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered mt-3" id="userTable">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAllUser" class="select-all"></th> <!-- Select All checkbox -->
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $userResult = fetchUserRecords($mysqlConn4); // Archive connection
+                    if ($userResult && $userResult->num_rows > 0) {
+                        while ($row = $userResult->fetch_assoc()) {
+                            echo "<tr>
+                                <td><input type='checkbox' class='selectRow' data-id='{$row['user_id']}'></td> <!-- Row selection checkbox -->
+                                <td>{$row['user_id']}</td>
+                                <td>{$row['fname']}</td>
+                                <td>{$row['role']}</td>
+                            </tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='4'>No records found</td></tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+        <button id="deleteSelectedUserBtn" class="btn btn-delete">Delete Selected</button>
+    </div>
+</div>
+
+<script>
+    // Search Functionality for Filtering Tables
+    function filterTable(tableId, query) {
+        const table = document.getElementById(tableId);
+        const rows = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+        query = query.toLowerCase();
+
+        for (let i = 0; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName("td");
+            let match = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j].textContent.toLowerCase().includes(query)) {
+                    match = true;
+                    break;
+                }
+            }
+            rows[i].style.display = match ? "" : "none";
+        }
+    }
+
+    // jQuery for Select All and Delete Selected Functions
+    $(document).ready(function() {
+        // Select All functionality for each tab
+        $('#selectAllResidents').click(function() {
+            $('.selectRow').prop('checked', $(this).prop('checked'));
+        });
+
+        $('#selectAllBlotter').click(function() {
+            $('.selectRow').prop('checked', $(this).prop('checked'));
+        });
+
+        $('#selectAllUser').click(function() {
+            $('.selectRow').prop('checked', $(this).prop('checked'));
+        });
+
+        // Delete Selected Residents
+        $('#deleteSelectedResidentsBtn').click(function() {
+            var selectedIDs = [];
+            $('.selectRow:checked').each(function() {
+                selectedIDs.push($(this).data('id'));
+            });
+
+            if (selectedIDs.length > 0) {
+                if (confirm("Are you sure you want to delete these residents?")) {
+                    deleteRecords(selectedIDs, 'residents_records');
+                }
+            } else {
+                alert("Please select at least one resident to delete.");
+            }
+        });
+
+        // Delete Selected Blotter Records
+        $('#deleteSelectedBlotterBtn').click(function() {
+            var selectedIDs = [];
+            $('.selectRow:checked').each(function() {
+                selectedIDs.push($(this).data('id'));
+            });
+
+            if (selectedIDs.length > 0) {
+                if (confirm("Are you sure you want to delete these blotter records?")) {
+                    deleteRecords(selectedIDs, 'archive_blotter');
+                }
+            } else {
+                alert("Please select at least one blotter record to delete.");
+            }
+        });
+
+        // Delete Selected Users
+        $('#deleteSelectedUserBtn').click(function() {
+            var selectedIDs = [];
+            $('.selectRow:checked').each(function() {
+                selectedIDs.push($(this).data('id'));
+            });
+
+            if (selectedIDs.length > 0) {
+                if (confirm("Are you sure you want to delete these users?")) {
+                    deleteRecords(selectedIDs, 'archive_user');
+                }
+            } else {
+                alert("Please select at least one user to delete.");
+            }
+        });
+    });
+
+    // This function will delete records from the selected table
+    function deleteRecords(selectedIDs, table) {
+        $.ajax({
+            type: 'POST',
+            url: '../src/components/deleteArchiveSelected.php', // The PHP file to handle the request
+            data: {
+                action: 'delete',
+                ids: selectedIDs,  // Send the selected IDs
+                table: table,       // Send the table name dynamically
+            },
+            success: function(response) {
+                alert(response.trim());  // Show a message with the response from PHP
+                location.reload(); // Reload the page to reflect changes
+            },
+            error: function(xhr, status, error) {
+                console.error("Error: " + error);  // Log any errors to the console
+            }
+        });
+    }
+
+    // Example usage: Call deleteRecords() based on the table you're working with
+    function deleteFromResidentsRecords(selectedIDs) {
+        deleteRecords(selectedIDs, 'residents_records');  // Call with residents_records table
+    }
+
+    function deleteFromArchiveBlotter(selectedIDs) {
+        deleteRecords(selectedIDs, 'archive_blotter');  // Call with archive_blotter table
+    }
+
+    function deleteFromArchiveUser(selectedIDs) {
+        deleteRecords(selectedIDs, 'archive_user');  // Call with archive_user table
+    }
+    
+</script>
+
+        <!-- Resident Details Modal -->
     <div class="modal fade" id="residentModal" tabindex="-1" aria-labelledby="residentModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -242,8 +381,7 @@ function fetchUserRecords($conn)
             </div>
         </div>
     </div>
-
-
+    
     <!-- Blotter Details Modal -->
     <div class="modal fade" id="blotterModal" tabindex="-1" role="dialog" aria-labelledby="blotterModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
