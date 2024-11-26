@@ -16,7 +16,7 @@ if (isset($_POST['id'])) {
 
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
-            $fullName = $row['first_name'] . " " . $row['middle_name'] . " " . $row['last_name'];
+            $fullName = $row['first_name'] . " " . $row['middle_name'] . " " . $row['last_name'] . " " . $row['suffix'];
 
             // Start landscape layout with Bootstrap grid
             echo "<h5 style='color: #1c2455;'>Resident Details</h5>";

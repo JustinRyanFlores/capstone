@@ -1096,17 +1096,21 @@ if ($result_total_blotter->num_rows > 0) {
                         weight: 4,
                         fillOpacity: 0.6
                     });
-
                     // Use stats data if available, otherwise display 'N/A'
                     const stats = subdivisionStats[subdivisionName] || {
                         totalResidents: 'N/A',
                         avgAge: 'N/A',
-                        genderRatio: 'N/A',
+                        genderDistribution: {
+                            male: 'N/A',
+                            female: 'N/A'
+                        },
                         philhealthPercentage: 'N/A',
                         totalVoters: 'N/A',
                         disabilityCount: 'N/A',
                         osyCount: 'N/A',
                         pwdCount: 'N/A',
+                        alsParticipationPercentage: 'N/A',
+                        teenPregnancyCount: 'N/A',
                         employmentPercentage: 'N/A',
                         ofwCount: 'N/A',
                         avgYearsOfStay: 'N/A'
@@ -1115,21 +1119,24 @@ if ($result_total_blotter->num_rows > 0) {
                     // Format and display the tooltip with updated stats
                     polygon.bindTooltip(
                         `<b>${subdivisionName}</b><br>
-                Total Residents: ${stats.totalResidents}<br>
-                Average Age: ${stats.avgAge}<br>
-                Gender Ratio (Males): ${stats.genderRatio}<br>
-                Philhealth Percentage: ${stats.philhealthPercentage}<br>
-                Registered Voters: ${stats.totalVoters}<br>
-                Disability Count: ${stats.disabilityCount}<br>
-                Out-of-School Youth (OSY): ${stats.osyCount}<br>
-                PWD Count: ${stats.pwdCount}<br>
-                Employment Percentage: ${stats.employmentPercentage}<br>
-                OFW Count: ${stats.ofwCount}<br>
-                Average Years of Stay: ${stats.avgYearsOfStay}`, {
+    Total Residents: ${stats.totalResidents}<br>
+    Average Age: ${stats.avgAge}<br>
+    Gender Distribution: Male: ${stats.genderDistribution.male}, Female: ${stats.genderDistribution.female}<br>
+    Philhealth Coverage: ${stats.philhealthPercentage}<br>
+    Registered Voters: ${stats.totalVoters}<br>
+    Disabilities: ${stats.disabilityCount}<br>
+    PWD Count: ${stats.pwdCount}<br>
+    OSY Count: ${stats.osyCount}<br>
+    ALS Participation: ${stats.alsParticipationPercentage}<br>
+    Teen Pregnancies: ${stats.teenPregnancyCount}<br>
+    Employment Rate: ${stats.employmentPercentage}<br>
+    OFW Count: ${stats.ofwCount}<br>
+    Average Years of Stay: ${stats.avgYearsOfStay}`, {
                             direction: 'top',
                             permanent: false
                         }
                     ).openTooltip();
+
                 });
 
                 polygon.on('mouseout', function() {
