@@ -142,7 +142,7 @@
     max-height: 350px;
     /* Set the desired height for the scrollable area */
     overflow-y: auto;
-    overflow-x: auto;
+    overflow-x: hidden;
     /* Prevent horizontal scrolling */
 }
 
