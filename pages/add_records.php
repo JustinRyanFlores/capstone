@@ -25,7 +25,7 @@ if (!$mysqlConn) {
 }
 
 // Initialize variables to hold form values
-$residentImage = $firstName = $middleName = $lastName = $dob = $year = $month = $day = $age = $gender = $contactNumber = $religion = $philhealth = $voterstatus =
+$residentImage = $firstName = $middleName = $lastName = $suffix = $dob = $year = $month = $day = $age = $gender = $contactNumber = $religion = $philhealth = $voterstatus =
     $streetAddress = $houseNumber = $subdivision = $barangay = $city = $province = $region = $zipCode =
     $motherFirstName = $motherMiddleName =  $motherLastName = $fatherFirstName = $fatherMiddleName = $fatherLastName =
     $outOfSchoolYouth = $alternativeLearningSystem = $educationalAttainment = $currentSchool = $illness =
@@ -57,6 +57,7 @@ if (isset($_GET['id'])) {
         $firstName = htmlspecialchars($row['first_name']);
         $middleName = htmlspecialchars($row['middle_name']);
         $lastName = htmlspecialchars($row['last_name']);
+        $suffix = htmlspecialchars($row['suffix']);
         $dob = htmlspecialchars($row['dob']);
         list($year, $month, $day) = explode('-', $dob);
         $age = calculateAge($dob);
@@ -183,24 +184,28 @@ $isEdit = isset($_GET['id']) ? true : false;
                     <div class="col-md-12">
                         <h5>Personal Information</h5>
                         <div class="row">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label for="firstName">First Name:</label>
-                                <input type="text" class="form-control" id="firstName" name="firstName" value="<?php echo $firstName; ?>">
+                                <input type="text" class="form-control" id="firstName" name="firstName" value="<?php echo $firstName; ?>" required>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label for="middleName">Middle Name:</label>
-                                <input type="text" class="form-control" id="middleName" name="middleName" value="<?php echo $middleName; ?>">
+                                <input type="text" class="form-control" id="middleName" name="middleName" value="<?php echo $middleName; ?>" required>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-3 mb-3">
                                 <label for="lastName">Last Name:</label>
-                                <input type="text" class="form-control" id="lastName" name="lastName" value="<?php echo $lastName; ?>">
+                                <input type="text" class="form-control" id="lastName" name="lastName" value="<?php echo $lastName; ?>" required>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="suffix">Suffix:</label>
+                                <input type="text" class="form-control" id="suffix" name="suffix" value="<?php echo $suffix; ?>">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label for="dob">Date of Birth:</label>
                                 <div class="input-group">
-                                    <select class="form-control" id="dobDay" name="dobDay" onchange="calculateAge()">
+                                    <select class="form-control" id="dobDay" name="dobDay" onchange="calculateAge()" required>
                                         <option value="">Day</option>
                                         <?php for ($d = 1; $d <= 31; $d++): ?>
                                             <option value="<?php echo str_pad($d, 2, '0', STR_PAD_LEFT); ?>" <?php echo ($d == intval($day)) ? 'selected' : ''; ?>>
@@ -208,7 +213,7 @@ $isEdit = isset($_GET['id']) ? true : false;
                                             </option>
                                         <?php endfor; ?>
                                     </select>
-                                    <select class="form-control" id="dobMonth" name="dobMonth" onchange="calculateAge()">
+                                    <select class="form-control" id="dobMonth" name="dobMonth" onchange="calculateAge()" required>
                                         <option value="">Month</option>
                                         <?php
                                         $months = [
@@ -231,7 +236,7 @@ $isEdit = isset($_GET['id']) ? true : false;
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
-                                    <select class="form-control" id="dobYear" name="dobYear" onchange="calculateAge()">
+                                    <select class="form-control" id="dobYear" name="dobYear" onchange="calculateAge()" required>
                                         <option value="">Year</option>
                                         <?php
                                         $currentYear = date('Y');
@@ -245,7 +250,7 @@ $isEdit = isset($_GET['id']) ? true : false;
                             </div>
                             <div class="col-md-2 mb-3">
                                 <label for="age">Age:</label>
-                                <input type="text" class="form-control" id="age" name="age" value="<?php echo $age; ?>">
+                                <input type="text" class="form-control" id="age" name="age" value="<?php echo $age; ?>" required>
                             </div>
 
                             <script>
@@ -280,7 +285,7 @@ $isEdit = isset($_GET['id']) ? true : false;
                             <div class="col-md-4 mb-3">
                                 <label for="contactNumber">Contact Number:</label>
                                 <input type="text" class="form-control" id="contactNumber" name="contactNumber"
-                                    pattern="\d{10,11}" title="Please enter a valid contact number." value="<?php echo $contactNumber; ?>" required>
+                                    pattern="\d{10,11}" title="Please enter a valid contact number." value="<?php echo $contactNumber; ?>" >
                                 <small class="form-text text-muted">Please enter a valid contact number with 10 or 11 digits.</small>
                             </div>
                         </div>
@@ -321,15 +326,15 @@ $isEdit = isset($_GET['id']) ? true : false;
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="streetAddress">Street Address:</label>
-                                <input type="text" class="form-control" id="streetAddress" name="streetAddress" value="<?php echo $streetAddress; ?>">
+                                <input type="text" class="form-control" id="streetAddress" name="streetAddress" value="<?php echo $streetAddress; ?>" required>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="houseNumber">House Number:</label>
-                                <input type="text" class="form-control" id="houseNumber" name="houseNumber" value="<?php echo $houseNumber; ?>">
+                                <input type="text" class="form-control" id="houseNumber" name="houseNumber" value="<?php echo $houseNumber; ?>" required>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="subdivision">Subdivision:</label>
-                                <select class="form-control" id="subdivision" name="subdivision">
+                                <select class="form-control" id="subdivision" name="subdivision" required>
                                     <option value="" <?php echo (empty($subdivision)) ? 'selected' : ''; ?>>-- Select Subdivision --</option>
                                     <option value="Purok-1" <?php echo ($subdivision === 'Purok-1') ? 'selected' : ''; ?>>Purok-1</option>
                                     <option value="Purok-2" <?php echo ($subdivision === 'Purok-2') ? 'selected' : ''; ?>>Purok-2</option>
@@ -348,28 +353,28 @@ $isEdit = isset($_GET['id']) ? true : false;
                         <div class="row">
                             <div class="col-md-3 mb-3">
                                 <label for="barangay">Barangay:</label>
-                                <select class="form-control" id="barangay" name="barangay">
+                                <select class="form-control" id="barangay" name="barangay" required>
                                     <option value="" <?php echo ($barangay === '') ? 'selected' : ''; ?>>Select Barangay</option>
                                     <!-- Barangay options will be loaded here -->
                                 </select>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="city">City:</label>
-                                <select class="form-control" id="city" name="city">
+                                <select class="form-control" id="city" name="city" required>
                                     <option value="" <?php echo ($city === '') ? 'selected' : ''; ?>>Select City/Municipality</option>
                                     <!-- City options will be loaded here -->
                                 </select>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="province">Province:</label>
-                                <select class="form-control" id="province" name="province">
+                                <select class="form-control" id="province" name="province" required>
                                     <option value="" <?php echo ($province === '') ? 'selected' : ''; ?>>Select Province</option>
                                     <!-- Province options will be loaded here -->
                                 </select>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="region">Region:</label>
-                                <select class="form-control" id="region" name="region">
+                                <select class="form-control" id="region" name="region" required>
                                     <option value="" <?php echo ($region === '') ? 'selected' : ''; ?>>Select Region</option>
                                     <!-- Region options will be loaded here -->
                                 </select>
@@ -495,29 +500,29 @@ $isEdit = isset($_GET['id']) ? true : false;
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
                                         <label for="motherFirstName">Mother First Name:</label>
-                                        <input type="text" class="form-control" id="motherFirstName" name="motherFirstName" value="<?php echo $motherFirstName; ?>">
+                                        <input type="text" class="form-control" id="motherFirstName" name="motherFirstName" value="<?php echo $motherFirstName; ?>" required>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="motherMiddleName">Mother Middle Name:</label>
-                                        <input type="text" class="form-control" id="motherMiddleName" name="motherMiddleName" value="<?php echo $motherMiddleName; ?>">
+                                        <input type="text" class="form-control" id="motherMiddleName" name="motherMiddleName" value="<?php echo $motherMiddleName; ?>" required>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="motherLastName">Mother Last Name:</label>
-                                        <input type="text" class="form-control" id="motherLastName" name="motherLastName" value="<?php echo $motherLastName; ?>">
+                                        <input type="text" class="form-control" id="motherLastName" name="motherLastName" value="<?php echo $motherLastName; ?>" required>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
                                         <label for="fatherFirstName">Father First Name:</label>
-                                        <input type="text" class="form-control" id="fatherFirstName" name="fatherFirstName" value="<?php echo $fatherFirstName; ?>">
+                                        <input type="text" class="form-control" id="fatherFirstName" name="fatherFirstName" value="<?php echo $fatherFirstName; ?>" required>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="fatherMiddleName">Father Middle Name:</label>
-                                        <input type="text" class="form-control" id="fatherMiddleName" name="fatherMiddleName" value="<?php echo $fatherMiddleName; ?>">
+                                        <input type="text" class="form-control" id="fatherMiddleName" name="fatherMiddleName" value="<?php echo $fatherMiddleName; ?>" required>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="fatherLastName">Father Last Name:</label>
-                                        <input type="text" class="form-control" id="fatherLastName" name="fatherLastName" value="<?php echo $fatherLastName; ?>">
+                                        <input type="text" class="form-control" id="fatherLastName" name="fatherLastName" value="<?php echo $fatherLastName; ?>" required>
                                     </div>
                                 </div>
                             </div>
@@ -580,7 +585,16 @@ $isEdit = isset($_GET['id']) ? true : false;
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="disability">Disability:</label>
-                                        <input type="text" class="form-control" id="disability" name="disability" value="<?php echo $disability; ?>">
+                                        <input list="disabilities" class="form-control" id="disability" name="disability" value="<?php echo $disability; ?>">
+                                        <datalist id="disabilities">
+                                            <option value="Physical Disability">
+                                            <option value="Sensory Disability">
+                                            <option value="Intellectual Disability">
+                                            <option value="Chronic Illness or Medical Condition">
+                                            <option value="Learning Disability">
+                                            <option value="Speech or Communication Disability">
+                                            <option value="Others">
+                                        </datalist>
                                     </div>
                                 </div>
                                 <div class="row">

@@ -82,7 +82,7 @@ if ($result_total_blotter->num_rows > 0) {
             /* Position the button absolutely */
             top: 5%;
             /* 5% from the top */
-            left: 95%;
+            left: 90%;
             /* 95% from the left */
             transform: translate(-50%, 0);
             /* Center horizontally */
@@ -107,7 +107,7 @@ if ($result_total_blotter->num_rows > 0) {
                 /* Smaller font size on smaller screens */
                 padding: 8px 12px;
                 /* Smaller padding */
-                left: 90%;
+                left: 85%;
                 /* Adjust left position */
             }
         }
@@ -118,7 +118,7 @@ if ($result_total_blotter->num_rows > 0) {
                 /* Even smaller font size */
                 padding: 6px 10px;
                 /* Smaller padding */
-                left: 85%;
+                left: 80%;
                 /* Further adjust left position */
             }
         }
@@ -488,6 +488,23 @@ if ($result_total_blotter->num_rows > 0) {
                                 <option value="0">No</option>
                             </select>
                         </div>
+                        <div class="mb-2">
+                            <label for="ofw">OFW</label>
+                            <select name="ofw" class="form-select">
+                                <option value="">Any</option>
+                                <option value="1">Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label for="employment">Employment</label>
+                            <select name="employment" class="form-select">
+                                <option value="">Any</option>
+                                <option value="Employed">Yes</option>
+                                <option value="Unemployed">No</option>
+                            </select>
+                        </div>
+
 
                         <!-- Button Group -->
                         <div class="d-flex flex-column mt-3">
@@ -586,7 +603,7 @@ if ($result_total_blotter->num_rows > 0) {
 
                                         // Base query
                                         $query = "
-                                    SELECT id, first_name, middle_name, last_name, dob, gender, contact_number, subdivision,
+                                    SELECT id, first_name, middle_name, last_name, suffix, dob, gender, contact_number, subdivision,
                                     FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) AS age
                                     FROM residents_records 
                                     WHERE 1 "; // Base condition to always be true for adding dynamic filters
@@ -605,6 +622,11 @@ if ($result_total_blotter->num_rows > 0) {
                                         if (!empty($_GET['last_name'])) {
                                             $last_name = $mysqlConn->real_escape_string($_GET['last_name']);
                                             $query .= " AND last_name LIKE '%$last_name%'";
+                                        }
+
+                                        if (!empty($_GET['suffix'])) {
+                                            $suffix = $mysqlConn->real_escape_string($_GET['suffix']);
+                                            $query .= " AND suffix LIKE '%$suffix%'";
                                         }
 
                                         if (!empty($_GET['age_min']) && !empty($_GET['age_max'])) {
@@ -701,6 +723,17 @@ if ($result_total_blotter->num_rows > 0) {
                                             $query .= " AND business_owner = '$business_owner'";
                                         }
 
+                                        if (!empty($_GET['ofw'])) {
+                                            $ofw = $mysqlConn->real_escape_string($_GET['ofw']);
+                                            $query .= " AND ofw = '$ofw'";
+                                        }
+
+                                        if (!empty($_GET['employment'])) {
+                                            $employment = $mysqlConn->real_escape_string($_GET['employment']);
+                                            $query .= " AND employment = '$employment'";
+                                        }
+
+
                                         if (!empty($_GET['subdivision'])) {
                                             $subdivisions = explode(',', $mysqlConn->real_escape_string($_GET['subdivision']));
                                             $subdivisionList = "'" . implode("','", $subdivisions) . "'";
@@ -719,7 +752,7 @@ if ($result_total_blotter->num_rows > 0) {
                                                 if (!$first_term) {
                                                     $query .= " AND ";
                                                 }
-                                                $query .= "(first_name LIKE '%$term%' OR middle_name LIKE '%$term%' OR last_name LIKE '%$term%')";
+                                                $query .= "(first_name LIKE '%$term%' OR middle_name LIKE '%$term%' OR last_name LIKE '%$term%' OR suffix LIKE '%$term%')";
                                                 $first_term = false;
                                             }
                                             $query .= " OR gender LIKE '%$search_query%' 
@@ -734,7 +767,7 @@ if ($result_total_blotter->num_rows > 0) {
                                         }
 
                                         // Add the ORDER BY clause to sort by name
-                                        $query .= " ORDER BY last_name, first_name, middle_name";
+                                        $query .= " ORDER BY first_name, middle_name, last_name, suffix";
 
                                         // Add the pagination limit
                                         $query .= " LIMIT $start_from, $limit";
@@ -746,7 +779,7 @@ if ($result_total_blotter->num_rows > 0) {
                                         if ($result->num_rows > 0) {
                                             while ($row = $result->fetch_assoc()) {
                                                 echo "<tr data-id='{$row['id']}' onclick='fetchResidentDetails({$row['id']})'>
-                                            <td>{$row['last_name']}, {$row['first_name']} {$row['middle_name']}</td>
+                                            <td>{$row['first_name']} {$row['middle_name']} {$row['last_name']} {$row['suffix']}</td>
                                             <td>{$row['age']}</td>
                                             <td>{$row['gender']}</td>
                                             <td>{$row['dob']}</td>
@@ -772,6 +805,7 @@ if ($result_total_blotter->num_rows > 0) {
                                     WHERE first_name LIKE '%$search_query%' 
                                     OR middle_name LIKE '%$search_query%' 
                                     OR last_name LIKE '%$search_query%' 
+                                    OR suffix LIKE '%$search_query%' 
                                     OR dob LIKE '%$search_query%' 
                                     OR contact_number LIKE '%$search_query%' 
                                     OR subdivision LIKE '%$search_query%'";
@@ -791,26 +825,42 @@ if ($result_total_blotter->num_rows > 0) {
                             </div>
                             <ul class="pagination">
                                 <?php
-                                // Generate pagination links with search query
-                                $total_pages = ceil($total_records / $limit);
+                                // Build a query string with all current filters
+                                $query_string = $_GET; // Get all current GET parameters
+                                unset($query_string['page']); // Remove 'page' to handle it dynamically
+                                $query_string = http_build_query($query_string); // Convert to query string format
 
+                                // Define the maximum number of pages to show
+                                $max_visible_pages = 5;
+
+                                // Calculate start and end page for the pagination range
+                                $start_page = max(1, $page - floor($max_visible_pages / 2));
+                                $end_page = min($total_pages, $start_page + $max_visible_pages - 1);
+
+                                // Adjust start_page if near the end
+                                $start_page = max(1, $end_page - $max_visible_pages + 1);
+
+                                // Generate Previous button
                                 if ($page > 1) {
-                                    echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . "&search=$search_query'>Previous</a></li>";
+                                    echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . "&$query_string'>Previous</a></li>";
                                 }
 
-                                for ($i = 1; $i <= $total_pages; $i++) {
+                                // Generate page links
+                                for ($i = $start_page; $i <= $end_page; $i++) {
                                     if ($i == $page) {
-                                        echo "<li class='page-item active'><a class='page-link' href='?page=$i&search=$search_query'>$i</a></li>";
+                                        echo "<li class='page-item active'><a class='page-link' href='?page=$i&$query_string'>$i</a></li>";
                                     } else {
-                                        echo "<li class='page-item'><a class='page-link' href='?page=$i&search=$search_query'>$i</a></li>";
+                                        echo "<li class='page-item'><a class='page-link' href='?page=$i&$query_string'>$i</a></li>";
                                     }
                                 }
 
+                                // Generate Next button
                                 if ($page < $total_pages) {
-                                    echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . "&search=$search_query'>Next</a></li>";
+                                    echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . "&$query_string'>Next</a></li>";
                                 }
                                 ?>
                             </ul>
+
                         </div>
                     </div>
                 </div>
@@ -931,7 +981,7 @@ if ($result_total_blotter->num_rows > 0) {
                                             residentId: selectedResidentId
                                         },
                                         success: function(response) {
-                                            alert(response); // Show success or error message
+                                            alert(response.trim()); // Show success or error message
 
                                             console.log("Page will reload now");
                                             $('#residentDetailsModal').modal('hide'); // Close the modal
@@ -1011,10 +1061,21 @@ if ($result_total_blotter->num_rows > 0) {
             };
 
             function setSubdivision(subdivision) {
-                document.getElementById('subdivision').value = subdivision;
-                document.getElementById('subdivisionLabel').textContent = subdivision;
-                document.getElementById('selectedSubdivision').style.display = 'block';
+                // Get the input and label elements
+                const subdivisionInput = document.getElementById('subdivision');
+                const subdivisionLabel = document.getElementById('subdivisionLabel');
+                const selectedSubdivision = document.getElementById('selectedSubdivision');
+
+                // Update the input field and label
+                subdivisionInput.value = subdivision;
+                subdivisionLabel.textContent = subdivision;
+                selectedSubdivision.style.display = 'block';
+
+                // Debugging output
+                console.log("Subdivision value set to:", subdivisionInput.value);
+                console.log("Subdivision label updated to:", subdivisionLabel.textContent);
             }
+
 
             var map = L.map('map').setView([14.162525303855341, 121.11590938129102], 15);
 
@@ -1054,17 +1115,17 @@ if ($result_total_blotter->num_rows > 0) {
                     // Format and display the tooltip with updated stats
                     polygon.bindTooltip(
                         `<b>${subdivisionName}</b><br>
-            Total Residents: ${stats.totalResidents}<br>
-            Average Age: ${stats.avgAge}<br>
-            Gender Ratio (Males): ${stats.genderRatio}<br>
-            Philhealth Percentage: ${stats.philhealthPercentage}<br>
-            Registered Voters: ${stats.totalVoters}<br>
-            Disability Count: ${stats.disabilityCount}<br>
-            Out-of-School Youth (OSY): ${stats.osyCount}<br>
-            PWD Count: ${stats.pwdCount}<br>
-            Employment Percentage: ${stats.employmentPercentage}<br>
-            OFW Count: ${stats.ofwCount}<br>
-            Average Years of Stay: ${stats.avgYearsOfStay}`, {
+                Total Residents: ${stats.totalResidents}<br>
+                Average Age: ${stats.avgAge}<br>
+                Gender Ratio (Males): ${stats.genderRatio}<br>
+                Philhealth Percentage: ${stats.philhealthPercentage}<br>
+                Registered Voters: ${stats.totalVoters}<br>
+                Disability Count: ${stats.disabilityCount}<br>
+                Out-of-School Youth (OSY): ${stats.osyCount}<br>
+                PWD Count: ${stats.pwdCount}<br>
+                Employment Percentage: ${stats.employmentPercentage}<br>
+                OFW Count: ${stats.ofwCount}<br>
+                Average Years of Stay: ${stats.avgYearsOfStay}`, {
                             direction: 'top',
                             permanent: false
                         }
@@ -1105,8 +1166,13 @@ if ($result_total_blotter->num_rows > 0) {
             }).openTooltip();
 
             sv.on('click', function() {
+                // Set the selected subdivision in localStorage
+                localStorage.setItem('selectedSubdivision', 'Southville 6');
+                // Redirect to the URL with the selected subdivision as a query parameter
                 window.location.href = window.location.pathname + "?subdivision=Southville 6";
             });
+
+
 
             addHoverTooltip(sv, "Southville 6");
 
@@ -1127,7 +1193,9 @@ if ($result_total_blotter->num_rows > 0) {
             }).openTooltip();
 
             p1.on('click', function() {
-                setSubdivision('Purok-1');
+                // Set the selected subdivision in localStorage
+                localStorage.setItem('selectedSubdivision', 'Purok-1');
+                // Redirect to the URL with the selected subdivision as a query parameter
                 window.location.href = window.location.pathname + "?subdivision=Purok-1";
             });
 
@@ -1152,6 +1220,9 @@ if ($result_total_blotter->num_rows > 0) {
             }).openTooltip();
 
             p4.on('click', function() {
+                // Set the selected subdivision in localStorage
+                localStorage.setItem('selectedSubdivision', 'Purok-4');
+                // Redirect to the URL with the selected subdivision as a query parameter
                 window.location.href = window.location.pathname + "?subdivision=Purok-4";
             });
 
@@ -1176,6 +1247,9 @@ if ($result_total_blotter->num_rows > 0) {
             }).openTooltip();
 
             mvv.on('click', function() {
+                // Set the selected subdivision in localStorage
+                localStorage.setItem('selectedSubdivision', 'Mother Ignacia,Villa Javier,Villa Andrea');
+                // Redirect to the URL with the selected subdivision as a query parameter
                 window.location.href = window.location.pathname + "?subdivision=Mother Ignacia,Villa Javier,Villa Andrea";
             });
 
@@ -1201,6 +1275,8 @@ if ($result_total_blotter->num_rows > 0) {
             }).openTooltip();
 
             cv5.on('click', function() {
+                // Set the selected subdivision in localStorage
+                localStorage.setItem('selectedSubdivision', 'Calambeño Ville 5');
                 // Redirect to the URL with the selected subdivision as a query parameter
                 window.location.href = window.location.pathname + "?subdivision=Calambeño Ville 5";
             });
@@ -1225,9 +1301,10 @@ if ($result_total_blotter->num_rows > 0) {
             }).openTooltip();
 
             p2.on('click', function() {
+                // Set the selected subdivision in localStorage
+                localStorage.setItem('selectedSubdivision', 'Purok-2');
                 // Redirect to the URL with the selected subdivision as a query parameter
                 window.location.href = window.location.pathname + "?subdivision=Purok-2";
-
             });
 
             addHoverTooltip(p2, "Purok-2");
@@ -1282,6 +1359,8 @@ if ($result_total_blotter->num_rows > 0) {
             }).openTooltip();
 
             p3.on('click', function() {
+                // Set the selected subdivision in localStorage
+                localStorage.setItem('selectedSubdivision', 'Purok-3');
                 // Redirect to the URL with the selected subdivision as a query parameter
                 window.location.href = window.location.pathname + "?subdivision=Purok-3";
             });
@@ -1300,6 +1379,22 @@ if ($result_total_blotter->num_rows > 0) {
 
             // Add event listener to the button
             document.getElementById('autoFocusBtn').addEventListener('click', resetMapView);
+
+            // On page load, retrieve the subdivision from localStorage
+            document.addEventListener('DOMContentLoaded', function() {
+                const savedSubdivision = localStorage.getItem('selectedSubdivision');
+                if (savedSubdivision) {
+                    // Set the subdivision in the UI or perform actions as needed
+                    setSubdivision(savedSubdivision);
+
+                    // Optional: Update the URL to reflect the stored subdivision
+                    const url = new URL(window.location.href);
+                    if (url.searchParams.get('subdivision') !== savedSubdivision) {
+                        url.searchParams.set('subdivision', savedSubdivision);
+                        window.history.replaceState(null, '', url.toString());
+                    }
+                }
+            });
         </script>
 
 
