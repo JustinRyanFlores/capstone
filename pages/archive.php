@@ -88,7 +88,7 @@ function fetchUserRecords($conn)
 </head>
 
 <body>
-    <?php include '/xampp/htdocs/system/src/components/moderator_navbar.php'; ?>
+    <?php include '../src/components/moderator_navbar.php'; ?>
 
     <div class="container-fluid main-content">
         <div class="row">

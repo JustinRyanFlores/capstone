@@ -435,6 +435,7 @@ $mysqlConn->close();
 
             var control = new google.visualization.ControlWrapper({
                 controlType: 'ChartRangeFilter',
+                curveType: 'function',
                 containerId: 'filter_div',
                 options: {
                     filterColumnLabel: 'Date',

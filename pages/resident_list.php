@@ -240,7 +240,9 @@ if (isset($_GET['search'])) {
                         <div class="button-container">
                             <button id="editButton" class="btn btn-custom" onclick="editResident(<?php echo $residentId; ?>)">Edit</button>
                             <button class="btn btn-custom" onclick="printResidentDetails()">Print</button>
-                            <button class="btn btn-delete" onclick="deleteResident()">Delete</button>
+                            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Admin'): ?>
+                                <button class="btn btn-delete" onclick="deleteResident()">Archive</button>
+                            <?php endif; ?>
                             <button class="btn btn-secondary" data-bs-dismiss="modal" onclick="cancelAction()">Cancel</button>
                         </div>
                     </div>

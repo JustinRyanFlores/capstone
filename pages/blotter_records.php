@@ -249,7 +249,9 @@ if (isset($_GET['search'])) {
                         <div class="mb-3 text-end">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Exit</button>
                             <button type="button" class="btn btn-success" id="markDoneBtn" style="display: none;">Mark as Done</button>
-                            <button type="button" class="btn btn-danger" id="deleteBtn">Delete</button>
+                            <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'Admin'): ?>
+                                <button type="button" class="btn btn-danger" id="deleteBtn">Archive</button>
+                            <?php endif; ?>
                         </div>
                     </form>
                 </div>
