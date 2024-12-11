@@ -45,16 +45,16 @@ if (isset($_GET['search'])) {
             color: #610000;
         }
 
-    .btn-custom {
-        background-color: #1c2455;
-        border-color: #1c2455;
-        color: #f1f1f1;
-    }
+        .btn-custom {
+            background-color: #1c2455;
+            border-color: #1c2455;
+            color: #f1f1f1;
+        }
 
-    .btn-custom:hover {
-        background-color: #f1f1f1;
-        color: #141a3f;
-    }
+        .btn-custom:hover {
+            background-color: #f1f1f1;
+            color: #141a3f;
+        }
     </style>
 </head>
 
@@ -116,7 +116,7 @@ if (isset($_GET['search'])) {
 
                             // Build the SQL query for fetching data
                             $query = "
-                        SELECT id, first_name, middle_name, last_name, dob, gender, contact_number, subdivision,
+                        SELECT id, first_name, middle_name, last_name, suffix, dob, gender, contact_number, subdivision,
                         FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) AS age
                         FROM residents_records 
                         WHERE (";
@@ -127,7 +127,7 @@ if (isset($_GET['search'])) {
                                     $query .= " AND ";
                                 }
                                 // Check if the concatenated full name contains the term
-                                $query .= "CONCAT_WS(' ', first_name, middle_name, last_name) LIKE '%$term%'";
+                                $query .= "CONCAT_WS(' ', first_name, middle_name, last_name, suffix) LIKE '%$term%'";
                             }
 
                             $query .= " OR dob LIKE '%$search_query%' 
@@ -146,7 +146,7 @@ if (isset($_GET['search'])) {
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
                                     echo "<tr data-id='{$row['id']}' onclick='fetchResidentDetails({$row['id']})'>
-                                <td>{$row['first_name']} {$row['middle_name']} {$row['last_name']}</td>
+                                <td>{$row['first_name']} {$row['middle_name']} {$row['last_name']} {$row['suffix']}</td>
                                 <td>{$row['age']}</td>
                                 <td>{$row['gender']}</td>
                                 <td>{$row['dob']}</td>
@@ -171,7 +171,7 @@ if (isset($_GET['search'])) {
                                 if ($index > 0) {
                                     $query_total .= " AND ";
                                 }
-                                $query_total .= "CONCAT_WS(' ', first_name, middle_name, last_name) LIKE '%$term%'";
+                                $query_total .= "CONCAT_WS(' ', first_name, middle_name, last_name, suffix) LIKE '%$term%'";
                             }
                             $query_total .= " OR dob LIKE '%$search_query%' 
                                       OR contact_number LIKE '%$search_query%' 
@@ -197,11 +197,17 @@ if (isset($_GET['search'])) {
                             // Generate pagination links with search query
                             $total_pages = ceil($total_records / $limit);
 
+                            // Calculate the start and end page numbers for displaying 5 page links
+                            $start = max(1, $page - 2);  // Start from 2 pages before the current page
+                            $end = min($total_pages, $page + 2);  // End at 2 pages after the current page
+
+                            // Display "Previous" button
                             if ($page > 1) {
                                 echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . "&search=$search_query'>Previous</a></li>";
                             }
 
-                            for ($i = 1; $i <= $total_pages; $i++) {
+                            // Loop through and display the page links
+                            for ($i = $start; $i <= $end; $i++) {
                                 if ($i == $page) {
                                     echo "<li class='page-item active'><a class='page-link' href='?page=$i&search=$search_query'>$i</a></li>";
                                 } else {
@@ -209,6 +215,7 @@ if (isset($_GET['search'])) {
                                 }
                             }
 
+                            // Display "Next" button
                             if ($page < $total_pages) {
                                 echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . "&search=$search_query'>Next</a></li>";
                             }
@@ -347,7 +354,7 @@ if (isset($_GET['search'])) {
                             residentId: selectedResidentId
                         },
                         success: function(response) {
-                            alert(response); // Show success or error message
+                            alert(response.trim()); // Show success or error message
 
                             console.log("Page will reload now");
                             $('#residentDetailsModal').modal('hide'); // Close the modal

@@ -11,6 +11,7 @@ if ($mysqlConn->connect_error) {
 $firstName = htmlspecialchars($_POST['firstName'] ?? '', ENT_QUOTES);
 $middleName = htmlspecialchars($_POST['middleName'] ?? '', ENT_QUOTES);
 $lastName = htmlspecialchars($_POST['lastName'] ?? '', ENT_QUOTES);
+$suffix = htmlspecialchars($_POST['suffix'] ?? '', ENT_QUOTES);
 $dobDay = htmlspecialchars($_POST['dobDay'] ?? '', ENT_QUOTES);
 $dobMonth = htmlspecialchars($_POST['dobMonth'] ?? '', ENT_QUOTES);
 $dobYear = htmlspecialchars($_POST['dobYear'] ?? '', ENT_QUOTES);
@@ -92,13 +93,13 @@ if (isset($_FILES['update_image']) && $_FILES['update_image']['error'] == 0) {
 
 // Prepare SQL statement
 $sql = "INSERT INTO residents_records 
-        (first_name, middle_name, last_name, dob, age, gender, contact_number, religion, philhealth, voterstatus,
+        (first_name, middle_name, last_name, suffix, dob, age, gender, contact_number, religion, philhealth, voterstatus,
         street_address, house_number, subdivision, barangay, city, province, region, zip_code, 
         mother_first_name, mother_middle_name, mother_last_name, father_first_name, father_middle_name, father_last_name, 
         osy, als, educational_attainment, current_school, illness, medication, disability, immunization, pwd, 
         teen_pregnancy, type_of_delivery, assisted_by, organization, cases_violated, years_of_stay, business_owner, ofw, employment, residents_img) 
         VALUES 
-        ('$firstName', '$middleName', '$lastName', '$dob', '$age', '$gender', '$contactNumber', '$religion', '$philhealth', '$voterstatus',
+        ('$firstName', '$middleName', '$lastName', '$suffix', '$dob', '$age', '$gender', '$contactNumber', '$religion', '$philhealth', '$voterstatus',
         '$streetAddress', '$houseNumber', '$subdivision', '$barangay', '$city', '$province', '$region', '$zipCode', 
         '$motherFirstName', '$motherMiddleName', '$motherLastName', '$fatherFirstName', '$fatherMiddleName', '$fatherLastName', 
         '$osy', '$als', '$educationalAttainment', '$currentSchool', '$illness', '$medication', '$disability', '$immunization', '$pwd',  

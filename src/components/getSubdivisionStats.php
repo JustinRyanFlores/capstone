@@ -11,7 +11,7 @@ if (!$mysqlConn) {
 }
 
 try {
-    // Expanded query with additional statistics
+    // Expanded query with additional insights
     $query = "
         SELECT 
             CASE 
@@ -22,26 +22,24 @@ try {
             COUNT(*) AS totalResidents, 
             AVG(age) AS avgAge,
             
-            SUM(CASE WHEN gender = 'M' THEN 1 ELSE 0 END) / COUNT(*) * 100 AS genderRatio,
+            SUM(CASE WHEN gender = 'Male' THEN 1 ELSE 0 END) / COUNT(*) * 100 AS malePercentage,
+            SUM(CASE WHEN gender = 'Female' THEN 1 ELSE 0 END) / COUNT(*) * 100 AS femalePercentage,
+
+            
             SUM(CASE WHEN philhealth IS NOT NULL AND philhealth <> '' THEN 1 ELSE 0 END) / COUNT(*) * 100 AS philhealthPercentage,
             SUM(CASE WHEN voterstatus = 1 THEN 1 ELSE 0 END) AS totalVoters,
             
-            -- Count of residents with disabilities
             SUM(CASE WHEN disability IS NOT NULL AND disability <> '' THEN 1 ELSE 0 END) AS disabilityCount,
-            
-            -- Count of residents who are out-of-school youth (OSY)
-            SUM(CASE WHEN osy = 1 THEN 1 ELSE 0 END) AS osyCount,
-            
-            -- Count of residents who are persons with disabilities (PWD)
             SUM(CASE WHEN pwd = 1 THEN 1 ELSE 0 END) AS pwdCount,
             
-            -- Percentage of residents employed
-            SUM(CASE WHEN employment IS NOT NULL AND employment <> '' THEN 1 ELSE 0 END) / COUNT(*) * 100 AS employmentPercentage,
+            SUM(CASE WHEN osy = 1 THEN 1 ELSE 0 END) AS osyCount,
+            SUM(CASE WHEN als IS NOT NULL AND als <> '' THEN 1 ELSE 0 END) / COUNT(*) * 100 AS alsParticipationPercentage,
             
-            -- Count of OFW (Overseas Filipino Workers)
+            SUM(CASE WHEN teen_pregnancy = 1 THEN 1 ELSE 0 END) AS teenPregnancyCount,
+            
+            SUM(CASE WHEN employment = 'Employed' THEN 1 ELSE 0 END) / COUNT(*) * 100 AS employmentPercentage,
             SUM(CASE WHEN ofw = 1 THEN 1 ELSE 0 END) AS ofwCount,
             
-            -- Average years of stay
             AVG(years_of_stay) AS avgYearsOfStay
 
         FROM 
@@ -59,12 +57,17 @@ try {
         $subdivisionStats[$row['combinedSubdivision']] = [
             'totalResidents' => (int) $row['totalResidents'],
             'avgAge' => round($row['avgAge'], 1),
-            'genderRatio' => round($row['genderRatio'], 1) . '%',
+            'genderDistribution' => [
+                'male' => round($row['malePercentage'], 1) . '%',
+                'female' => round($row['femalePercentage'], 1) . '%'
+            ],
             'philhealthPercentage' => round($row['philhealthPercentage'], 1) . '%',
             'totalVoters' => (int) $row['totalVoters'],
             'disabilityCount' => (int) $row['disabilityCount'],
-            'osyCount' => (int) $row['osyCount'],
             'pwdCount' => (int) $row['pwdCount'],
+            'osyCount' => (int) $row['osyCount'],
+            'alsParticipationPercentage' => round($row['alsParticipationPercentage'], 1) . '%',
+            'teenPregnancyCount' => (int) $row['teenPregnancyCount'],
             'employmentPercentage' => round($row['employmentPercentage'], 1) . '%',
             'ofwCount' => (int) $row['ofwCount'],
             'avgYearsOfStay' => round($row['avgYearsOfStay'], 1)
@@ -72,11 +75,9 @@ try {
     }
 
     echo json_encode($subdivisionStats);
-
 } catch (Exception $e) {
-    echo json_encode(['error' => 'Failed to fetch data']);
+    echo json_encode(['error' => 'Failed to fetch data: ' . $e->getMessage()]);
 }
 
 $stmt->close();
 $mysqlConn->close();
-?>

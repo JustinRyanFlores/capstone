@@ -247,25 +247,6 @@
     .custom-container h5 {
         font-size: 16px;
     }
-
-}
-
-@media (max-width: 765px) {
-    .custom-container {
-        padding: 10px;
-        margin: 5px 0;
-        height: 150px;
-        width: 170px;
-        padding: 30px;
-    }
-
-    .custom-container h1 {
-        font-size: 20px;
-    }
-
-    .custom-container h5 {
-        font-size: 16px;
-    }
 }
 
 @media (max-width: 585px) {

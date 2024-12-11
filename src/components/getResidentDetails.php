@@ -108,7 +108,14 @@ if ($row = $result->fetch_assoc()) {
                             <img src="<?php echo $imagePath; ?>" alt="Resident Image" class="img-fluid" style="width: 180px; height: 180px; object-fit: cover; border: 2px solid black;">
                         </div>
                         <div class="col-md-8">
-                            <h3 class="text-primary"><?php echo htmlspecialchars($row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']); ?></h3>
+                            <h3 class="text-primary">
+                                <?php
+                                echo htmlspecialchars($row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']);
+                                if (!empty($row['suffix'])) {
+                                    echo ' ' . htmlspecialchars($row['suffix']);
+                                }
+                                ?>
+                            </h3>
                             <p><strong>Date of Birth:</strong> <?php echo htmlspecialchars($row['dob']); ?></p>
                             <p><strong>Age:</strong> <?php echo $age; ?></p> <!-- Dynamically calculated age -->
                             <p><strong>Gender:</strong> <?php echo htmlspecialchars($row['gender']); ?></p>
