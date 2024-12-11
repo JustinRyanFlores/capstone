@@ -281,9 +281,7 @@ include("../src/configs/connection.php");
                     </div>
                     <div class="mb-3 text-end">
                         <button type="button" class="btn btn-secondary" id="exitModalUser" data-bs-dismiss="modal">Exit</button>
-                        <button type="button" class="btn btn-danger" id="deleteBtn">Archive
-                            
-                        </button>
+                        <button type="button" class="btn btn-danger" id="deleteBtn">Archive</button>
                     </div>
                 </form>
             </div>
