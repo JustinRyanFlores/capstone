@@ -133,7 +133,7 @@ if ($result_total_blotter->num_rows > 0) {
 
         #map {
             height: 500px;
-            width: 70%;
+            width: 50%;
             margin-top: 20px;
             border: 4px solid #1c2455;
             /* Border color */
@@ -301,7 +301,7 @@ if ($result_total_blotter->num_rows > 0) {
         </div>
         <div class="row">
             <!-- GIS Map (Left Column) -->
-            <div class="col-lg-7 col-md-7 col-sm-12">
+            <div class="col-lg-5 col-md-7 col-sm-12">
                 <div class="position-relative shadow rounded">
                     <div id="map" class="w-100" style="height: 600px; background-color: #eef;"></div>
                     <button id="autoFocusBtn" class="btn btn-dark position-absolute bottom-0 end-0 m-3">
@@ -311,18 +311,21 @@ if ($result_total_blotter->num_rows > 0) {
             </div>
 
 
-            <div class="col-lg-5 col-md-5 col-sm-12" style="margin-top: -25px;">
+            <div class="col-lg-7 col-md-5 col-sm-12" style="margin-top: -25px;">
                 <div class="row mt-4 d-flex justify-content-center">
                     <div class="col-12 col-md-11 m-3 bg-light text-white p-2 shadow rounded">
                         <!-- Search Form -->
                         <div class="col-12 mb-2">
                             <form method="GET" action="dashboard.php">
-                                <input
-                                    type="text"
-                                    name="search"
-                                    class="form-control"
-                                    placeholder="Type Here to Search..."
-                                    value="<?php echo htmlspecialchars($search_query); ?>" />
+                                <div class="input-group">
+                                    <input
+                                        type="text"
+                                        name="search"
+                                        class="form-control"
+                                        placeholder="Type Here to Search..."
+                                        value="<?php echo htmlspecialchars($search_query); ?>" />
+                                    <button type="submit" class="btn btn-custom">Search</button>
+                                </div>
                             </form>
                         </div>
                         <!-- Filter and Clear Buttons -->
@@ -512,6 +515,8 @@ if ($result_total_blotter->num_rows > 0) {
                             <button type="button" class="btnfilter2 btn-secondary w-100" onclick="toggleFilterPopup()">Cancel</button>
                         </div>
 
+                        <input type="hidden" name="search" value="<?= htmlspecialchars($search_query) ?>">
+
                     </form>
                 </div>
                 <script>
@@ -557,9 +562,26 @@ if ($result_total_blotter->num_rows > 0) {
 
                     // Clear filters and reset the form
                     function clearFilters() {
+                        // Reset all input fields in the filter form
                         document.getElementById('filterForm').reset();
+
+                        // Hide the filter panel
                         document.getElementById('filterPanel').style.display = 'none';
+
+                        // Reset subdivision input, label, and hide selected subdivision display
+                        const subdivisionInput = document.getElementById('subdivision');
+                        const subdivisionLabel = document.getElementById('subdivisionLabel');
+                        const selectedSubdivision = document.getElementById('selectedSubdivision');
+
+                        subdivisionInput.value = ''; // Clear the subdivision input field
+                        subdivisionLabel.textContent = ''; // Reset the label text
+                        selectedSubdivision.style.display = 'none'; // Hide the selected subdivision display
+
+                        // Reload the page without query parameters to remove all filters
+                        window.location.href = window.location.pathname;
                     }
+
+
 
                     // Close filter panel on outside click
                     document.addEventListener('click', function(event) {
@@ -840,7 +862,7 @@ if ($result_total_blotter->num_rows > 0) {
                                 // Adjust start_page if near the end
                                 $start_page = max(1, $end_page - $max_visible_pages + 1);
 
-                                // Generate Previous button
+                                // Generate "Previous" button
                                 if ($page > 1) {
                                     echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . "&$query_string'>Previous</a></li>";
                                 }
@@ -854,13 +876,12 @@ if ($result_total_blotter->num_rows > 0) {
                                     }
                                 }
 
-                                // Generate Next button
+                                // Generate "Next" button
                                 if ($page < $total_pages) {
                                     echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . "&$query_string'>Next</a></li>";
                                 }
                                 ?>
                             </ul>
-
                         </div>
                     </div>
                 </div>
@@ -997,13 +1018,13 @@ if ($result_total_blotter->num_rows > 0) {
                             }
 
                             $('input[name="search"]').on('keyup', function() {
+                                const urlParams = new URLSearchParams(window.location.search);
                                 let searchValue = $(this).val();
+                                urlParams.set('search', searchValue); // Update the search parameter
+
                                 $.ajax({
-                                    url: 'dashboard.php',
+                                    url: 'dashboard.php?' + urlParams.toString(), // Include existing filters
                                     method: 'GET',
-                                    data: {
-                                        search: searchValue
-                                    },
                                     success: function(response) {
                                         $('tbody').html($(response).find('tbody').html());
 
@@ -1029,8 +1050,23 @@ if ($result_total_blotter->num_rows > 0) {
                                 // Clear all input fields
                                 form.reset();
 
-                                // Reload the page without query parameters to remove all filters
-                                window.location.href = window.location.pathname;
+                                // Reset subdivision input and hide selected subdivision
+                                const subdivisionInput = document.getElementById('subdivision');
+                                const subdivisionLabel = document.getElementById('subdivisionLabel');
+                                const selectedSubdivision = document.getElementById('selectedSubdivision');
+
+                                subdivisionInput.value = ''; // Clear the subdivision input field
+                                subdivisionLabel.textContent = ''; // Reset the label text
+                                selectedSubdivision.style.display = 'none'; // Hide the selected subdivision display
+
+                                // Remove subdivision from localStorage
+                                localStorage.removeItem('selectedSubdivision');
+
+                                // Remove query parameters from the URL (no page reload yet)
+                                window.history.pushState({}, document.title, window.location.pathname);
+
+                                // Reload the page (without query parameters)
+                                location.reload();
                             }
                         </script>
                     </div>

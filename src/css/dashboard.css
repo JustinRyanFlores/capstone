@@ -22,10 +22,8 @@
 
 /* Container for the whole table */
 .resident-table-container {
-    margin: 20px 0;
     border: 1px solid #dee2e6;
     border-radius: 8px;
-    overflow: hidden;
 }
 
 /* Custom Table Styling */
@@ -139,130 +137,19 @@
     color: #1c2455 !important;
 }
 
-/* Make it responsive */
-@media (max-width: 1664px) {
-    .custom-container {
-        padding: 10px;
-        margin: 5px 0;
-        height: 200px;
-        width: 350px;
-        padding: 32px;
-    }
-
-    .custom-container h1 {
-        font-size: 28px;
-    }
-
-    .custom-container h5 {
-        font-size: 16px;
-    }
+/* Scrollable Table Body */
+.resident-table-container .table-body-scroll {
+    max-height: 350px;
+    /* Set the desired height for the scrollable area */
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* Prevent horizontal scrolling */
 }
 
-@media (max-width: 1500px) {
-    .custom-container {
-        padding: 10px;
-        margin: 5px 0;
-        height: 150px;
-        width: 300px;
-        padding: 32px;
-    }
-
-    .custom-container h1 {
-        font-size: 28px;
-    }
-
-    .custom-container h5 {
-        font-size: 16px;
-    }
-}
-
-@media (max-width: 1300px) {
-    .custom-container {
-        padding: 10px;
-        margin: 5px 0;
-        height: 150px;
-        width: 250px;
-        padding: 32px;
-    }
-
-    .custom-container h1 {
-        font-size: 28px;
-    }
-
-    .custom-container h5 {
-        font-size: 16px;
-    }
-}
-
-@media (max-width: 1080px) {
-    .custom-container {
-        padding: 10px;
-        margin: 5px 0;
-        height: 150px;
-        width: 220px;
-        padding: 32px;
-    }
-
-    .custom-container h1 {
-        font-size: 28px;
-    }
-
-    .custom-container h5 {
-        font-size: 16px;
-    }
-}
-
-@media (max-width: 932px) {
-    .custom-container {
-        padding: 10px;
-        margin: 5px 0;
-        height: 150px;
-        width: 200px;
-        padding: 32px;
-    }
-
-    .custom-container h1 {
-        font-size: 28px;
-    }
-
-    .custom-container h5 {
-        font-size: 16px;
-    }
-}
-
-
-@media (max-width: 876px) {
-    .custom-container {
-        padding: 10px;
-        margin: 5px 0;
-        height: 150px;
-        width: 170px;
-        padding: 30px;
-    }
-
-    .custom-container h1 {
-        font-size: 20px;
-    }
-
-    .custom-container h5 {
-        font-size: 16px;
-    }
-}
-
-@media (max-width: 585px) {
-    .custom-container {
-        padding: 10px;
-        margin: 5px 0;
-        height: 150px;
-        width: 120px;
-        padding: 30px;
-    }
-
-    .custom-container h1 {
-        font-size: 20px;
-    }
-
-    .custom-container h5 {
-        font-size: 16px;
-    }
+.resident-table-container .table-custom thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #ced4da;
+    /* Ensure header background matches existing styles */
 }

@@ -96,65 +96,130 @@ if ($row = $result->fetch_assoc()) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Resident details page for viewing and managing resident information">
         <title>Resident Details</title>
+
+        <style>
+            /* Tab styling */
+            .nav-tabs .nav-link {
+                color: #1c2455;
+                /* Default tab text color */
+            }
+
+            .nav-tabs .nav-link.active {
+                color: white;
+                /* Active tab text color */
+                background-color: #1c2455;
+                /* Active tab background color */
+            }
+
+            .nav-tabs .nav-link:hover {
+                color: #ffffff;
+                /* Hover text color */
+                background-color: #3b4a8b;
+                /* Hover background color */
+            }
+        </style>
     </head>
 
     <body class="bg-light">
-        <div class="container py-1">
+        <div class="container py-4">
             <div class="card shadow-sm">
-                <div class="card-body shadow">
-                    <!-- Profile Section -->
-                    <div class="row align-items-center mb-4">
-                        <div class="col-md-4 text-center">
-                            <img src="<?php echo $imagePath; ?>" alt="Resident Image" class="img-fluid" style="width: 180px; height: 180px; object-fit: cover; border: 2px solid black;">
-                        </div>
-                        <div class="col-md-8">
-                            <h3 class="text-primary">
-                                <?php
-                                echo htmlspecialchars($row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']);
-                                if (!empty($row['suffix'])) {
-                                    echo ' ' . htmlspecialchars($row['suffix']);
-                                }
-                                ?>
-                            </h3>
-                            <p><strong>Date of Birth:</strong> <?php echo htmlspecialchars($row['dob']); ?></p>
-                            <p><strong>Age:</strong> <?php echo $age; ?></p> <!-- Dynamically calculated age -->
-                            <p><strong>Gender:</strong> <?php echo htmlspecialchars($row['gender']); ?></p>
-                            <p><strong>Contact Number:</strong> <?php echo htmlspecialchars($row['contact_number']); ?></p>
-                            <p><strong>Religion:</strong> <?php echo htmlspecialchars($row['religion']); ?></p>
-                            <p><strong>Philhealth Number:</strong> <?php echo htmlspecialchars($row['philhealth']); ?></p>
-                            <p><strong>Voter Status:</strong> <?php echo $row['voterstatus'] ? 'Yes' : 'No'; ?></p>
-                        </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <img src="<?php echo $imagePath; ?>" alt="Resident Image" class="img-fluid rounded-circle" style="width: 180px; height: 180px; object-fit: cover; border: 2px solid black;">
+                        <h3 class="text-primary mt-3">
+                            <?php echo htmlspecialchars($row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']); ?>
+                        </h3>
                     </div>
 
-                    <!-- Address Information -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h4 class="text-primary">Address Information</h4>
+                    <ul class="nav nav-tabs" id="residentTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Profile</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="address-tab" data-bs-toggle="tab" data-bs-target="#address" type="button" role="tab" aria-controls="address" aria-selected="false">Address</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="family-tab" data-bs-toggle="tab" data-bs-target="#family" type="button" role="tab" aria-controls="family" aria-selected="false">Family</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="education-tab" data-bs-toggle="tab" data-bs-target="#education" type="button" role="tab" aria-controls="education" aria-selected="false">Education</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="health-tab" data-bs-toggle="tab" data-bs-target="#health" type="button" role="tab" aria-controls="health" aria-selected="false">Health</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="additional-tab" data-bs-toggle="tab" data-bs-target="#additional" type="button" role="tab" aria-controls="additional" aria-selected="false">Additional</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content mt-3" id="residentTabsContent">
+                        <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                             <table class="table table-bordered">
-                                <?php
-                                $address_fields = [
-                                    'Street Address' => 'street_address',
-                                    'House Number' => 'house_number',
-                                    'Subdivision' => 'subdivision',
-                                    'Barangay' => $barangayName, // Barangay name from JSON
-                                    'City' => $cityName,         // City name from JSON
-                                    'Province' => $provinceName, // Province name from JSON
-                                    'Zip Code' => 'zip_code'
-                                ];
-                                foreach ($address_fields as $label => $field) {
-                                    if (in_array($label, ['Barangay', 'City', 'Province'])) {
-                                        echo "<tr><th>$label</th><td>" . htmlspecialchars($field) . "</td></tr>";
-                                    } else {
-                                        echo "<tr><th>$label</th><td>" . htmlspecialchars($row[$field]) . "</td></tr>";
-                                    }
-                                }
-                                ?>
+                                <tr>
+                                    <th>Date of Birth</th>
+                                    <td><?php echo htmlspecialchars($row['dob']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Age</th>
+                                    <td><?php echo $age; ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Gender</th>
+                                    <td><?php echo htmlspecialchars($row['gender']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Contact Number</th>
+                                    <td><?php echo htmlspecialchars($row['contact_number']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Religion</th>
+                                    <td><?php echo htmlspecialchars($row['religion']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Philhealth Number</th>
+                                    <td><?php echo htmlspecialchars($row['philhealth']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Voter Status</th>
+                                    <td><?php echo $row['voterstatus'] ? 'Yes' : 'No'; ?></td>
+                                </tr>
                             </table>
                         </div>
 
-                        <!-- Family Information -->
-                        <div class="col-md-6">
-                            <h4 class="text-primary">Family Information</h4>
+                        <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Street Address</th>
+                                    <td><?php echo htmlspecialchars($row['street_address']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>House Number</th>
+                                    <td><?php echo htmlspecialchars($row['house_number']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Subdivision</th>
+                                    <td><?php echo htmlspecialchars($row['subdivision']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Barangay</th>
+                                    <td><?php echo htmlspecialchars($barangayName); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>City</th>
+                                    <td><?php echo htmlspecialchars($cityName); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Province</th>
+                                    <td><?php echo htmlspecialchars($provinceName); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Zip Code</th>
+                                    <td><?php echo htmlspecialchars($row['zip_code']); ?></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="tab-pane fade" id="family" role="tabpanel" aria-labelledby="family-tab">
                             <table class="table table-bordered">
                                 <tr>
                                     <th>Mother's Name</th>
@@ -166,12 +231,8 @@ if ($row = $result->fetch_assoc()) {
                                 </tr>
                             </table>
                         </div>
-                    </div>
 
-                    <!-- Educational and Health Information -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h4 class="text-primary">Educational Information</h4>
+                        <div class="tab-pane fade" id="education" role="tabpanel" aria-labelledby="education-tab">
                             <table class="table table-bordered">
                                 <tr>
                                     <th>Out of School Youth</th>
@@ -192,9 +253,7 @@ if ($row = $result->fetch_assoc()) {
                             </table>
                         </div>
 
-                        <!-- Health Information -->
-                        <div class="col-md-6">
-                            <h4 class="text-primary">Health Information</h4>
+                        <div class="tab-pane fade" id="health" role="tabpanel" aria-labelledby="health-tab">
                             <table class="table table-bordered">
                                 <tr>
                                     <th>Illness</th>
@@ -230,12 +289,8 @@ if ($row = $result->fetch_assoc()) {
                                 </tr>
                             </table>
                         </div>
-                    </div>
 
-                    <!-- Additional Information -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h4 class="text-primary">Additional Information</h4>
+                        <div class="tab-pane fade" id="additional" role="tabpanel" aria-labelledby="additional-tab">
                             <table class="table table-bordered">
                                 <tr>
                                     <th>Organization</th>
@@ -268,6 +323,7 @@ if ($row = $result->fetch_assoc()) {
             </div>
         </div>
 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 
     </html>

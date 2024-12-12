@@ -49,13 +49,24 @@ function fetchUserRecords($conn)
     <link rel="stylesheet" href="/system/src/css/archive.css" />
     <?php include '../src/components/header.php'; ?>
     <style>
+        /* Tab styling */
         .nav-tabs .nav-link {
             color: #1c2455;
+            /* Default tab text color */
         }
 
         .nav-tabs .nav-link.active {
             color: white;
+            /* Active tab text color */
             background-color: #1c2455;
+            /* Active tab background color */
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: #ffffff;
+            /* Hover text color */
+            background-color: #3b4a8b;
+            /* Hover background color */
         }
 
         .btn-delete {
@@ -505,6 +516,7 @@ function fetchUserRecords($conn)
                         success: function(response) {
                             alert(response.trim());; // Show success message
                             $('#blotterModal').modal('hide'); // Hide modal
+                            window.location.hash = '#blotter-tab';
                             // After reload, activate the Blotter tab explicitly
                             location.reload(); // Reload page to see changes
                         },

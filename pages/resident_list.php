@@ -79,8 +79,30 @@ if (isset($_GET['search'])) {
         <div class="row m-3 bg-light text-white p-2 shadow rounded">
             <div class="col-6">
                 <form method="GET" action="resident_list.php">
-                    <input type="text" name="search" class="form-control" placeholder="Type Here to Search..." style="max-width: 800px;" value="<?php echo htmlspecialchars($search_query); ?>" />
+                    <div class="input-group" style="max-width: 800px;">
+                        <!-- Search Input -->
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="Type Here to Search..."
+                            value="<?php echo htmlspecialchars($search_query); ?>" />
+
+                        <!-- Search Button -->
+                        <div class="input-group-append">
+                            <button class="btn btn-custom" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+
+                        <!-- Reset Button -->
+                        <a href="resident_list.php" class="btn btn-secondary ml-2" style="display: flex; align-items: center;">
+                            <i class="fas fa-sync-alt"></i>
+                        </a>
+                    </div>
                 </form>
+
+
             </div>
         </div>
 
@@ -203,21 +225,21 @@ if (isset($_GET['search'])) {
 
                             // Display "Previous" button
                             if ($page > 1) {
-                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . "&search=$search_query'>Previous</a></li>";
+                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . "&search=" . urlencode($search_query) . "'>Previous</a></li>";
                             }
 
                             // Loop through and display the page links
                             for ($i = $start; $i <= $end; $i++) {
                                 if ($i == $page) {
-                                    echo "<li class='page-item active'><a class='page-link' href='?page=$i&search=$search_query'>$i</a></li>";
+                                    echo "<li class='page-item active'><a class='page-link' href='?page=$i&search=" . urlencode($search_query) . "'>$i</a></li>";
                                 } else {
-                                    echo "<li class='page-item'><a class='page-link' href='?page=$i&search=$search_query'>$i</a></li>";
+                                    echo "<li class='page-item'><a class='page-link' href='?page=$i&search=" . urlencode($search_query) . "'>$i</a></li>";
                                 }
                             }
 
                             // Display "Next" button
                             if ($page < $total_pages) {
-                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . "&search=$search_query'>Next</a></li>";
+                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . "&search=" . urlencode($search_query) . "'>Next</a></li>";
                             }
                             ?>
                         </ul>
