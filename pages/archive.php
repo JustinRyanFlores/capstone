@@ -238,7 +238,7 @@ function fetchUserRecords($conn)
                                 while ($row = $userResult->fetch_assoc()) {
                                     echo "<tr>
                                 <td><input type='checkbox' class='selectRow' data-id='{$row['user_id']}'></td> <!-- Row selection checkbox -->
-                                <td>{$row['user_id']}</td>
+                                <td onclick='loadUserDetails({$row['user_id']})' style='cursor:pointer'>{$row['user_id']}</td>
                                 <td>{$row['fname']}</td>
                                 <td>{$row['role']}</td>
                             </tr>";
