@@ -64,8 +64,10 @@ $populationQuery = "
 $populationResult = $mysqlConn->query($populationQuery);
 
 $populationData = [];
+$cumulativeCount = 0; // Initialize cumulative count
 while ($row = $populationResult->fetch_assoc()) {
-    $populationData[] = [$row['adjusted_date'], (int)$row['count']];
+    $cumulativeCount += (int)$row['count']; // Add current count to cumulative count
+    $populationData[] = [$row['adjusted_date'], $cumulativeCount];
 }
 
 
@@ -136,8 +138,10 @@ $pwdQuery = "
 $pwdResult = $mysqlConn->query($pwdQuery);
 
 $pwdData = [];
+$cumulativeCount = 0; // Initialize cumulative count for PWDs
 while ($row = $pwdResult->fetch_assoc()) {
-    $pwdData[] = [$row['date'], (int)$row['count']];
+    $cumulativeCount += (int)$row['count']; // Add current count to cumulative count
+    $pwdData[] = [$row['date'], $cumulativeCount]; // Store the cumulative count
 }
 
 // Query for teen pregnancy over the years
@@ -151,8 +155,10 @@ $teenPregnancyQuery = "
 $teenPregnancyResult = $mysqlConn->query($teenPregnancyQuery);
 
 $teenPregnancyData = [];
+$cumulativeCount = 0; // Initialize cumulative count for teen pregnancies
 while ($row = $teenPregnancyResult->fetch_assoc()) {
-    $teenPregnancyData[] = [$row['date'], (int)$row['count']];
+    $cumulativeCount += (int)$row['count']; // Add current count to cumulative count
+    $teenPregnancyData[] = [$row['date'], $cumulativeCount]; // Store the cumulative count
 }
 
 // Query to get counts for ALS and OSY
@@ -194,8 +200,10 @@ $alsQuery = "
 $alsResult = $mysqlConn->query($alsQuery);
 
 $alsData = [];
+$cumulativeCount = 0; // Initialize cumulative count for ALS
 while ($row = $alsResult->fetch_assoc()) {
-    $alsData[] = [$row['date'], (int)$row['count']]; // Push date and count for ALS
+    $cumulativeCount += (int)$row['count']; // Add the current count to the cumulative total
+    $alsData[] = [$row['date'], $cumulativeCount]; // Store the cumulative count
 }
 
 // Fetch OSY Data
@@ -209,8 +217,10 @@ $osyQuery = "
 $osyResult = $mysqlConn->query($osyQuery);
 
 $osyData = [];
+$cumulativeCount = 0; // Initialize cumulative count for OSY
 while ($row = $osyResult->fetch_assoc()) {
-    $osyData[] = [$row['date'], (int)$row['count']]; // Push date and count for OSY
+    $cumulativeCount += (int)$row['count']; // Add the current count to the cumulative total
+    $osyData[] = [$row['date'], $cumulativeCount]; // Store the cumulative count
 }
 
 // Query to count business owners and non-business owners
@@ -962,7 +972,7 @@ $mysqlConn->close();
                 chartType: 'LineChart',
                 containerId: 'blotterLineChart', // Update chart container ID
                 options: {
-                    title: 'Blotter Reports Over Time',
+                    title: 'Blotter Reports Rate',
                     hAxis: { title: 'Date', format: 'yyyy-MMM-dd' },
                     vAxis: { title: 'Number of Blotter Reports', format: '0' },
                     chartArea: { width: '85%', height: '70%' },
@@ -1237,7 +1247,7 @@ $mysqlConn->close();
 
                     <!-- Blotter Reports Over Time -->
                     <div class="chart-container">
-                        <h5>Blotter Reports Over Time</h5>
+                        <h5>Blotter Reports Rate</h5>
                         <div id="blotterDashboard">
                             <div id="blotter_filter_div" style="height: 100px;"></div> <!-- Filter for blotter reports -->
                             <div id="blotterLineChart" style="height: 400px;"></div> <!-- Chart for blotter reports -->
