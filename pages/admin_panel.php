@@ -273,10 +273,6 @@ include("../src/configs/connection.php");
                                 <label for="username" class="form-label">Username</label>
                                 <input type="text" class="form-control" id="username" readonly>
                             </div>
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="text" class="form-control" id="password" readonly>
-                            </div>
                         </div>
                     </div>
                     <div class="mb-3 text-end">
