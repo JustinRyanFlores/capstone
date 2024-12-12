@@ -1,13 +1,68 @@
 <?php
 session_start();
 
-// Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: /system/website/login/login.php");
-    exit();
-}
+// Set the default timezone to UTC+08:00
+date_default_timezone_set('Asia/Singapore');
 
 include("../src/configs/connection.php");
+
+// Check if the user is logged in by verifying the user_id in the session
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+
+    // Check if the activity log has already been inserted for this session
+    if (!isset($_SESSION['activity_log_inserted'])) {
+
+        // Query to get the first name of the user
+        $sql = "SELECT fname FROM user WHERE user_id = ?";
+        $stmt = $mysqlConn3->prepare($sql);
+
+        // Bind parameters and execute the query
+        $stmt->bind_param("i", $user_id); // "i" indicates integer
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($fname);
+
+        // Check if the query returned a result
+        if ($stmt->fetch()) {
+            // Get the current time for login_time and date
+            $login_time = date("Y-m-d H:i:s");
+            $logout_time = '0000-00-00 00:00:00'; // Default value for logout_time
+            $date = date("Y-m-d");
+
+            // Insert the user's first name into the activity_log table
+            $insert_sql = "INSERT INTO activity_log (name, login_time, logout_time, date) 
+                           VALUES (?, ?, ?, ?)";
+            $insert_stmt = $mysqlConn3->prepare($insert_sql);
+
+            // Bind parameters for the insert query
+            $insert_stmt->bind_param("ssss", $fname, $login_time, $logout_time, $date); // "s" for string, "s" for each date and time field
+
+            // Execute the insert query
+            if ($insert_stmt->execute()) {
+                // Set session variable to mark that the activity log has been inserted
+                $_SESSION['activity_log_inserted'] = true;
+            } else {
+                // echo "Error inserting first name: " . $insert_stmt->error;
+            }
+
+            // Close the insert statement
+            $insert_stmt->close();
+        } else {
+            // echo "User not found.";
+        }
+
+        // Close the statement and connection
+        $stmt->close();
+        $mysqlConn3->close();
+    } else {
+        // Activity log already inserted for this session
+        // echo "Activity log already inserted for this session.";
+    }
+} else {
+   // echo "User is not logged in.";
+}
+
 
 // Initialize search_query to prevent undefined variable warning
 $search_query = "";

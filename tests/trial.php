@@ -42,80 +42,104 @@ include("../src/configs/connection.php");
             </div>
         </div>
 
+        <?php
+// Initialize search query
+$search_query = "";
+if (isset($_GET['search'])) {
+    $search_query = trim($_GET['search']);
+}
+?>
+
+<!-- Tabs for Admin Panel and Activity Log -->
+<ul class="nav nav-tabs" id="adminTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="adminPanelTab" data-bs-toggle="tab" href="#adminPanel" role="tab" aria-controls="adminPanel" aria-selected="true">Admin Panel</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="activityLogTab" data-bs-toggle="tab" href="#activityLog" role="tab" aria-controls="activityLog" aria-selected="false">Activity Log</a>
+    </li>
+</ul>
+
+
         <!-- Search and Buttons -->
         <div class="row mt-4 search-bar-container">
             <div class="col-md-12">
                 <form method="GET" action="admin_panel.php">
-                    <input type="text" class="form-control" name="search" placeholder="Type Here to Search..." style="max-width: 300px;" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" />
+                    <input type="text" name="search" class="form-control" placeholder="Type Here to Search..." style="max-width: 300px;" value="<?php echo htmlspecialchars($search_query); ?>" />
                     <div class="action-buttons d-flex mt-3">
                         <button type="button" class="btn btn-new-user" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
-                        <a href="activity_log.php">
-                        <button type="button" class="btn btn-primary">See Activity Log</button>
-                        </a>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- User Records Table -->
+
+    </div>
+
+    <!-- Activity Log Tab -->
+    <div class="tab-pane fade" id="activityLog" role="tabpanel" aria-labelledby="activityLogTab">
         <div class="row mt-4">
+            <!-- Search Bar -->
+            <div class="col-md-12">
+            <form method="GET" id="activityLogSearchForm">
+                <input type="text" id="searchActivityLog" class="form-control mb-3" placeholder="Search Activity Log..." onkeyup="filterTable('activityLogTable', this.value)" style="max-width: 300px;">
+            </form>
+            </div>
             <div class="col-md-12">
                 <div class="user-table-container">
-                    <table class="table table-custom">
+                    <table class="table table-custom" id="activityLogTable">
                         <thead>
                             <tr>
-                                <th>UserID</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Role</th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Time Logged In</th>
+                                <th>Time Logged Out</th>
+                                <th>Date</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            // Pagination settings
+                            // Pagination settings for Activity Log
                             $limit = 8; // Number of records per page
-                            if (isset($_GET['page'])) {
-                                $page = $_GET['page'];
+                            if (isset($_GET['activityPage'])) {
+                                $activityPage = $_GET['activityPage'];
                             } else {
-                                $page = 1;
+                                $activityPage = 1;
                             }
-                            $start_from = ($page - 1) * $limit;
+                            $start_from = ($activityPage - 1) * $limit;
 
-                            // Initialize search query
-                            $search_query = "";
-                            if (isset($_GET['search'])) {
-                                $search_query = trim($_GET['search']);
-                            }
+                        // Get the search query specifically for the Activity Log search
+                        $search_query = isset($_GET['search_activity_log']) ? $_GET['search_activity_log'] : '';
 
-                            // Fetch data from the database
+
+                            // Fetch data from the database for Activity Log
                             if (!empty($search_query)) {
-                                $query = "SELECT user_id, fname, lname, role, contact_no, address, username, password 
-                                        FROM user 
-                                        WHERE fname LIKE '%$search_query%' 
-                                        OR lname LIKE '%$search_query%' 
-                                        OR role LIKE '%$search_query%'
-                                        OR contact_no LIKE '%$search_query%' 
+                                $query = "SELECT id, name, login_time, logout_time, date
+                                        FROM activity_log
+                                        WHERE name LIKE '%$search_query%' 
+                                        OR login_time LIKE '%$search_query%' 
+                                        OR logout_time LIKE '%$search_query%'
+                                        OR date LIKE '%$search_query%' 
+                                        ORDER BY id DESC
                                         LIMIT $start_from, $limit";
                             } else {
-                                $query = "SELECT user_id, fname, lname, role, contact_no, address, username, password 
-                                        FROM user 
+                                $query = "SELECT id, name, login_time, logout_time, date
+                                        FROM activity_log
+                                        ORDER BY id DESC
                                         LIMIT $start_from, $limit";
                             }
 
                             $result = $mysqlConn3->query($query);
 
-                            // Loop through the records
+                            // Loop through the records for Activity Log
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
-                                    echo "<tr data-id='{$row['user_id']}' 
-                                                data-name-contact='{$row['contact_no']}' 
-                                                data-address='{$row['address']}' 
-                                                data-username='{$row['username']}' 
-                                                data-password='{$row['password']}'>
-                                        <td>{$row['user_id']}</td>
-                                        <td>{$row['fname']}</td>
-                                        <td>{$row['lname']}</td>
-                                        <td>{$row['role']}</td>
+                                    echo "<tr>
+                                        <td>{$row['id']}</td>
+                                        <td>{$row['name']}</td>
+                                        <td>{$row['login_time']}</td>
+                                        <td>{$row['logout_time']}</td>
+                                        <td>{$row['date']}</td>
                                     </tr>";
                                 }
                             }
@@ -123,48 +147,54 @@ include("../src/configs/connection.php");
                         </tbody>
                     </table>
 
-                    <!-- Pagination and Info -->
+                    <!-- Pagination and Info for Activity Log -->
                     <div class="pagination-container">
                         <div class="pagination-info">
                             <?php
-                            // Fetch total records for "Showing X to Y of Z entries"
-                            $query_total = "SELECT COUNT(*) FROM user";
+                            // Fetch total records for Activity Log
+                            $query_total = "SELECT COUNT(*) FROM activity_log";
                             $result_total = $mysqlConn3->query($query_total);
                             $row_total = $result_total->fetch_row();
                             $total_records = $row_total[0];
-                            $start_entry = ($page - 1) * $limit + 1;
+                            $start_entry = ($activityPage - 1) * $limit + 1;
                             $end_entry = min($start_entry + $limit - 1, $total_records);
 
                             echo "Showing $start_entry to $end_entry of $total_records entries";
                             ?>
                         </div>
                         <ul class="pagination">
-                            <?php
-                            $total_pages = ceil($total_records / $limit);
-                            $search_param = !empty($search_query) ? "&search=" . urlencode($search_query) : "";
+                        <?php
+                        $total_pages = ceil($total_records / $limit);
+                        $search_param = !empty($search_query) ? "&search=" . urlencode($search_query) : "";
 
-                            if ($page > 1) {
-                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . $search_param . "'>Previous</a></li>";
-                            }
+                        // Ensure #activityLog is added to the URL so the tab stays active
+                        $tab_param = "#activityLog";
 
-                            for ($i = 1; $i <= $total_pages; $i++) {
-                                if ($i == $page) {
-                                    echo "<li class='page-item active'><a class='page-link' href='?page=$i$search_param'>$i</a></li>";
-                                } else {
-                                    echo "<li class='page-item'><a class='page-link' href='?page=$i$search_param'>$i</a></li>";
-                                }
-                            }
+                        if ($activityPage > 1) {
+                            echo "<li class='page-item'><a class='page-link' href='?activityPage=" . ($activityPage - 1) . $search_param . $tab_param . "'>Previous</a></li>";
+                        }
 
-                            if ($page < $total_pages) {
-                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . $search_param . "'>Next</a></li>";
+                        for ($i = 1; $i <= $total_pages; $i++) {
+                            if ($i == $activityPage) {
+                                echo "<li class='page-item active'><a class='page-link' href='?activityPage=$i$search_param$tab_param'>$i</a></li>";
+                            } else {
+                                echo "<li class='page-item'><a class='page-link' href='?activityPage=$i$search_param$tab_param'>$i</a></li>";
                             }
-                            ?>
-                        </ul>
+                        }
+
+                        if ($activityPage < $total_pages) {
+                            echo "<li class='page-item'><a class='page-link' href='?activityPage=" . ($activityPage + 1) . $search_param . $tab_param . "'>Next</a></li>";
+                        }
+                        ?>
+                    </ul>
                     </div>
                 </div>
             </div>
         </div>
+        
     </div>
+</div>
+
 
 <!-- Add User Modal -->
 <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
@@ -294,7 +324,9 @@ include("../src/configs/connection.php");
 $(document).ready(function() {
     // Function to bind click event
     function bindRowClick() {
-        $('tbody tr').click(function() {
+    $('tbody tr').click(function() {
+        // Check if the Admin Panel Tab is active
+        if ($('#adminPanelTab').hasClass('active')) {
             var user_id = $(this).data('id');
             var fname = $(this).find('td:eq(1)').text();
             var lname = $(this).find('td:eq(2)').text();
@@ -304,6 +336,7 @@ $(document).ready(function() {
             var password = $(this).data('password');
             var role = $(this).find('td:eq(3)').text();
 
+            // Set the modal inputs
             $('#userId').val(user_id);
             $('#firstName').val(fname);
             $('#lastName').val(lname);
@@ -313,12 +346,22 @@ $(document).ready(function() {
             $('#password').val(password);
             $('#role').val(role);
 
+            // Show the modal
             $('#viewModal').modal('show');
-        });
-    }
+        }
+    });
+}
 
-    // Initial binding of the row click event
+// Bind the row click event immediately on page load
+$(document).ready(function() {
     bindRowClick();
+});
+
+// Ensure the row click event is re-bound when the Admin Panel tab is shown
+$('#adminPanelTab').on('shown.bs.tab', function () {
+    bindRowClick();  // This ensures the click event is applied whenever the Admin Panel tab is active
+});
+    
 
     // Rebind click event after search
     $('input[name="search"]').on('keyup', function() {
@@ -393,6 +436,44 @@ $('#deleteBtn').on('click', function() {
             }
         });
     });
+});
+
+
+    // JavaScript function for filtering table rows
+    function filterTable(tableId, searchValue) {
+        const table = document.getElementById(tableId);
+        const rows = table.getElementsByTagName('tr');
+        const filter = searchValue.toLowerCase();
+
+        for (let i = 1; i < rows.length; i++) {
+            const cells = rows[i].getElementsByTagName('td');
+            let rowMatches = false;
+
+            for (let j = 0; j < cells.length; j++) {
+                if (cells[j].innerText.toLowerCase().includes(filter)) {
+                    rowMatches = true;
+                    break;
+                }
+            }
+
+            rows[i].style.display = rowMatches ? '' : 'none';
+        }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+    // Check if the hash is present in the URL
+    var tabHash = window.location.hash;
+    
+    if (tabHash === '#activityLog') {
+        // Activate the Activity Log tab using Bootstrap's Tab component
+        var activityLogTab = new bootstrap.Tab(document.querySelector('#activityLogTab'));
+        activityLogTab.show(); // This will make the Activity Log tab active
+    } else {
+        // If the hash is not #activityLog, ensure Admin Panel tab is active by default
+        var adminPanelTab = new bootstrap.Tab(document.querySelector('#adminPanelTab'));
+        adminPanelTab.show();
+    }
 });
 </script>
 

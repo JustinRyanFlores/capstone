@@ -1,0 +1,63 @@
+// Check if the user is logged in by verifying the user_id in the session
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+
+    // Third MySQL connection (if needed)
+    $mysqlServername3 = "localhost";
+    $mysqlUsername3 = "root";
+    $mysqlPassword3 = "";
+    $mysqlDbname3 = "user_accounts";
+
+    // Create third MySQL connection
+    $mysqlConn3 = new mysqli($mysqlServername3, $mysqlUsername3, $mysqlPassword3, $mysqlDbname3);
+    if ($mysqlConn3->connect_error) {
+        die("MySQL Connection 3 failed: " . $mysqlConn3->connect_error);
+    }
+
+    // Query to get the first name of the user
+    $sql = "SELECT fname FROM user WHERE user_id = ?";
+    $stmt = $mysqlConn3->prepare($sql);
+
+    // Bind parameters and execute the query
+    $stmt->bind_param("i", $user_id); // "i" indicates integer
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($fname);
+
+    // Check if the query returned a result
+    if ($stmt->fetch()) {
+        // Store the user's first name in a variable
+        /// echo "User's First Name: " . $fname;
+
+        // Get the current time for login_time and date
+        $login_time = date("Y-m-d H:i:s");
+        $logout_time = '0000-00-00 00:00:00'; // Default value for logout_time
+        $date = date("Y-m-d");
+
+        // Insert the user's first name into the activity_log table
+        $insert_sql = "INSERT INTO activity_log (name, login_time, logout_time, date) 
+                       VALUES (?, ?, ?, ?)";
+        $insert_stmt = $mysqlConn3->prepare($insert_sql);
+
+        // Bind parameters for the insert query
+        $insert_stmt->bind_param("ssss", $fname, $login_time, $logout_time, $date); // "s" for string, "s" for each date and time field
+
+        // Execute the insert query
+        if ($insert_stmt->execute()) {
+           // echo "First name inserted successfully into activity_log.";
+        } else {
+            // echo "Error inserting first name: " . $insert_stmt->error;
+        }
+
+        // Close the insert statement
+        $insert_stmt->close();
+    } else {
+       // echo "User not found.";
+    }
+
+    // Close the statement and connection
+    $stmt->close();
+    $mysqlConn3->close();
+} else {
+    // echo "User is not logged in.";
+}
