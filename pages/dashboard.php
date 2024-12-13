@@ -60,7 +60,7 @@ if (isset($_SESSION['user_id'])) {
         // echo "Activity log already inserted for this session.";
     }
 } else {
-   // echo "User is not logged in.";
+    // echo "User is not logged in.";
 }
 
 
@@ -1010,27 +1010,79 @@ if ($result_total_blotter->num_rows > 0) {
                             }
 
                             function printResidentDetails() {
-                                // Get the content of the modal that we want to print
-                                var printContent = document.getElementById('printable-details').innerHTML;
+                                var residentName = document.querySelector('h3.text-primary').innerText || 'Unknown Resident';
+
+                                // Consolidate all content into a document-style layout
+                                var content = `
+        <div style="font-family: Arial, sans-serif; margin: 20px;">
+            <h1 style="text-align: center; font-size: 1.8em; margin-bottom: 10px;">Resident Details</h1>
+            <h2 style="text-align: center; font-size: 1.4em; margin-bottom: 20px;">${residentName}</h2>
+            
+            <section style="margin-bottom: 15px;">
+                <h3 style="font-size: 1.2em; text-decoration: underline;">Personal Information</h3>
+                <p><strong>Birth Date:</strong> ${getData('#profile tr:nth-child(1) td:nth-child(2)')}</p>
+                <p><strong>Age:</strong> ${getData('#profile tr:nth-child(2) td:nth-child(2)')}</p>
+                <p><strong>Gender:</strong> ${getData('#profile tr:nth-child(3) td:nth-child(2)')}</p>
+                <p><strong>Contact Number:</strong> ${getData('#profile tr:nth-child(4) td:nth-child(2)')}</p>
+                <p><strong>Religion:</strong> ${getData('#profile tr:nth-child(5) td:nth-child(2)')}</p>
+                <p><strong>PhilHealth Number:</strong> ${getData('#profile tr:nth-child(6) td:nth-child(2)')}</p>
+                <p><strong>Voter Status:</strong> ${getData('#profile tr:nth-child(7) td:nth-child(2)')}</p>
+            </section>
+            
+            <section style="margin-bottom: 15px;">
+                <h3 style="font-size: 1.2em; text-decoration: underline;">Address</h3>
+                <p><strong>Street Address:</strong> ${getData('#address tr:nth-child(1) td:nth-child(2)')}</p>
+                <p><strong>House Number:</strong> ${getData('#address tr:nth-child(2) td:nth-child(2)')}</p>
+                <p><strong>Barangay:</strong> ${getData('#address tr:nth-child(4) td:nth-child(2)')}</p>
+                <p><strong>City:</strong> ${getData('#address tr:nth-child(5) td:nth-child(2)')}</p>
+                <p><strong>Province:</strong> ${getData('#address tr:nth-child(6) td:nth-child(2)')}</p>
+            </section>
+            
+            <section style="margin-bottom: 15px;">
+                <h3 style="font-size: 1.2em; text-decoration: underline;">Family Information</h3>
+                <p><strong>Mother's Name:</strong> ${getData('#family tr:nth-child(1) td:nth-child(2)')}</p>
+                <p><strong>Father's Name:</strong> ${getData('#family tr:nth-child(2) td:nth-child(2)')}</p>
+            </section>
+            
+            <section style="margin-bottom: 15px;">
+                <h3 style="font-size: 1.2em; text-decoration: underline;">Educational Information</h3>
+                <p><strong>Out of School Youth:</strong> ${getData('#education tr:nth-child(1) td:nth-child(2)')}</p>
+                <p><strong>Educational Attainment:</strong> ${getData('#education tr:nth-child(2) td:nth-child(2)')}</p>
+                <p><strong>Enrolled in ALS:</strong> ${getData('#education tr:nth-child(3) td:nth-child(2)')}</p>
+                <p><strong>Current School:</strong> ${getData('#education tr:nth-child(4) td:nth-child(2)')}</p>
+            </section>
+
+            <section style="margin-bottom: 15px;">
+                <h3 style="font-size: 1.2em; text-decoration: underline;">Health Information</h3>
+                <p><strong>Medication:</strong> ${getData('#health tr:nth-child(2) td:nth-child(2)')}</p>
+                <p><strong>Immunization Status:</strong> ${getData('#health tr:nth-child(5) td:nth-child(2)')}</p>
+                <p><strong>Teen Pregnancy:</strong> ${getData('#health tr:nth-child(6) td:nth-child(2)')}</p>
+                <p><strong>Type of Delivery:</strong> ${getData('#health tr:nth-child(7) td:nth-child(2)')}</p>
+            </section>
+        </div>
+    `;
+
+                                // Helper function to get data safely
+                                function getData(selector) {
+                                    var element = document.querySelector(selector);
+                                    return element ? element.innerText : 'Not Available';
+                                }
 
                                 // Open a new window for printing
                                 var printWindow = window.open('', '', 'height=600,width=800');
 
-                                // Write the modal content to the new window with print-specific styles
+                                // Write the content to the print window with styles
                                 printWindow.document.write('<html><head><title>Resident Details</title>');
-                                printWindow.document.write('<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />');
                                 printWindow.document.write('<style>');
-                                printWindow.document.write('body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }');
-                                printWindow.document.write('.modal-body { padding: 10px; }');
-                                printWindow.document.write('h5 { font-size: 1.5em; margin-bottom: 10px; }'); // Adjust heading size
-                                printWindow.document.write('p { font-size: 1em; margin: 0; }'); // Adjust paragraph size
-                                printWindow.document.write('.button-container { display: none; }'); // Hide buttons in print view
+                                printWindow.document.write('body { margin: 0; padding: 0; font-size: 0.9em; line-height: 1.6; width: 100%; }');
+                                printWindow.document.write('h1, h2, h3 { margin: 0 0 10px; }');
+                                printWindow.document.write('section { page-break-inside: avoid; margin-bottom: 20px; }'); // Avoid breaks within sections
                                 printWindow.document.write('@media print {');
-                                printWindow.document.write('body { -webkit-print-color-adjust: exact; }'); // Print colors exactly
+                                printWindow.document.write('body { width: 100%; height: auto; overflow: visible; }');
                                 printWindow.document.write('}');
                                 printWindow.document.write('</style>');
                                 printWindow.document.write('</head><body>');
-                                printWindow.document.write(printContent);
+                                printWindow.document.write(content);
                                 printWindow.document.write('</body></html>');
 
                                 // Close the document to finish writing
@@ -1041,10 +1093,10 @@ if ($result_total_blotter->num_rows > 0) {
                                     printWindow.focus(); // Ensure the print window has focus
                                     printWindow.print(); // Trigger the print
 
-                                    // Use a delay before closing the window to ensure the print dialog fully processes
+                                    // Close the print window after a delay
                                     setTimeout(function() {
-                                        printWindow.close(); // Close the print window after a small delay
-                                    }, 500); // 500ms delay
+                                        printWindow.close(); // Close the print window
+                                    }, 500);
                                 };
                             }
 
