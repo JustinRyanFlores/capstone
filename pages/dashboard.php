@@ -3,7 +3,7 @@ session_start();
 
 // Set the default timezone to UTC+08:00
 date_default_timezone_set('Asia/Singapore');
-
+include_once "../src/components/session_handler.php";
 include("../src/configs/connection.php");
 
 // Check if the user is logged in by verifying the user_id in the session

@@ -6,7 +6,6 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: /system/website/login/login.php");
     exit();
 }
-
 include("../src/configs/connection.php"); // Include your database connection
 
 // Initialize search_query to prevent undefined variable warning

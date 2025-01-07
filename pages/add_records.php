@@ -13,6 +13,8 @@ if (isset($_GET['success']) && $_GET['success'] == 'true') {
 
 if (isset($_GET['error']) && $_GET['error'] == 'true') {
     echo "<script>alert('An error occurred while adding the record');</script>";
+
+    include_once "../src/components/session_handler.php";
 }
 ?>
 
@@ -285,7 +287,7 @@ $isEdit = isset($_GET['id']) ? true : false;
                             <div class="col-md-4 mb-3">
                                 <label for="contactNumber">Contact Number:</label>
                                 <input type="text" class="form-control" id="contactNumber" name="contactNumber"
-                                    pattern="\d{10,11}" title="Please enter a valid contact number." value="<?php echo $contactNumber; ?>" >
+                                    pattern="\d{10,11}" title="Please enter a valid contact number." value="<?php echo $contactNumber; ?>">
                                 <small class="form-text text-muted">Please enter a valid contact number with 10 or 11 digits.</small>
                             </div>
                         </div>

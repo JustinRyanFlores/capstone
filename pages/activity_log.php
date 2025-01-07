@@ -6,7 +6,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: /system/website/login/login.php");
     exit();
 }
-
+include_once "../src/components/session_handler.php";
 include("../src/configs/connection.php");
 ?>
 
@@ -25,6 +25,7 @@ include("../src/configs/connection.php");
     <link rel="stylesheet" href="/system/src/css/admin_panel.css" />
     <?php include '../src/components/header.php'; ?>
 </head>
+
 <body>
     <?php include '../src/components/moderator_navbar.php'; ?>
     <div class="container-fluid main-content">
@@ -46,11 +47,11 @@ include("../src/configs/connection.php");
         <div class="row mt-4 search-bar-container">
             <div class="col-md-12 d-flex align-items-center">
                 <form method="GET" action="activity_log.php" class="d-flex w-100">
-                    <input type="text" 
-                        class="form-control" 
-                        name="search" 
-                        placeholder="Type Here to Search..." 
-                        style="max-width: 300px;" 
+                    <input type="text"
+                        class="form-control"
+                        name="search"
+                        placeholder="Type Here to Search..."
+                        style="max-width: 300px;"
                         value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" />
 
                     <!-- Search Button -->
