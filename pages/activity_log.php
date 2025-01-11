@@ -76,6 +76,7 @@ include("../src/configs/connection.php");
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="user-table-container">
+                    <div class="table-responsive">
                     <table class="table table-custom">
                         <thead>
                             <tr>
@@ -177,6 +178,7 @@ include("../src/configs/connection.php");
                         </ul>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>

@@ -57,6 +57,29 @@ if (isset($_GET['search'])) {
         border-color: #5a6268;
         color: #5a6268;
     }
+
+    .btn-primary {
+            background-color: #1c2455;
+            border-color: #1c2455;
+            color: #ffffff; /* Optional: Change text color */
+        }
+        
+        .btn-primary:hover {
+            background-color: white;
+            border-color: #1c2455;
+            color: #1c2455; /* Optional: Change text color */
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #5a6268;
+            color: #ffffff; /* Optional: Change text color */
+        }
+        .btn-secondary:hover {
+            background-color: white;
+            border-color: #4e555b;
+            color: #4e555b;
+        }
 </style>
 
 <body>
@@ -79,8 +102,17 @@ if (isset($_GET['search'])) {
         <!-- Search and Buttons -->
         <div class="row mt-4 search-bar-container">
             <div class="col-md-12">
-                <form method="GET" action="blotter_records.php">
-                    <input type="text" name="search" class="form-control" placeholder="Type Here to Search..." style="max-width: 300px;" value="<?php echo htmlspecialchars($search_query); ?>" />
+                <form method="GET" action="blotter_records.php" class="d-flex w-100">
+                    <input type="text" name="search" class="form-control" placeholder="Type Here to Search..." style="max-width: 300px;" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" />
+                    <!-- Search Button -->
+                        <button type="submit" class="btn btn-primary ml-2" style="display: flex; align-items: center;">
+                        <i class="fas fa-search"></i>
+                    </button>
+
+                    <!-- Reset Button -->
+                    <a href="blotter_records.php" class="btn btn-secondary ml-2" style="display: flex; align-items: center;">
+                        <i class="fas fa-sync-alt"></i>
+                    </a>
                 </form>
                 <div class="action-buttons d-flex mt-3">
                     <button class="btn btn-new-blotter" data-bs-toggle="modal" data-bs-target="#addBlotterModal">New Blotter</button>
