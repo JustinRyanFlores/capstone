@@ -111,6 +111,7 @@ if (isset($_GET['search'])) {
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="resident-table-container">
+                    <div class="table-responsive">
                     <table class="table table-custom">
                         <thead>
                             <tr>
@@ -244,6 +245,7 @@ if (isset($_GET['search'])) {
                             ?>
                         </ul>
                     </div>
+                </div>
                 </div>
             </div>
         </div>
