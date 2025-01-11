@@ -1354,33 +1354,107 @@ if ($result_total_blotter->num_rows > 0) {
 
 
                     // Example polygons with hover effects
-                    var sv = L.polygon([
-                        [14.16281008863725, 121.10695135075427],
-                        [14.158996892409405, 121.10317297117919],
-                        [14.154131410300558, 121.10257159703275],
-                        [14.153039079691384, 121.1059350868183],
-                        [14.158106245905019, 121.10900876206654],
-                        [14.159287195375994, 121.10948691956729]
+                    var sv1 = L.polygon([
+                        [14.159358621907295, 121.10358862738792],
+                        [14.161355966901166, 121.10615281896287],
+                        [14.161813689321288, 121.10590605575693],
+                        [14.162489868480904, 121.10706476994142],
+                        [14.16091904918489, 121.10826639946609],
+                        [14.160086822637803, 121.10711841411663],
+                        [14.159348219022792, 121.1065712435295],
+                        [14.158318331099064, 121.10450057836644]
                     ], {
-                        color: 'blue',
-                        fillColor: '#0d6efd',
+                        color: '#0d47a1', // Dark Blue
+                        fillColor: '#0d47a1',
                         fillOpacity: 0.3
-                    }).addTo(map).bindTooltip("South Ville", {
+                    }).addTo(map).bindTooltip("South Ville Phase-1", {
                         permanent: true,
                         direction: "center",
                         className: "polygon-label"
                     }).openTooltip();
 
-                    sv.on('click', function() {
-                        // Set the selected subdivision in localStorage
-                        localStorage.setItem('selectedSubdivision', 'Southville 6');
-                        // Redirect to the URL with the selected subdivision as a query parameter
-                        window.location.href = window.location.pathname + "?subdivision=Southville 6";
+                    sv1.on('click', function() {
+                        localStorage.setItem('selectedSubdivision', 'Southville 6 Phase-1');
+                        window.location.href = window.location.pathname + "?subdivision=Southville 6 Phase-1";
                     });
 
+                    addHoverTooltip(sv1, "Southville 6 Phase-1");
 
+                    var sv2 = L.polygon([
+                        [14.158032250283204, 121.10899596029827],
+                        [14.16018044826834, 121.10772995776337],
+                        [14.160128434029327, 121.10693602397028],
+                        [14.159291003141288, 121.10659806566647],
+                        [14.157933422284106, 121.10683946445491],
+                        [14.158422360386048, 121.10796062771675],
+                        [14.157990638499344, 121.10818593325263],
+                        [14.157652542472952, 121.10882966335514]
+                    ], {
+                        color: '#0d47a2', // Dark Blue
+                        fillColor: '#0d47a2',
+                        fillOpacity: 0.3
+                    }).addTo(map).bindTooltip("South Ville Phase-2", {
+                        permanent: true,
+                        direction: "center",
+                        className: "polygon-label"
+                    }).openTooltip();
 
-                    addHoverTooltip(sv, "Southville 6");
+                    sv2.on('click', function() {
+                        localStorage.setItem('selectedSubdivision', 'Southville 6 Phase-2');
+                        window.location.href = window.location.pathname + "?subdivision=Southville 6 Phase-2";
+                    });
+
+                    addHoverTooltip(sv2, "Southville 6 Phase-2");
+
+                    var sv3 = L.polygon([
+                        [14.157938623711631, 121.10681264242476],
+                        [14.157460087539823, 121.10510675765315],
+                        [14.15602447297544, 121.10330431336614],
+                        [14.155140213112574, 121.10346524589177],
+                        [14.155951651705022, 121.10543935153943],
+                        [14.155244243863327, 121.10586850494109],
+                        [14.155764396902478, 121.10705940563071],
+                        [14.156596639287823, 121.10654442154872]
+                    ], {
+                        color: '#42a5f5', // Light Blue
+                        fillColor: '#42a5f5',
+                        fillOpacity: 0.3
+                    }).addTo(map).bindTooltip("South Ville Phase-3", {
+                        permanent: true,
+                        direction: "center",
+                        className: "polygon-label"
+                    }).openTooltip();
+
+                    sv3.on('click', function() {
+                        localStorage.setItem('selectedSubdivision', 'Southville 6 Phase-3');
+                        window.location.href = window.location.pathname + "?subdivision=Southville 6 Phase-3";
+                    });
+
+                    addHoverTooltip(sv3, "Southville 6 Phase-3");
+
+                    var sv4 = L.polygon([
+                        [14.156008868413231, 121.105460809152],
+                        [14.155093399252976, 121.10594360672889],
+                        [14.153293659353544, 121.10577194536823],
+                        [14.154344376286971, 121.10262839670101],
+                        [14.15512460848963, 121.10352961884449]
+                    ], {
+                        color: '#90caf9', // Pale Blue
+                        fillColor: '#90caf9',
+                        fillOpacity: 0.4
+                    }).addTo(map).bindTooltip("South Ville Phase-4", {
+                        permanent: true,
+                        direction: "center",
+                        className: "polygon-label"
+                    }).openTooltip();
+
+                    sv4.on('click', function() {
+                        localStorage.setItem('selectedSubdivision', 'Southville 6 Phase-4');
+                        window.location.href = window.location.pathname + "?subdivision=Southville 6 Phase-4";
+                    });
+
+                    addHoverTooltip(sv4, "Southville 6 Phase-4");
+
 
                     var p1 = L.polygon([
                         [14.163232083344555, 121.1151981878794],

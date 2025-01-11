@@ -71,7 +71,7 @@ if (isset($_GET['id'])) {
         $streetAddress = htmlspecialchars($row['street_address']);
         $houseNumber = htmlspecialchars($row['house_number']);
         $subdivision = htmlspecialchars($row['subdivision']);
-        $barangay = htmlspecialchars($row['barangay']); 
+        $barangay = htmlspecialchars($row['barangay']);
         $city = htmlspecialchars($row['city']);
         $province = htmlspecialchars($row['province']);
         $region = htmlspecialchars($row['region']);
@@ -141,7 +141,7 @@ $isEdit = isset($_GET['id']) ? true : false;
 </head>
 
 <body>
-<?php include '../src/components/moderator_navbar.php'; ?>
+    <?php include '../src/components/moderator_navbar.php'; ?>
     <div class="container-fluid main-content">
         <div class="row">
             <div class="h3 col-sm-6 col-md-6 text-start h5-sm">
@@ -339,11 +339,11 @@ $isEdit = isset($_GET['id']) ? true : false;
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="streetAddress">Street Address:</label>
-                                <input type="text" class="form-control" id="streetAddress" name="streetAddress" value="<?php echo $streetAddress; ?>" required>
+                                <input type="text" class="form-control" id="streetAddress" name="streetAddress" value="<?php echo $streetAddress; ?>">
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="houseNumber">House Number:</label>
-                                <input type="text" class="form-control" id="houseNumber" name="houseNumber" value="<?php echo $houseNumber; ?>" required>
+                                <input type="text" class="form-control" id="houseNumber" name="houseNumber" value="<?php echo $houseNumber; ?>">
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label for="subdivision">Subdivision:</label>
@@ -358,7 +358,10 @@ $isEdit = isset($_GET['id']) ? true : false;
                                     <option value="Villa Javier" <?php echo ($subdivision === 'Villa Javier') ? 'selected' : ''; ?>>Villa Javier</option>
                                     <option value="Villa Andrea" <?php echo ($subdivision === 'Villa Andrea') ? 'selected' : ''; ?>>Villa Andrea</option>
                                     <option value="Valley Breeze" <?php echo ($subdivision === 'Valley Breeze') ? 'selected' : ''; ?>>Valley Breeze</option>
-                                    <option value="Southville 6" <?php echo ($subdivision === 'Southville 6') ? 'selected' : ''; ?>>Southville 6</option>
+                                    <option value="Southville 6 Phase-1" <?php echo ($subdivision === 'Southville 6 Phase-1') ? 'selected' : ''; ?>>Southville 6 Phase-1</option>
+                                    <option value="Southville 6 Phase-2" <?php echo ($subdivision === 'Southville 6 Phase-2') ? 'selected' : ''; ?>>Southville 6 Phase-2</option>
+                                    <option value="Southville 6 Phase-3" <?php echo ($subdivision === 'Southville 6 Phase-3') ? 'selected' : ''; ?>>Southville 6 Phase-3</option>
+                                    <option value="Southville 6 Phase-4" <?php echo ($subdivision === 'Southville 6 Phase-4') ? 'selected' : ''; ?>>Southville 6 Phase-4</option>
                                 </select>
                             </div>
                         </div>

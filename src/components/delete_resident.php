@@ -1,4 +1,8 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Include the connection from the external file
 include('../configs/connection.php'); // Ensure correct path
 
