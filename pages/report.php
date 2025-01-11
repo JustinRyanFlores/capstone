@@ -26,8 +26,8 @@ $ageQuery = "
             WHEN FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) BETWEEN 13 AND 18 THEN '13-18'
             WHEN FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) BETWEEN 19 AND 34 THEN '19-34'
             WHEN FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) BETWEEN 35 AND 49 THEN '34-49'
-            WHEN FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) BETWEEN 50 AND 64 THEN '50-64'
-            WHEN FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) BETWEEN 65 AND 100 THEN '65-100'
+            WHEN FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) BETWEEN 50 AND 59 THEN '50-59'
+            WHEN FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) BETWEEN 60 AND 100 THEN '60-100'
             ELSE '100+' 
         END AS age_group,
         COUNT(*) as count
@@ -47,8 +47,8 @@ $ageGroups = array_merge([
     '13-18' => 0,
     '19-34' => 0,
     '34-49' => 0,
-    '50-64' => 0,
-    '65-100' => 0,
+    '50-59' => 0,
+    '60-100' => 0,
     '100+' => 0,
 ], $ageGroups);
 
@@ -315,6 +315,40 @@ if ($employmentResult && $employmentResult->num_rows > 0) {
     }
 }
 
+// Fetch and group occupation data
+$sql = "SELECT occupation, COUNT(*) as count FROM residents_records WHERE occupation != '' AND occupation != 'N/A' AND occupation != 'n/a' GROUP BY occupation";
+$result = $mysqlConn->query($sql);
+
+$dataArray = [];
+if ($result->num_rows > 0) {
+    // Prepare data for Google Charts
+    $dataArray[] = ['Occupation', 'Count'];
+    while ($row = $result->fetch_assoc()) {
+        $dataArray[] = [$row['occupation'], (int)$row['count']];
+    }
+} else {
+    echo "No data found";
+    $mysqlConn->close();
+    exit;
+}
+
+// Fetch and group civil status data
+$sql = "SELECT civil_status, COUNT(*) as count FROM residents_records GROUP BY civil_status";
+$result = $mysqlConn->query($sql);
+
+$civilstatusData = [];
+if ($result->num_rows > 0) {
+    // Prepare data for Google Charts
+    $civilstatusData[] = ['Civil Status', 'Count'];
+    while ($row = $result->fetch_assoc()) {
+        $civilstatusData[] = [$row['civil_status'], (int)$row['count']];
+    }
+} else {
+    echo "No data found";
+    $mysqlConn->close();
+    exit;
+}
+
 // Close the connection
 $mysqlConn->close();
 
@@ -366,6 +400,8 @@ $mysqlConn->close();
             drawOFWLocalPieChart();
             drawEmployedUnemployedPieChart();
             drawEmploymentLineChart();
+            drawOccupationBarChart();
+            drawCivilStatusPieChart();
         }
 
         function drawGenderPieChart() {
@@ -397,8 +433,8 @@ $mysqlConn->close();
                 ['13-18', <?php echo (int)$ageGroups['13-18']; ?>],
                 ['19-34', <?php echo (int)$ageGroups['19-34']; ?>],
                 ['34-49', <?php echo (int)$ageGroups['34-49']; ?>],
-                ['50-64', <?php echo (int)$ageGroups['50-64']; ?>],
-                ['65-100', <?php echo (int)$ageGroups['65-100']; ?>],
+                ['50-59', <?php echo (int)$ageGroups['50-59']; ?>],
+                ['60-100', <?php echo (int)$ageGroups['60-100']; ?>],
                 ['100+', <?php echo (int)$ageGroups['100+']; ?>]
             ]);
 
@@ -1073,6 +1109,50 @@ $mysqlConn->close();
             dashboard.draw(data);
         }
 
+        function drawOccupationBarChart() {
+            // Convert PHP data to JavaScript
+            const data = google.visualization.arrayToDataTable(<?php echo json_encode($dataArray); ?>);
+
+            // Set chart options
+            const options = {
+                title: 'Occupation Distribution',
+                hAxis: {
+                    title: 'Occupation',
+                    titleTextStyle: {color: '#333'},
+                    format: '0',
+
+                },
+                vAxis: {
+                    title: 'Count',
+                    minValue: 0
+                    
+                },
+                bar: {groupWidth: "75%"},
+                legend: {position: 'none'}
+            };
+
+            // Create and display the chart
+            const chart = new google.visualization.BarChart(document.getElementById('occupationDistribtion'));
+            chart.draw(data, options);
+        }
+
+        function drawCivilStatusPieChart() {
+            // Convert PHP data to JavaScript
+            const data = google.visualization.arrayToDataTable(<?php echo json_encode($civilstatusData); ?>);
+
+            // Set chart options
+            const options = {
+                title: 'Civil Status Distribution',
+                is3D: true, // Enables 3D effect
+                legend: { position: 'bottom' },
+                chartArea: { width: '85%', height: '75%' },
+            };
+
+            // Create and display the chart
+            const chart = new google.visualization.PieChart(document.getElementById('civilStatusPieChart'));
+            chart.draw(data, options);
+        }
+
 
         window.addEventListener('resize', function () {
             drawCharts();
@@ -1151,6 +1231,12 @@ $mysqlConn->close();
                     <div class="chart-container">
                         <h5>Age Distribution</h5>
                         <div id="ageHistogram" style="width: 100%; height: 500px;"></div>
+                    </div>
+
+                    <!-- Civil Status Distribution -->
+                    <div class="chart-container">
+                        <h5>Civil Status Distribution</h5>
+                        <div id="civilStatusPieChart" style="width: 100%; height: 500px;"></div>
                     </div>
 
                 </div>
@@ -1285,6 +1371,12 @@ $mysqlConn->close();
                         <div id="employmentLineChart" style="width: 100%; height: 400px;"></div>
                     </div>
                     
+                    <!-- Occupation Distribution -->
+                    <div class="chart-container">
+                        <h5>Occupation Distribution</h5>
+                        <div id="occupationDistribtion" style="height: 400px;"></div>
+                    </div>
+                    
                     <!-- OFW vs Local Pie Chart -->
                     <div class="chart-container">
                         <h5>Employment Distribution</h5>
@@ -1359,6 +1451,7 @@ $mysqlConn->close();
             drawPopulationLineChart();
             drawGenderPieChart();
             drawAgeHistogram();
+            drawCivilStatusPieChart();
         });
 
         // Health Section
@@ -1383,6 +1476,7 @@ $mysqlConn->close();
         $('#employmentSection').on('shown.bs.collapse', function () {
             drawEmployedUnemployedPieChart();
             drawEmploymentLineChart();
+            drawOccupationBarChart();
             drawOFWLocalPieChart();
             drawBusinessOwnerPieChart();
             drawBusinessOwnerBarChart();
