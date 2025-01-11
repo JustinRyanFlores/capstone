@@ -23,8 +23,18 @@ if (isset($_POST['residentId'])) {
 
     // Move to archive
     $moveToArchiveQuery = "INSERT INTO archive.residents_records 
-        (id, first_name, middle_name, last_name, suffix, dob, age, gender, contact_number, religion, philhealth, voterstatus, street_address, house_number, subdivision, barangay, city, province, region, zip_code, mother_first_name, mother_middle_name, mother_last_name, father_first_name, father_middle_name, father_last_name, osy, als, educational_attainment, current_school, illness, medication, disability, immunization, pwd, teen_pregnancy, type_of_delivery, assisted_by, organization, cases_violated, years_of_stay, business_owner, ofw, employment, residents_img)
-        SELECT id, first_name, middle_name, last_name, suffix, dob, age, gender, contact_number, religion, philhealth, voterstatus, street_address, house_number, subdivision, barangay, city, province, region, zip_code, mother_first_name, mother_middle_name, mother_last_name, father_first_name, father_middle_name, father_last_name, osy, als, educational_attainment, current_school, illness, medication, disability, immunization, pwd, teen_pregnancy, type_of_delivery, assisted_by, organization, cases_violated, years_of_stay, business_owner, ofw, employment, residents_img
+        (id, first_name, middle_name, last_name, suffix, dob, age, gender, contact_number, religion, civil_status, philhealth, voterstatus, 
+        street_address, house_number, subdivision, barangay, city, province, region, zip_code, 
+        mother_first_name, mother_middle_name, mother_last_name, father_first_name, father_middle_name, father_last_name, 
+        osy, als, educational_attainment, current_school, 
+        illness, medication, disability, immunization, bloodtype, pwd, teen_pregnancy, type_of_delivery, assisted_by, 
+        organization, cases_violated, years_of_stay, business_owner, ofw, employment, occupation, soloparent_id, senior_id, pwd_id, residents_img)
+        SELECT id, first_name, middle_name, last_name, suffix, dob, age, gender, contact_number, religion, civil_status, philhealth, voterstatus, 
+        street_address, house_number, subdivision, barangay, city, province, region, zip_code, 
+        mother_first_name, mother_middle_name, mother_last_name, father_first_name, father_middle_name, father_last_name, 
+        osy, als, educational_attainment, current_school, 
+        illness, medication, disability, immunization, bloodtype, pwd, teen_pregnancy, type_of_delivery, assisted_by, 
+        organization, cases_violated, years_of_stay, business_owner, ofw, employment, occupation, soloparent_id, senior_id, pwd_id, residents_img
         FROM residents_db.residents_records 
         WHERE id = ?";
 

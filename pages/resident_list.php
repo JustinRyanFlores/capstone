@@ -6,6 +6,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: /system/website/login/login.php");
     exit();
 }
+include_once "../src/components/session_handler.php";
 include("../src/configs/connection.php"); // Include your database connection
 
 // Initialize search_query to prevent undefined variable warning
@@ -332,53 +333,65 @@ if (isset($_GET['search'])) {
 
                 // Consolidate all content into a document-style layout
                 var content = `
-        <div style="font-family: Arial, sans-serif; margin: 20px;">
-            <h1 style="text-align: center; font-size: 1.8em; margin-bottom: 10px;">Resident Details</h1>
-            <h2 style="text-align: center; font-size: 1.4em; margin-bottom: 20px;">${residentName}</h2>
-            
-            <section style="margin-bottom: 15px;">
-                <h3 style="font-size: 1.2em; text-decoration: underline;">Personal Information</h3>
-                <p><strong>Birth Date:</strong> ${getData('#profile tr:nth-child(1) td:nth-child(2)')}</p>
-                <p><strong>Age:</strong> ${getData('#profile tr:nth-child(2) td:nth-child(2)')}</p>
-                <p><strong>Gender:</strong> ${getData('#profile tr:nth-child(3) td:nth-child(2)')}</p>
-                <p><strong>Contact Number:</strong> ${getData('#profile tr:nth-child(4) td:nth-child(2)')}</p>
-                <p><strong>Religion:</strong> ${getData('#profile tr:nth-child(5) td:nth-child(2)')}</p>
-                <p><strong>PhilHealth Number:</strong> ${getData('#profile tr:nth-child(6) td:nth-child(2)')}</p>
-                <p><strong>Voter Status:</strong> ${getData('#profile tr:nth-child(7) td:nth-child(2)')}</p>
-            </section>
-            
-            <section style="margin-bottom: 15px;">
-                <h3 style="font-size: 1.2em; text-decoration: underline;">Address</h3>
-                <p><strong>Street Address:</strong> ${getData('#address tr:nth-child(1) td:nth-child(2)')}</p>
-                <p><strong>House Number:</strong> ${getData('#address tr:nth-child(2) td:nth-child(2)')}</p>
-                <p><strong>Barangay:</strong> ${getData('#address tr:nth-child(4) td:nth-child(2)')}</p>
-                <p><strong>City:</strong> ${getData('#address tr:nth-child(5) td:nth-child(2)')}</p>
-                <p><strong>Province:</strong> ${getData('#address tr:nth-child(6) td:nth-child(2)')}</p>
-            </section>
-            
-            <section style="margin-bottom: 15px;">
-                <h3 style="font-size: 1.2em; text-decoration: underline;">Family Information</h3>
-                <p><strong>Mother's Name:</strong> ${getData('#family tr:nth-child(1) td:nth-child(2)')}</p>
-                <p><strong>Father's Name:</strong> ${getData('#family tr:nth-child(2) td:nth-child(2)')}</p>
-            </section>
-            
-            <section style="margin-bottom: 15px;">
-                <h3 style="font-size: 1.2em; text-decoration: underline;">Educational Information</h3>
-                <p><strong>Out of School Youth:</strong> ${getData('#education tr:nth-child(1) td:nth-child(2)')}</p>
-                <p><strong>Educational Attainment:</strong> ${getData('#education tr:nth-child(2) td:nth-child(2)')}</p>
-                <p><strong>Enrolled in ALS:</strong> ${getData('#education tr:nth-child(3) td:nth-child(2)')}</p>
-                <p><strong>Current School:</strong> ${getData('#education tr:nth-child(4) td:nth-child(2)')}</p>
-            </section>
+                                <div style="font-family: Arial, sans-serif; margin: 10px; font-size: 0.9em; line-height: 1.2;">
+                                <h1 style="text-align: center; font-size: 1.5em; margin-bottom: 5px;">Resident Details</h1>
+                                <h2 style="text-align: center; font-size: 1.2em; margin-bottom: 10px;">${residentName}</h2>
 
-            <section style="margin-bottom: 15px;">
-                <h3 style="font-size: 1.2em; text-decoration: underline;">Health Information</h3>
-                <p><strong>Medication:</strong> ${getData('#health tr:nth-child(2) td:nth-child(2)')}</p>
-                <p><strong>Immunization Status:</strong> ${getData('#health tr:nth-child(5) td:nth-child(2)')}</p>
-                <p><strong>Teen Pregnancy:</strong> ${getData('#health tr:nth-child(6) td:nth-child(2)')}</p>
-                <p><strong>Type of Delivery:</strong> ${getData('#health tr:nth-child(7) td:nth-child(2)')}</p>
-            </section>
-        </div>
-    `;
+                                <section style="margin-bottom: 10px;">
+                                    <h3 style="font-size: 1em; text-decoration: underline;">Personal Information</h3>
+                                    <p><strong>Birth Date:</strong> ${getData('#profile tr:nth-child(1) td:nth-child(2)')}</p>
+                                    <p><strong>Age:</strong> ${getData('#profile tr:nth-child(2) td:nth-child(2)')}</p>
+                                    <p><strong>Gender:</strong> ${getData('#profile tr:nth-child(3) td:nth-child(2)')}</p>
+                                    <p><strong>Contact:</strong> ${getData('#profile tr:nth-child(4) td:nth-child(2)')}</p>
+                                    <p><strong>Religion:</strong> ${getData('#profile tr:nth-child(5) td:nth-child(2)')}</p>
+                                    <p><strong>Status:</strong> ${getData('#profile tr:nth-child(6) td:nth-child(2)')}</p>
+                                    <p><strong>Voter:</strong> ${getData('#profile tr:nth-child(7) td:nth-child(2)')}</p>
+                                </section>
+
+                                <section style="margin-bottom: 10px;">
+                                    <h3 style="font-size: 1em; text-decoration: underline;">Address</h3>
+                                    <p><strong>Street:</strong> ${getData('#address tr:nth-child(1) td:nth-child(2)')}</p>
+                                    <p><strong>House #:</strong> ${getData('#address tr:nth-child(2) td:nth-child(2)')}</p>
+                                    <p><strong>Barangay:</strong> ${getData('#address tr:nth-child(4) td:nth-child(2)')}</p>
+                                    <p><strong>City:</strong> ${getData('#address tr:nth-child(5) td:nth-child(2)')}</p>
+                                    <p><strong>Province:</strong> ${getData('#address tr:nth-child(6) td:nth-child(2)')}</p>
+                                </section>
+
+                                <section style="margin-bottom: 10px;">
+                                    <h3 style="font-size: 1em; text-decoration: underline;">Family Information</h3>
+                                    <p><strong>Mother:</strong> ${getData('#family tr:nth-child(1) td:nth-child(2)')}</p>
+                                    <p><strong>Father:</strong> ${getData('#family tr:nth-child(2) td:nth-child(2)')}</p>
+                                </section>
+
+                                <section style="margin-bottom: 10px;">
+                                    <h3 style="font-size: 1em; text-decoration: underline;">Education</h3>
+                                    <p><strong>Out of School:</strong> ${getData('#education tr:nth-child(1) td:nth-child(2)')}</p>
+                                    <p><strong>Attainment:</strong> ${getData('#education tr:nth-child(2) td:nth-child(2)')}</p>
+                                    <p><strong>Enrolled in ALS:</strong> ${getData('#education tr:nth-child(3) td:nth-child(2)')}</p>
+                                    <p><strong>School:</strong> ${getData('#education tr:nth-child(4) td:nth-child(2)')}</p>
+                                </section>
+
+                                <section style="margin-bottom: 10px;">
+                                    <h3 style="font-size: 1em; text-decoration: underline;">Health</h3>
+                                    <p><strong>Illness:</strong> ${getData('#health tr:nth-child(1) td:nth-child(2)')}</p>
+                                    <p><strong>Medication:</strong> ${getData('#health tr:nth-child(2) td:nth-child(2)')}</p>
+                                    <p><strong>Disability:</strong> ${getData('#health tr:nth-child(3) td:nth-child(2)')}</p>
+                                    <p><strong>Blood Type:</strong> ${getData('#health tr:nth-child(4) td:nth-child(2)')}</p>
+                                    <p><strong>PWD:</strong> ${getData('#health tr:nth-child(5) td:nth-child(2)')}</p>
+                                    <p><strong>Immunization:</strong> ${getData('#health tr:nth-child(6) td:nth-child(2)')}</p>
+                                    <p><strong>Teen Pregnancy:</strong> ${getData('#health tr:nth-child(7) td:nth-child(2)')}</p>
+                                    <p><strong>Delivery:</strong> ${getData('#health tr:nth-child(8) td:nth-child(2)')}</p>
+                                    <p><strong>Assisted By:</strong> ${getData('#health tr:nth-child(9) td:nth-child(2)')}</p>
+                                </section>
+
+                                <section style="margin-bottom: 10px;">
+                                    <h3 style="font-size: 1em; text-decoration: underline;">Identification</h3>
+                                    <p><strong>Solo Parent ID:</strong> ${getData('#identification tr:nth-child(1) td:nth-child(2)')}</p>
+                                    <p><strong>Senior ID:</strong> ${getData('#identification tr:nth-child(2) td:nth-child(2)')}</p>
+                                    <p><strong>PWD ID:</strong> ${getData('#identification tr:nth-child(3) td:nth-child(2)')}</p>
+                                    <p><strong>PhilHealth:</strong> ${getData('#identification tr:nth-child(4) td:nth-child(2)')}</p>
+                                </section>
+                            </div>`;
 
                 // Helper function to get data safely
                 function getData(selector) {

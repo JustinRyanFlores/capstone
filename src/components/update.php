@@ -26,6 +26,7 @@ $age = htmlspecialchars($_POST['age'] ?? '', ENT_QUOTES);
 $gender = htmlspecialchars($_POST['gender'] ?? '', ENT_QUOTES);
 $contactNumber = htmlspecialchars($_POST['contactNumber'] ?? '', ENT_QUOTES);
 $religion = htmlspecialchars($_POST['religion'] ?? '', ENT_QUOTES);
+$civilstatus = htmlspecialchars($_POST['civilstatus'] ?? '', ENT_QUOTES);
 $philhealth = htmlspecialchars($_POST['philhealth'] ?? '', ENT_QUOTES);
 $voterstatus = isset($_POST['voterstatus']) ? 1 : 0;
 $streetAddress = htmlspecialchars($_POST['streetAddress'] ?? '', ENT_QUOTES);
@@ -55,6 +56,7 @@ if (isset($_POST['immunization']) && is_array($_POST['immunization'])) {
 } else {
     $immunization = ''; // If no immunization selected
 }
+$bloodType = htmlspecialchars($_POST['bloodtype'] ?? '', ENT_QUOTES);
 $pwd = isset($_POST['pwd']) ? 1 : 0;
 $teenPregnancy = isset($_POST['teenAgePregnancy']) ? 1 : 0;
 $typeOfDelivery = htmlspecialchars($_POST['typeOfDelivery'] ?? '', ENT_QUOTES);
@@ -65,7 +67,10 @@ $yearsOfStay = htmlspecialchars($_POST['yearsOfStay'] ?? '', ENT_QUOTES);
 $businessOwner = isset($_POST['businessOwner']) ? 1 : 0;
 $ofw = isset($_POST['ofw']) ? 1 : 0;
 $employment = htmlspecialchars($_POST['employment'] ?? '', ENT_QUOTES);
-
+$occupation = htmlspecialchars($_POST['occupation'] ?? '', ENT_QUOTES);
+$soloParentID = htmlspecialchars($_POST['soloParentID'] ?? '', ENT_QUOTES);
+$seniorID = htmlspecialchars($_POST['seniorID'] ?? '', ENT_QUOTES);
+$pwdID = htmlspecialchars($_POST['pwdID'] ?? '', ENT_QUOTES);
 
 // Handle file upload
 $imagePath = ''; // Default image path
@@ -110,6 +115,7 @@ $sql = "UPDATE residents_records
             gender = '$gender',
             contact_number = '$contactNumber',
             religion = '$religion',
+            civil_status = '$civilstatus',
             philhealth = '$philhealth',
             voterstatus = '$voterstatus',
             street_address = '$streetAddress',
@@ -134,6 +140,7 @@ $sql = "UPDATE residents_records
             medication = '$medication',
             disability = '$disability',
             immunization = '$immunization',
+            bloodtype = '$bloodType',
             pwd = '$pwd',
             teen_pregnancy = '$teenPregnancy',
             type_of_delivery = '$typeOfDelivery',
@@ -143,7 +150,11 @@ $sql = "UPDATE residents_records
             years_of_stay = '$yearsOfStay',
             business_owner = '$businessOwner',
             ofw = '$ofw',
-            employment = '$employment'
+            employment = '$employment',
+            occupation = '$occupation',
+            soloparent_id = '$soloParentID',
+            senior_id = '$seniorID',
+            pwd_id = '$pwdID'
             $imageSql
         WHERE id = $residentId";
 
@@ -159,5 +170,3 @@ if ($mysqlConn->query($sql) === TRUE) {
     header("Location: ../../pages/resident_list.php?residentId=$residentId&error=update_failed");
     exit();
 }
-
-

@@ -21,6 +21,16 @@ if (isset($_POST['id'])) {
             // Start landscape layout with Bootstrap grid
             echo "<h5 style='color: #1c2455;'>Resident Details</h5>";
             echo "<p><strong>Name:</strong> $fullName</p>";
+            $dob = new DateTime($row['dob']); // Create a DateTime object for the date of birth
+            $today = new DateTime(); // Create a DateTime object for the current date
+            $age = $today->diff($dob)->y; // Calculate the age in years
+            echo "<p><strong>Age:</strong> $age</p>";
+            echo "<p><strong>Gender:</strong> {$row['gender']}</p>";
+            echo "<p><strong>Date of Birth:</strong> {$row['dob']}</p>";
+            echo "<p><strong>Contact Number:</strong> {$row['contact_number']}</p>";
+            echo "<p><strong>Religion:</strong> {$row['religion']}</p>";
+            echo "<p><strong>Civil Status:</strong> {$row['civil_status']}</p>";
+            echo "<p><strong>Voter Status:</strong> {$row['voterstatus']}</p>";
 
             // Address Information in two columns
             echo "<h5 style='color: #1c2455;'>Address Information</h5>";
@@ -34,6 +44,7 @@ if (isset($_POST['id'])) {
             echo "<div class='col-md-6'>";
             echo "<p><strong>City:</strong> {$row['city']}</p>";
             echo "<p><strong>Province:</strong> {$row['province']}</p>";
+            echo "<p><strong>Region:</strong> {$row['region']}</p>";
             echo "<p><strong>ZIP Code:</strong> {$row['zip_code']}</p>";
             echo "</div>";
             echo "</div>";
@@ -73,6 +84,7 @@ if (isset($_POST['id'])) {
             echo "<p><strong>PWD:</strong> {$pwdStatus}</p>";
             echo "</div>";
             echo "<div class='col-md-6'>";
+            echo "<p><strong>Blood Type:</strong> {$row['bloodtype']}</p>";
             echo "<p><strong>Immunization Status:</strong> {$row['immunization']}</p>";
             $teenPregnancyStatus = $row['teen_pregnancy'] == 1 ? 'Yes' : 'No';
             echo "<p><strong>Teen Pregnancy:</strong> {$teenPregnancyStatus}</p>";
@@ -92,9 +104,23 @@ if (isset($_POST['id'])) {
             echo "<div class='col-md-6'>";
             $businessOwnerStatus = $row['business_owner'] == 1 ? 'Yes' : 'No';
             echo "<p><strong>Business Owner:</strong> {$businessOwnerStatus}</p>";
-            $ofwStatus = isset($row['ofw']) && $row['ofw'] == 1 ? 'Yes' : 'No'; // Make sure 'ofw' exists in the DB if needed
+            $ofwStatus = isset($row['ofw']) && $row['ofw'] == 1 ? 'Yes' : 'No';
             echo "<p><strong>OFW:</strong> {$ofwStatus}</p>";
             echo "<p><strong>Employment Status:</strong> {$row['employment']}</p>";
+            echo "<p><strong>Occupation:</strong> {$row['occupation']}</p>";
+            echo "</div>";
+            echo "</div>";
+
+            // Special IDs
+            echo "<h5 style='color: #1c2455;'>Special IDs</h5>";
+            echo "<div class='row'>";
+            echo "<div class='col-md-6'>";
+            echo "<p><strong>Solo Parent ID:</strong> {$row['soloparent_id']}</p>";
+            echo "<p><strong>Senior Citizen ID:</strong> {$row['senior_id']}</p>";
+            echo "</div>";
+            echo "<div class='col-md-6'>";
+            echo "<p><strong>PWD ID:</strong> {$row['pwd_id']}</p>";
+            echo "<p><strong>PhilHealth ID:</strong> {$row['philhealth']}</p>";
             echo "</div>";
             echo "</div>";
         } else {
@@ -104,4 +130,3 @@ if (isset($_POST['id'])) {
         echo "<p>Error preparing statement: " . $mysqlConn4->error . "</p>";
     }
 }
-?>

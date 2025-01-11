@@ -150,6 +150,9 @@ if ($row = $result->fetch_assoc()) {
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="additional-tab" data-bs-toggle="tab" data-bs-target="#additional" type="button" role="tab" aria-controls="additional" aria-selected="false">Additional</button>
                         </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="identification-tab" data-bs-toggle="tab" data-bs-target="#identification" type="button" role="tab" aria-controls="identification" aria-selected="false">Identification</button>
+                        </li>
                     </ul>
 
                     <div class="tab-content mt-3" id="residentTabsContent">
@@ -176,8 +179,8 @@ if ($row = $result->fetch_assoc()) {
                                     <td><?php echo htmlspecialchars($row['religion']); ?></td>
                                 </tr>
                                 <tr>
-                                    <th>Philhealth Number</th>
-                                    <td><?php echo htmlspecialchars($row['philhealth']); ?></td>
+                                    <th>Civil Status</th>
+                                    <td><?php echo htmlspecialchars($row['civil_status']); ?></td>
                                 </tr>
                                 <tr>
                                     <th>Voter Status</th>
@@ -268,6 +271,10 @@ if ($row = $result->fetch_assoc()) {
                                     <td><?php echo htmlspecialchars($row['disability']); ?></td>
                                 </tr>
                                 <tr>
+                                    <th>Blood Type</th>
+                                    <td><?php echo htmlspecialchars($row['bloodtype']); ?></td>
+                                </tr>
+                                <tr>
                                     <th>PWD</th>
                                     <td><?php echo $row['pwd'] ? 'Yes' : 'No'; ?></td>
                                 </tr>
@@ -315,6 +322,31 @@ if ($row = $result->fetch_assoc()) {
                                 <tr>
                                     <th>Employment Status</th>
                                     <td><?php echo htmlspecialchars($row['employment']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Occupation</th>
+                                    <td><?php echo htmlspecialchars($row['occupation']); ?></td>
+                                </tr>
+
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="identification" role="tabpanel" aria-labelledby="identification-tab">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Solo Parent ID</th>
+                                    <td><?php echo htmlspecialchars($row['soloparent_id']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Senior ID</th>
+                                    <td><?php echo htmlspecialchars($row['senior_id']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>PWD ID</th>
+                                    <td><?php echo htmlspecialchars($row['pwd_id']); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Philhealth Number</th>
+                                    <td><?php echo htmlspecialchars($row['philhealth']); ?></td>
                                 </tr>
                             </table>
                         </div>

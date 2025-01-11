@@ -13,9 +13,8 @@ if (isset($_GET['success']) && $_GET['success'] == 'true') {
 
 if (isset($_GET['error']) && $_GET['error'] == 'true') {
     echo "<script>alert('An error occurred while adding the record');</script>";
-
-    include_once "../src/components/session_handler.php";
 }
+include_once "../src/components/session_handler.php";
 ?>
 
 <?php
@@ -27,13 +26,13 @@ if (!$mysqlConn) {
 }
 
 // Initialize variables to hold form values
-$residentImage = $firstName = $middleName = $lastName = $suffix = $dob = $year = $month = $day = $age = $gender = $contactNumber = $religion = $philhealth = $voterstatus =
+$residentImage = $firstName = $middleName = $lastName = $suffix = $dob = $year = $month = $day = $age = $gender = $contactNumber = $religion = $civilstatus = $philhealth = $voterstatus =
     $streetAddress = $houseNumber = $subdivision = $barangay = $city = $province = $region = $zipCode =
-    $motherFirstName = $motherMiddleName =  $motherLastName = $fatherFirstName = $fatherMiddleName = $fatherLastName =
-    $outOfSchoolYouth = $alternativeLearningSystem = $educationalAttainment = $currentSchool = $illness =
-    $illness = $medication = $disability = $immunization = $pwd =  $teenAgePregnancy = $typeOfDelivery = $assisted_by =
-    $organization = $casesViolated = $yearsOfStay = $businessOwner = $ofw = $employment = "";
-
+    $motherFirstName = $motherMiddleName = $motherLastName = $fatherFirstName = $fatherMiddleName = $fatherLastName =
+    $outOfSchoolYouth = $alternativeLearningSystem = $educationalAttainment = $currentSchool =
+    $illness = $medication = $disability = $immunization = $bloodType = $pwd = $teenAgePregnancy = $typeOfDelivery = $assisted_by =
+    $organization = $casesViolated = $yearsOfStay = $businessOwner = $ofw = $employment = $occupation =
+    $soloParentID = $seniorID = $pwdID = "";
 
 // Function to calculate age from date of birth
 function calculateAge($dob)
@@ -66,12 +65,13 @@ if (isset($_GET['id'])) {
         $gender = htmlspecialchars($row['gender']);
         $contactNumber = htmlspecialchars($row['contact_number']);
         $religion = htmlspecialchars($row['religion']);
+        $civilstatus = htmlspecialchars($row['civil_status']);
         $philhealth = htmlspecialchars($row['philhealth']);
         $voterstatus = htmlspecialchars($row['voterstatus']);
         $streetAddress = htmlspecialchars($row['street_address']);
         $houseNumber = htmlspecialchars($row['house_number']);
         $subdivision = htmlspecialchars($row['subdivision']);
-        $barangay = htmlspecialchars($row['barangay']);
+        $barangay = htmlspecialchars($row['barangay']); 
         $city = htmlspecialchars($row['city']);
         $province = htmlspecialchars($row['province']);
         $region = htmlspecialchars($row['region']);
@@ -92,6 +92,7 @@ if (isset($_GET['id'])) {
         // Handle multi-checkbox immunization
         $immunization = htmlspecialchars($row['immunization']); // Fetch immunization as a comma-separated string
         $immunizationArray = explode(', ', $immunization); // Convert the string into an array
+        $bloodType = htmlspecialchars($row['bloodtype']);
         $pwd = htmlspecialchars($row['pwd']);
         $teenAgePregnancy = htmlspecialchars($row['teen_pregnancy']);
         $typeOfDelivery = htmlspecialchars($row['type_of_delivery']);
@@ -102,6 +103,10 @@ if (isset($_GET['id'])) {
         $businessOwner = htmlspecialchars($row['business_owner']);
         $ofw = htmlspecialchars($row['ofw']);
         $employment = htmlspecialchars($row['employment']);
+        $occupation = htmlspecialchars($row['occupation']);
+        $soloParentID = htmlspecialchars($row['soloparent_id']);
+        $seniorID = htmlspecialchars($row['senior_id']);
+        $pwdID = htmlspecialchars($row['pwd_id']);
     }
 
 
@@ -136,13 +141,13 @@ $isEdit = isset($_GET['id']) ? true : false;
 </head>
 
 <body>
-    <?php include '../src/components/moderator_navbar.php'; ?>
-    <div class="container-fluid main-content mt-3">
-        <div class="row mb-4">
-            <div class="col-sm-6 col-md-6 text-start">
-                <h3>Residents Records</h3>
-                <div class="h6 text-muted" style="font-style: italic;">
-                    Home / Add Records
+<?php include '../src/components/moderator_navbar.php'; ?>
+    <div class="container-fluid main-content">
+        <div class="row">
+            <div class="h3 col-sm-6 col-md-6 text-start h5-sm">
+                Resident Records
+                <div class="h6" style="font-style: italic; color: grey">
+                    Home / Resident Records
                 </div>
             </div>
             <div class="col-sm-6 col-md-6 d-flex justify-content-sm-between justify-content-md-end">
@@ -300,12 +305,18 @@ $isEdit = isset($_GET['id']) ? true : false;
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label for="philhealth">PhilHealth Number:</label>
-                                <input type="text" class="form-control" id="philhealth" name="philhealth" value="<?php echo $philhealth; ?>">
-                            </div>
-                            <div class="col-md-4 mb-3">
                                 <label for="religion">Religion:</label>
                                 <input type="text" class="form-control" id="religion" name="religion" value="<?php echo $religion; ?>">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="civilstatus">Civil Status:</label>
+                                <select class="form-control" id="civilstatus" name="civilstatus">
+                                    <option value="">--Select Civil Status--</option>
+                                    <option value="Single" <?php echo ($civilstatus == 'Single') ? 'selected' : ''; ?>>Single</option>
+                                    <option value="Married" <?php echo ($civilstatus == 'Married') ? 'selected' : ''; ?>>Married</option>
+                                    <option value="Divorced" <?php echo ($civilstatus == 'Divorced') ? 'selected' : ''; ?>>Divorced</option>
+                                    <option value="Widowed" <?php echo ($civilstatus == 'Widowed') ? 'selected' : ''; ?>>Widowed</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -577,15 +588,15 @@ $isEdit = isset($_GET['id']) ? true : false;
                             <div class="col-md-12">
                                 <h5>Health Information</h5>
                                 <div class="row">
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-3 mb-3">
                                         <label for="illness">Illness:</label>
                                         <input type="text" class="form-control" id="illness" name="illness" value="<?php echo $illness; ?>">
                                     </div>
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-3 mb-3">
                                         <label for="medication">Medication:</label>
                                         <input type="text" class="form-control" id="medication" name="medication" value="<?php echo $medication; ?>">
                                     </div>
-                                    <div class="col-md-4 mb-3">
+                                    <div class="col-md-3 mb-3">
                                         <label for="disability">Disability:</label>
                                         <input list="disabilities" class="form-control" id="disability" name="disability" value="<?php echo $disability; ?>">
                                         <datalist id="disabilities">
@@ -597,6 +608,20 @@ $isEdit = isset($_GET['id']) ? true : false;
                                             <option value="Speech or Communication Disability">
                                             <option value="Others">
                                         </datalist>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="bloodtype">Blood Type:</label>
+                                        <select class="form-control" id="bloodtype" name="bloodtype">
+                                            <option value="">--Select Blood Type--</option>
+                                            <option value="A+" <?php echo ($bloodType == 'A+') ? 'selected' : ''; ?>>A+</option>
+                                            <option value="A-" <?php echo ($bloodType == 'A-') ? 'selected' : ''; ?>>A-</option>
+                                            <option value="B+" <?php echo ($bloodType == 'B+') ? 'selected' : ''; ?>>B+</option>
+                                            <option value="B-" <?php echo ($bloodType == 'B-') ? 'selected' : ''; ?>>B-</option>
+                                            <option value="O+" <?php echo ($bloodType == 'O+') ? 'selected' : ''; ?>>O+</option>
+                                            <option value="O-" <?php echo ($bloodType == 'O-') ? 'selected' : ''; ?>>O-</option>
+                                            <option value="AB+" <?php echo ($bloodType == 'AB+') ? 'selected' : ''; ?>>AB+</option>
+                                            <option value="AB-" <?php echo ($bloodType == 'AB-') ? 'selected' : ''; ?>>AB-</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -655,33 +680,35 @@ $isEdit = isset($_GET['id']) ? true : false;
                             <div class="col-md-12">
                                 <h5>Additional Information</h5>
                                 <div class="row">
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-3 mb-3">
                                         <label for="organization">Organization:</label>
                                         <input type="text" class="form-control" id="organization" name="organization" value="<?php echo $organization; ?>">
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-3 mb-3">
                                         <label for="casesViolated">Cases Violated:</label>
                                         <input type="text" class="form-control" id="casesViolated" name="casesViolated" value="<?php echo $casesViolated; ?>">
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-3 mb-3">
                                         <label for="yearsOfStay">Years of Stay:</label>
                                         <input type="text" class="form-control" id="yearsOfStay" name="yearsOfStay" value="<?php echo $yearsOfStay; ?>">
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-3 mb-3">
                                         <label for="businessOwner">Business Owner:</label>
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input" id="businessOwner" name="businessOwner" <?php echo ($businessOwner) ? 'checked' : ''; ?>>
                                             <label class="form-check-label" for="businessOwner">Yes</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
                                         <label for="ofw">OFW:</label>
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input" id="ofw" name="ofw" <?php echo ($ofw) ? 'checked' : ''; ?>>
                                             <label class="form-check-label" for="ofw">Yes</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-4 mb-3">
                                         <label for="employment">Employment Status:</label>
                                         <select class="form-control" id="employment" name="employment">
                                             <option value="" <?php echo (empty($employment)) ? 'selected' : ''; ?>>-- Select Status --</option>
@@ -689,45 +716,79 @@ $isEdit = isset($_GET['id']) ? true : false;
                                             <option value="Unemployed" <?php echo ($employment == 'Unemployed') ? 'selected' : ''; ?>>Unemployed</option>
                                         </select>
                                     </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="occupation">Occupation:</label>
+                                        <input type="text" class="form-control" id="occupation" name="occupation" value="<?php echo $occupation; ?>">
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-12 text-right button-container">
-                                <button id="submitButton" type="submit" class="btn btn-custom">
-                                    <?php echo $isEdit ? 'Update' : 'Add'; ?>
-                                </button>
-                                <button type="button" class="btn btn-secondary-custom" id="cancelButton">Cancel</button>
+                        <!-- Identification -->
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h5>Identification</h5>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <label for="soloParentID">Solo Parent ID:</label>
+                                        <input type="text" class="form-control" id="soloParentID" name="soloParentID" value="<?php echo $soloParentID; ?>">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="seniorID">Senior ID:</label>
+                                        <input type="text" class="form-control" id="seniorID" name="seniorID" value="<?php echo $seniorID; ?>">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="pwdID">PWD ID:</label>
+                                        <input type="text" class="form-control" id="pwdID" name="pwdID" value="<?php echo $pwdID; ?>">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label for="philhealth">PhilHealth ID:</label>
+                                        <input type="text" class="form-control" id="philhealth" name="philhealth" value="<?php echo $philhealth; ?>">
+                                    </div>
+                                </div>
                             </div>
-
-                            <script>
-                                // Check if a success message should be displayed
-                                if (window.location.search.includes('success=1')) {
-                                    alert('Record added successfully!');
-                                    window.scrollTo(0, 0);
-                                }
-
-                                // Set button text based on URL parameter
-                                const urlParams = new URLSearchParams(window.location.search);
-                                if (urlParams.has('id')) {
-                                    document.getElementById('submitButton').textContent = 'Update';
-                                } else {
-                                    document.getElementById('submitButton').textContent = 'Add';
-                                }
-
-                                // Modify the Cancel button to redirect based on the presence of the 'id' parameter
-                                document.getElementById('cancelButton').addEventListener('click', function() {
-                                    if (urlParams.has('id')) {
-                                        const residentId = urlParams.get('id');
-                                        window.location.href = `resident_list.php?id=${residentId}`;
-                                    } else {
-                                        window.location.href = 'resident_list.php';
-                                    }
-                                });
-                            </script>
-
                         </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="row">
+                    <div class="col-md-12 text-right button-container">
+                        <button id="submitButton" type="submit" class="btn btn-custom">
+                            <?php echo $isEdit ? 'Update' : 'Add'; ?>
+                        </button>
+                        <button type="button" class="btn btn-secondary-custom" id="cancelButton">Cancel</button>
+                    </div>
+
+                    <script>
+                        // Check if a success message should be displayed
+                        if (window.location.search.includes('success=1')) {
+                            alert('Record added successfully!');
+                            window.scrollTo(0, 0);
+                        }
+
+                        // Set button text based on URL parameter
+                        const urlParams = new URLSearchParams(window.location.search);
+                        if (urlParams.has('id')) {
+                            document.getElementById('submitButton').textContent = 'Update';
+                        } else {
+                            document.getElementById('submitButton').textContent = 'Add';
+                        }
+
+                        // Modify the Cancel button to redirect based on the presence of the 'id' parameter
+                        document.getElementById('cancelButton').addEventListener('click', function() {
+                            if (urlParams.has('id')) {
+                                const residentId = urlParams.get('id');
+                                window.location.href = `resident_list.php?id=${residentId}`;
+                            } else {
+                                window.location.href = 'resident_list.php';
+                            }
+                        });
+                    </script>
+
+                </div>
 
             </form>
         </div>

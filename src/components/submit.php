@@ -20,6 +20,7 @@ $age = htmlspecialchars($_POST['age'] ?? '', ENT_QUOTES);
 $gender = htmlspecialchars($_POST['gender'] ?? '', ENT_QUOTES);
 $contactNumber = htmlspecialchars($_POST['contactNumber'] ?? '', ENT_QUOTES);
 $religion = htmlspecialchars($_POST['religion'] ?? '', ENT_QUOTES);
+$civilstatus = htmlspecialchars($_POST['civilstatus'] ?? '', ENT_QUOTES);
 $philhealth = htmlspecialchars($_POST['philhealth'] ?? '', ENT_QUOTES);
 $voterstatus = isset($_POST['voterstatus']) ? 1 : 0;
 $streetAddress = htmlspecialchars($_POST['streetAddress'] ?? '', ENT_QUOTES);
@@ -49,6 +50,7 @@ if (isset($_POST['immunization']) && is_array($_POST['immunization'])) {
 } else {
     $immunization = ''; // If no immunization selected
 }
+$bloodType = htmlspecialchars($_POST['bloodtype'] ?? '', ENT_QUOTES);
 $pwd = isset($_POST['pwd']) ? 1 : 0;
 $teenPregnancy = isset($_POST['teenAgePregnancy']) ? 1 : 0;
 $typeOfDelivery = htmlspecialchars($_POST['typeOfDelivery'] ?? '', ENT_QUOTES);
@@ -59,6 +61,10 @@ $yearsOfStay = htmlspecialchars($_POST['yearsOfStay'] ?? '', ENT_QUOTES);
 $businessOwner = isset($_POST['businessOwner']) ? 1 : 0;
 $ofw = isset($_POST['ofw']) ? 1 : 0;
 $employment = htmlspecialchars($_POST['employment'] ?? '', ENT_QUOTES);
+$occupation = htmlspecialchars($_POST['occupation'] ?? '', ENT_QUOTES);
+$soloParentID = htmlspecialchars($_POST['soloParentID'] ?? '', ENT_QUOTES);
+$seniorID = htmlspecialchars($_POST['seniorID'] ?? '', ENT_QUOTES);
+$pwdID = htmlspecialchars($_POST['pwdID'] ?? '', ENT_QUOTES);
 
 // Handle file upload
 $imagePath = '';
@@ -93,17 +99,20 @@ if (isset($_FILES['update_image']) && $_FILES['update_image']['error'] == 0) {
 
 // Prepare SQL statement
 $sql = "INSERT INTO residents_records 
-        (first_name, middle_name, last_name, suffix, dob, age, gender, contact_number, religion, philhealth, voterstatus,
+        (first_name, middle_name, last_name, suffix, dob, age, gender, contact_number, religion, civil_status, philhealth, voterstatus,
         street_address, house_number, subdivision, barangay, city, province, region, zip_code, 
         mother_first_name, mother_middle_name, mother_last_name, father_first_name, father_middle_name, father_last_name, 
-        osy, als, educational_attainment, current_school, illness, medication, disability, immunization, pwd, 
-        teen_pregnancy, type_of_delivery, assisted_by, organization, cases_violated, years_of_stay, business_owner, ofw, employment, residents_img) 
+        osy, als, educational_attainment, current_school, illness, medication, disability, immunization, bloodtype, pwd, 
+        teen_pregnancy, type_of_delivery, assisted_by, organization, cases_violated, years_of_stay, business_owner, ofw, employment, occupation, 
+        soloparent_id, senior_id, pwd_id, residents_img) 
         VALUES 
-        ('$firstName', '$middleName', '$lastName', '$suffix', '$dob', '$age', '$gender', '$contactNumber', '$religion', '$philhealth', '$voterstatus',
+        ('$firstName', '$middleName', '$lastName', '$suffix', '$dob', '$age', '$gender', '$contactNumber', '$religion', '$civilstatus', '$philhealth', '$voterstatus',
         '$streetAddress', '$houseNumber', '$subdivision', '$barangay', '$city', '$province', '$region', '$zipCode', 
         '$motherFirstName', '$motherMiddleName', '$motherLastName', '$fatherFirstName', '$fatherMiddleName', '$fatherLastName', 
-        '$osy', '$als', '$educationalAttainment', '$currentSchool', '$illness', '$medication', '$disability', '$immunization', '$pwd',  
-        '$teenPregnancy', '$typeOfDelivery', '$assisted_by', '$organization', '$casesViolated', '$yearsOfStay', '$businessOwner', '$ofw', '$employment', '$imagePath')";
+        '$osy', '$als', '$educationalAttainment', '$currentSchool', '$illness', '$medication', '$disability', '$immunization', '$bloodType', '$pwd',  
+        '$teenPregnancy', '$typeOfDelivery', '$assisted_by', '$organization', '$casesViolated', '$yearsOfStay', '$businessOwner', '$ofw', '$employment', '$occupation', 
+        '$soloParentID', '$seniorID', '$pwdID', '$imagePath')";
+
 
 // Execute the statement and handle potential errors
 if ($mysqlConn->query($sql) === TRUE) {
