@@ -8,6 +8,16 @@ if (!isset($_SESSION['user_id'])) {
 }
 include_once "../src/components/session_handler.php";
 include("../src/configs/connection.php");
+
+// Handle "Delete All" functionality
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_all'])) {
+    $delete_all_query = "DELETE FROM activity_log";
+    if ($mysqlConn3->query($delete_all_query) === TRUE) {
+        echo "<script>alert('All records have been successfully deleted.');</script>";
+    } else {
+        echo "<script>alert('Error deleting records: " . $mysqlConn3->error . "');</script>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -25,6 +35,19 @@ include("../src/configs/connection.php");
     <link rel="stylesheet" href="/system/src/css/admin_panel.css" />
     <?php include '../src/components/header.php'; ?>
 </head>
+<style>
+        #deleteBtn {
+            background-color: #610000;
+            border-color: #610000;
+            color: #ffffff; /* Optional: Change text color */
+        }
+        
+        #deleteBtn:hover {
+            background-color: white;
+            border-color: #610000;
+            color: #610000; /* Optional: Change text color */
+        }
+</style>
 
 <body>
     <?php include '../src/components/moderator_navbar.php'; ?>
@@ -68,6 +91,12 @@ include("../src/configs/connection.php");
         </div>
 
         <div class="mt-3">
+            <form method="POST" action="activity_log.php" style="display:inline;">
+                <button type="submit" name="delete_all" class="btn btn-danger" id="deleteBtn"
+                        onclick="return confirm('Are you sure you want to delete all records?');">
+                    Delete All
+                </button>
+            </form>
             <a href="admin_panel.php">
                 <button type="button" class="btn btn-primary">Back to Admin Panel</button>
             </a>
