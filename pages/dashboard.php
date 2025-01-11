@@ -687,25 +687,23 @@ if ($result_total_blotter->num_rows > 0) {
                         <div class="resident-table-container" tabindex="-1" id="residentTableContainer">
                             <!-- Add responsive container -->
                             <div class="table-responsive">
-                                <table class="table table-custom">
-                                    <thead>
-                                        <tr>
-                                            <th>Name of Resident</th>
-                                            <th>Age</th>
-                                            <th>Gender</th>
-                                            <th>Birthdate</th>
-                                            <th>Contact Number</th>
-                                            <th>Subdivision</th>
-                                        </tr>
-                                    </thead>
-                                </table>
                                 <div class="table-body-scroll">
                                     <div class="table-responsive">
                                         <table class="table table-custom">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name of Resident</th>
+                                                    <th>Age</th>
+                                                    <th>Gender</th>
+                                                    <th>Birthdate</th>
+                                                    <th>Contact Number</th>
+                                                    <th>Subdivision</th>
+                                                </tr>
+                                            </thead>
                                             <tbody>
                                                 <?php
                                                 // Pagination settings
-                                                $limit = 10; // Number of records per page
+                                                $limit = 7; // Number of records per page
                                                 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
                                                 $search_query = isset($_GET['search']) ? trim($_GET['search']) : '';
                                                 $start_from = ($page - 1) * $limit;
@@ -715,10 +713,10 @@ if ($result_total_blotter->num_rows > 0) {
 
                                                 // Base query
                                                 $query = "
-                                    SELECT id, first_name, middle_name, last_name, suffix, dob, gender, contact_number, subdivision,
-                                    FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) AS age
-                                    FROM residents_records 
-                                    WHERE 1 "; // Base condition to always be true for adding dynamic filters
+                                                    SELECT id, first_name, middle_name, last_name, suffix, dob, gender, contact_number, subdivision,
+                                                    FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) AS age
+                                                    FROM residents_records 
+                                                    WHERE 1 "; // Base condition to always be true for adding dynamic filters
 
                                                 // Apply filters from GET parameters (add conditions to the query)
                                                 if (!empty($_GET['first_name'])) {
@@ -879,9 +877,9 @@ if ($result_total_blotter->num_rows > 0) {
                                                         $first_term = false;
                                                     }
                                                     $query .= " OR gender LIKE '%$search_query%' 
-                                    OR dob LIKE '%$search_query%' 
-                                    OR contact_number LIKE '%$search_query%' 
-                                    OR subdivision LIKE '%$search_query%') ";
+                                                    OR dob LIKE '%$search_query%' 
+                                                    OR contact_number LIKE '%$search_query%' 
+                                                    OR subdivision LIKE '%$search_query%') ";
                                                 }
 
                                                 // If the search query is numeric, include it in the age filter
@@ -902,13 +900,13 @@ if ($result_total_blotter->num_rows > 0) {
                                                 if ($result->num_rows > 0) {
                                                     while ($row = $result->fetch_assoc()) {
                                                         echo "<tr data-id='{$row['id']}' onclick='fetchResidentDetails({$row['id']})'>
-                                            <td>{$row['first_name']} {$row['middle_name']} {$row['last_name']} {$row['suffix']}</td>
-                                            <td>{$row['age']}</td>
-                                            <td>{$row['gender']}</td>
-                                            <td>{$row['dob']}</td>
-                                            <td>{$row['contact_number']}</td>
-                                            <td>{$row['subdivision']}</td>
-                                            </tr>";
+                                                            <td>{$row['first_name']} {$row['middle_name']} {$row['last_name']} {$row['suffix']}</td>
+                                                            <td>{$row['age']}</td>
+                                                            <td>{$row['gender']}</td>
+                                                            <td>{$row['dob']}</td>
+                                                            <td>{$row['contact_number']}</td>
+                                                            <td>{$row['subdivision']}</td>
+                                                            </tr>";
                                                     }
                                                 } else {
                                                     echo "<tr><td colspan='6'>No records found</td></tr>";
@@ -916,15 +914,14 @@ if ($result_total_blotter->num_rows > 0) {
                                                 ?>
                                             </tbody>
                                         </table>
-                                    </div>
-                                </div>
 
-                                <!-- Pagination and Info -->
-                                <div class="pagination-container">
-                                    <div class="pagination-info">
-                                        <?php
-                                        // Fetch total records for "Showing X to Y of Z entries"
-                                        $query_total = "SELECT COUNT(*) FROM residents_records 
+
+                                        <!-- Pagination and Info -->
+                                        <div class="pagination-container">
+                                            <div class="pagination-info">
+                                                <?php
+                                                // Fetch total records for "Showing X to Y of Z entries"
+                                                $query_total = "SELECT COUNT(*) FROM residents_records 
                                     WHERE first_name LIKE '%$search_query%' 
                                     OR middle_name LIKE '%$search_query%' 
                                     OR last_name LIKE '%$search_query%' 
@@ -933,62 +930,63 @@ if ($result_total_blotter->num_rows > 0) {
                                     OR contact_number LIKE '%$search_query%' 
                                     OR subdivision LIKE '%$search_query%'";
 
-                                        // If the search query is numeric, include it in the total count query
-                                        if ($is_numeric_search) {
-                                            $query_total .= " OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
-                                        }
+                                                // If the search query is numeric, include it in the total count query
+                                                if ($is_numeric_search) {
+                                                    $query_total .= " OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
+                                                }
 
-                                        $total_result = $mysqlConn->query($query_total);
-                                        $total_records = $total_result->fetch_row()[0];
-                                        $total_pages = ceil($total_records / $limit);
-                                        $end = min($page * $limit, $total_records);
-                                        $start = ($page - 1) * $limit + 1;
-                                        echo "Showing $start to $end of $total_records entries";
-                                        ?>
+                                                $total_result = $mysqlConn->query($query_total);
+                                                $total_records = $total_result->fetch_row()[0];
+                                                $total_pages = ceil($total_records / $limit);
+                                                $end = min($page * $limit, $total_records);
+                                                $start = ($page - 1) * $limit + 1;
+                                                echo "Showing $start to $end of $total_records entries";
+                                                ?>
+                                            </div>
+                                            <ul class="pagination">
+                                                <?php
+                                                // Build a query string with all current filters
+                                                $query_string = $_GET; // Get all current GET parameters
+                                                unset($query_string['page']); // Remove 'page' to handle it dynamically
+                                                $query_string = http_build_query($query_string); // Convert to query string format
+
+                                                // Define the maximum number of pages to show
+                                                $max_visible_pages = 5;
+
+                                                // Calculate start and end page for the pagination range
+                                                $start_page = max(1, $page - floor($max_visible_pages / 2));
+                                                $end_page = min($total_pages, $start_page + $max_visible_pages - 1);
+
+                                                // Adjust start_page if near the end
+                                                $start_page = max(1, $end_page - $max_visible_pages + 1);
+
+                                                // Generate "Previous" button
+                                                if ($page > 1) {
+                                                    echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . "&$query_string'>Previous</a></li>";
+                                                }
+
+                                                // Generate page links
+                                                for ($i = $start_page; $i <= $end_page; $i++) {
+                                                    if ($i == $page) {
+                                                        echo "<li class='page-item active'><a class='page-link' href='?page=$i&$query_string'>$i</a></li>";
+                                                    } else {
+                                                        echo "<li class='page-item'><a class='page-link' href='?page=$i&$query_string'>$i</a></li>";
+                                                    }
+                                                }
+
+                                                // Generate "Next" button
+                                                if ($page < $total_pages) {
+                                                    echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . "&$query_string'>Next</a></li>";
+                                                }
+                                                ?>
+                                            </ul>
+                                        </div>
                                     </div>
-                                    <ul class="pagination">
-                                        <?php
-                                        // Build a query string with all current filters
-                                        $query_string = $_GET; // Get all current GET parameters
-                                        unset($query_string['page']); // Remove 'page' to handle it dynamically
-                                        $query_string = http_build_query($query_string); // Convert to query string format
-
-                                        // Define the maximum number of pages to show
-                                        $max_visible_pages = 5;
-
-                                        // Calculate start and end page for the pagination range
-                                        $start_page = max(1, $page - floor($max_visible_pages / 2));
-                                        $end_page = min($total_pages, $start_page + $max_visible_pages - 1);
-
-                                        // Adjust start_page if near the end
-                                        $start_page = max(1, $end_page - $max_visible_pages + 1);
-
-                                        // Generate "Previous" button
-                                        if ($page > 1) {
-                                            echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . "&$query_string'>Previous</a></li>";
-                                        }
-
-                                        // Generate page links
-                                        for ($i = $start_page; $i <= $end_page; $i++) {
-                                            if ($i == $page) {
-                                                echo "<li class='page-item active'><a class='page-link' href='?page=$i&$query_string'>$i</a></li>";
-                                            } else {
-                                                echo "<li class='page-item'><a class='page-link' href='?page=$i&$query_string'>$i</a></li>";
-                                            }
-                                        }
-
-                                        // Generate "Next" button
-                                        if ($page < $total_pages) {
-                                            echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . "&$query_string'>Next</a></li>";
-                                        }
-                                        ?>
-                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
 
                 <!-- Resident Details Modal -->
                 <div class="modal fade" id="residentDetailsModal" tabindex="-1" role="dialog" aria-labelledby="residentDetailsModalLabel" aria-hidden="true">

@@ -22,8 +22,10 @@
 
 /* Container for the whole table */
 .resident-table-container {
+    margin: 20px 0;
     border: 1px solid #dee2e6;
     border-radius: 8px;
+    overflow: hidden;
 }
 
 /* Custom Table Styling */
@@ -47,6 +49,7 @@
     font-weight: bold;
     color: #343a40;
 }
+
 
 
 
@@ -139,7 +142,7 @@
 
 /* Scrollable Table Body */
 .resident-table-container .table-body-scroll {
-    max-height: 350px;
+    max-height: 450px;
     /* Set the desired height for the scrollable area */
     overflow-y: auto;
     overflow-x: hidden;

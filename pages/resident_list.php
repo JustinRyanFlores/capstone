@@ -76,176 +76,162 @@ if (isset($_GET['search'])) {
             </div>
         </div>
 
-        <div class="row m-3 bg-light text-white p-2 shadow rounded">
-            <div class="col-6">
-                <form method="GET" action="resident_list.php">
-                    <div class="input-group" style="max-width: 800px;">
-                        <!-- Search Input -->
-                        <input
-                            type="text"
-                            name="search"
-                            class="form-control"
-                            placeholder="Type Here to Search..."
-                            value="<?php echo htmlspecialchars($search_query); ?>" />
+        <div class="row mt-4 search-bar-container">
+            <div class="col-md-12">
+                <form method="GET" action="blotter_records.php" class="d-flex w-100">
+                    <input type="text" name="search" class="form-control" placeholder="Type Here to Search..." style="max-width: 300px;" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>" />
+                    <!-- Search Button -->
+                    <button type="submit" class="btn btn-custom ml-2" style="display: flex; align-items: center;">
+                        <i class="fas fa-search"></i>
+                    </button>
 
-                        <!-- Search Button -->
-                        <div class="input-group-append">
-                            <button class="btn btn-custom" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-
-                        <!-- Reset Button -->
-                        <a href="resident_list.php" class="btn btn-secondary ml-2" style="display: flex; align-items: center;">
-                            <i class="fas fa-sync-alt"></i>
-                        </a>
-                    </div>
+                    <!-- Reset Button -->
+                    <a href="resident_list.php" class="btn btn-secondary ml-2" style="display: flex; align-items: center;">
+                        <i class="fas fa-sync-alt"></i>
+                    </a>
                 </form>
-
-
             </div>
         </div>
-
 
         <!-- Resident Table -->
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="resident-table-container">
                     <div class="table-responsive">
-                    <table class="table table-custom">
-                        <thead>
-                            <tr>
-                                <th>Name of Resident</th>
-                                <th>Age</th>
-                                <th>Gender</th>
-                                <th>Birthdate</th>
-                                <th>Contact Number</th>
-                                <th>Subdivision</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            // Pagination settings
-                            $limit = 10; // Number of records per page
-                            $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-                            $search_query = isset($_GET['search']) ? trim($_GET['search']) : '';
-                            $start_from = ($page - 1) * $limit;
+                        <table class="table table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Name of Resident</th>
+                                    <th>Age</th>
+                                    <th>Gender</th>
+                                    <th>Birthdate</th>
+                                    <th>Contact Number</th>
+                                    <th>Subdivision</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                // Pagination settings
+                                $limit = 10; // Number of records per page
+                                $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                                $search_query = isset($_GET['search']) ? trim($_GET['search']) : '';
+                                $start_from = ($page - 1) * $limit;
 
-                            // Check if the search query is numeric (for age search)
-                            $is_numeric_search = is_numeric($search_query);
+                                // Check if the search query is numeric (for age search)
+                                $is_numeric_search = is_numeric($search_query);
 
-                            // Split the search query into individual terms
-                            $search_terms = explode(' ', $search_query);
+                                // Split the search query into individual terms
+                                $search_terms = explode(' ', $search_query);
 
-                            // Build the SQL query for fetching data
-                            $query = "
-                        SELECT id, first_name, middle_name, last_name, suffix, dob, gender, contact_number, subdivision,
-                        FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) AS age
-                        FROM residents_records 
-                        WHERE (";
+                                // Build the SQL query for fetching data
+                                $query = "
+                                    SELECT id, first_name, middle_name, last_name, suffix, dob, gender, contact_number, subdivision,
+                                    FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) AS age
+                                    FROM residents_records 
+                                    WHERE (";
 
-                            // Add each search term to the query
-                            foreach ($search_terms as $index => $term) {
-                                if ($index > 0) {
-                                    $query .= " AND ";
+                                // Add each search term to the query
+                                foreach ($search_terms as $index => $term) {
+                                    if ($index > 0) {
+                                        $query .= " AND ";
+                                    }
+                                    // Check if the concatenated full name contains the term
+                                    $query .= "CONCAT_WS(' ', first_name, middle_name, last_name, suffix) LIKE '%$term%'";
                                 }
-                                // Check if the concatenated full name contains the term
-                                $query .= "CONCAT_WS(' ', first_name, middle_name, last_name, suffix) LIKE '%$term%'";
-                            }
 
-                            $query .= " OR dob LIKE '%$search_query%' 
+                                $query .= " OR dob LIKE '%$search_query%' 
                                 OR contact_number LIKE '%$search_query%' 
                                 OR subdivision LIKE '%$search_query%' ";
 
-                            // If the search query is numeric, include it in the age filter
-                            if ($is_numeric_search) {
-                                $query .= " OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
-                            }
-
-                            $query .= ") LIMIT $start_from, $limit";
-                            $result = $mysqlConn->query($query);
-
-                            // Loop through the records
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    echo "<tr data-id='{$row['id']}' onclick='fetchResidentDetails({$row['id']})'>
-                                <td>{$row['first_name']} {$row['middle_name']} {$row['last_name']} {$row['suffix']}</td>
-                                <td>{$row['age']}</td>
-                                <td>{$row['gender']}</td>
-                                <td>{$row['dob']}</td>
-                                <td>{$row['contact_number']}</td>
-                                <td>{$row['subdivision']}</td>
-                            </tr>";
+                                // If the search query is numeric, include it in the age filter
+                                if ($is_numeric_search) {
+                                    $query .= " OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
                                 }
-                            } else {
-                                echo "<tr><td colspan='6'>No records found</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
 
-                    <!-- Pagination and Info -->
-                    <div class="pagination-container">
-                        <div class="pagination-info">
-                            <?php
-                            // Build the total count query for pagination info
-                            $query_total = "SELECT COUNT(*) FROM residents_records WHERE (";
-                            foreach ($search_terms as $index => $term) {
-                                if ($index > 0) {
-                                    $query_total .= " AND ";
+                                $query .= ") LIMIT $start_from, $limit";
+                                $result = $mysqlConn->query($query);
+
+                                // Loop through the records
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo "<tr data-id='{$row['id']}' onclick='fetchResidentDetails({$row['id']})'>
+                                        <td>{$row['first_name']} {$row['middle_name']} {$row['last_name']} {$row['suffix']}</td>
+                                        <td>{$row['age']}</td>
+                                        <td>{$row['gender']}</td>
+                                        <td>{$row['dob']}</td>
+                                        <td>{$row['contact_number']}</td>
+                                        <td>{$row['subdivision']}</td>
+                                        </tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='6'>No records found</td></tr>";
                                 }
-                                $query_total .= "CONCAT_WS(' ', first_name, middle_name, last_name, suffix) LIKE '%$term%'";
-                            }
-                            $query_total .= " OR dob LIKE '%$search_query%' 
+                                ?>
+                            </tbody>
+                        </table>
+
+                        <!-- Pagination and Info -->
+                        <div class="pagination-container">
+                            <div class="pagination-info">
+                                <?php
+                                // Build the total count query for pagination info
+                                $query_total = "SELECT COUNT(*) FROM residents_records WHERE (";
+                                foreach ($search_terms as $index => $term) {
+                                    if ($index > 0) {
+                                        $query_total .= " AND ";
+                                    }
+                                    $query_total .= "CONCAT_WS(' ', first_name, middle_name, last_name, suffix) LIKE '%$term%'";
+                                }
+                                $query_total .= " OR dob LIKE '%$search_query%' 
                                       OR contact_number LIKE '%$search_query%' 
                                       OR subdivision LIKE '%$search_query%' ";
 
-                            // If the search query is numeric, include it in the total count query
-                            if ($is_numeric_search) {
-                                $query_total .= " OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
-                            }
-
-                            $query_total .= ")";
-                            $result_total = $mysqlConn->query($query_total);
-                            $row_total = $result_total->fetch_row();
-                            $total_records = $row_total[0];
-                            $start_entry = ($page - 1) * $limit + 1;
-                            $end_entry = min($start_entry + $limit - 1, $total_records);
-
-                            echo "Showing $start_entry to $end_entry of $total_records entries";
-                            ?>
-                        </div>
-                        <ul class="pagination">
-                            <?php
-                            // Generate pagination links with search query
-                            $total_pages = ceil($total_records / $limit);
-
-                            // Calculate the start and end page numbers for displaying 5 page links
-                            $start = max(1, $page - 2);  // Start from 2 pages before the current page
-                            $end = min($total_pages, $page + 2);  // End at 2 pages after the current page
-
-                            // Display "Previous" button
-                            if ($page > 1) {
-                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . "&search=" . urlencode($search_query) . "'>Previous</a></li>";
-                            }
-
-                            // Loop through and display the page links
-                            for ($i = $start; $i <= $end; $i++) {
-                                if ($i == $page) {
-                                    echo "<li class='page-item active'><a class='page-link' href='?page=$i&search=" . urlencode($search_query) . "'>$i</a></li>";
-                                } else {
-                                    echo "<li class='page-item'><a class='page-link' href='?page=$i&search=" . urlencode($search_query) . "'>$i</a></li>";
+                                // If the search query is numeric, include it in the total count query
+                                if ($is_numeric_search) {
+                                    $query_total .= " OR FLOOR(DATEDIFF(CURDATE(), dob) / 365.25) = $search_query";
                                 }
-                            }
 
-                            // Display "Next" button
-                            if ($page < $total_pages) {
-                                echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . "&search=" . urlencode($search_query) . "'>Next</a></li>";
-                            }
-                            ?>
-                        </ul>
+                                $query_total .= ")";
+                                $result_total = $mysqlConn->query($query_total);
+                                $row_total = $result_total->fetch_row();
+                                $total_records = $row_total[0];
+                                $start_entry = ($page - 1) * $limit + 1;
+                                $end_entry = min($start_entry + $limit - 1, $total_records);
+
+                                echo "Showing $start_entry to $end_entry of $total_records entries";
+                                ?>
+                            </div>
+                            <ul class="pagination">
+                                <?php
+                                // Generate pagination links with search query
+                                $total_pages = ceil($total_records / $limit);
+
+                                // Calculate the start and end page numbers for displaying 5 page links
+                                $start = max(1, $page - 2);  // Start from 2 pages before the current page
+                                $end = min($total_pages, $page + 2);  // End at 2 pages after the current page
+
+                                // Display "Previous" button
+                                if ($page > 1) {
+                                    echo "<li class='page-item'><a class='page-link' href='?page=" . ($page - 1) . "&search=" . urlencode($search_query) . "'>Previous</a></li>";
+                                }
+
+                                // Loop through and display the page links
+                                for ($i = $start; $i <= $end; $i++) {
+                                    if ($i == $page) {
+                                        echo "<li class='page-item active'><a class='page-link' href='?page=$i&search=" . urlencode($search_query) . "'>$i</a></li>";
+                                    } else {
+                                        echo "<li class='page-item'><a class='page-link' href='?page=$i&search=" . urlencode($search_query) . "'>$i</a></li>";
+                                    }
+                                }
+
+                                // Display "Next" button
+                                if ($page < $total_pages) {
+                                    echo "<li class='page-item'><a class='page-link' href='?page=" . ($page + 1) . "&search=" . urlencode($search_query) . "'>Next</a></li>";
+                                }
+                                ?>
+                            </ul>
+                        </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>
